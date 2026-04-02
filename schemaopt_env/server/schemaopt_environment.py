@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+from collections import Counter
 import copy
 from dataclasses import dataclass, field
 import hashlib
@@ -62,9 +63,11 @@ class QueryExecution:
 @dataclass
 class ParsedSQL:
     tables: List[str]
+    canonical_tables: List[str]
     projection_aliases: List[str]
     group_by: List[str]
-    filter_predicates: List[str]
+    raw_filter_predicates: List[str]
+    canonical_filter_predicates: List[str]
     measure_columns: List[str]
     aggregate_functions: List[str]
 
@@ -81,10 +84,11 @@ class DerivedObject:
     row_count: int
     storage_bytes_estimate: int
     build_runtime_ms: float
+    signature: str
     used_by_visible_queries: set[str] = field(default_factory=set)
     used_by_clusters: set[str] = field(default_factory=set)
     def summary(self) -> Dict[str, Any]:
-        return {"name": self.name, "object_kind": self.object_kind, "source_objects": list(self.source_objects), "grain_dims": list(self.grain_dims), "available_columns": list(self.available_columns), "row_count": self.row_count, "storage_bytes_estimate": self.storage_bytes_estimate, "build_runtime_ms": round(self.build_runtime_ms, 4), "used_by_visible_queries": sorted(self.used_by_visible_queries), "used_by_clusters": sorted(self.used_by_clusters)}
+        return {"name": self.name, "object_kind": self.object_kind, "source_objects": list(self.source_objects), "grain_dims": list(self.grain_dims), "available_columns": list(self.available_columns), "row_count": self.row_count, "storage_bytes_estimate": self.storage_bytes_estimate, "build_runtime_ms": round(self.build_runtime_ms, 4), "signature": self.signature, "used_by_visible_queries": sorted(self.used_by_visible_queries), "used_by_clusters": sorted(self.used_by_clusters)}
 
 class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, SchemaOptState]):
     SUPPORTS_CONCURRENT_SESSIONS: bool = True
@@ -100,6 +104,7 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
         self._checkpoints: List[Dict[str, Any]] = []
         self._retrieval_context: Dict[str, Any] = {}
         self._benchmark_context: Dict[str, Any] = {}
+        self._router_summary: Dict[str, Any] = {}
         self._last_feedback: Dict[str, Any] = {}
         self._base_table_stats: Dict[str, Dict[str, Any]] = {}
         self._baseline_cache: Dict[str, QueryExecution] = {}
@@ -121,6 +126,7 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
         self._checkpoints = []
         self._retrieval_context = {"last_request": None, "matched_queries": [], "matched_clusters": [], "retrieval_count": 0}
         self._benchmark_context = {"baseline_weighted_cost": None, "current_weighted_cost": None, "raw_improvement": 0.0, "gated_improvement": 0.0, "correctness_coverage": 1.0, "routed_query_count": 0, "incorrect_query_count": 0, "last_benchmarked_query_ids": [], "last_benchmarked_cluster_id": None, "latest_plan_deltas": {}}
+        self._router_summary = {"queries_routed": 0, "queries_unrouted": len(self._task.visible_queries), "dominant_rejection_reason": None, "candidate_object_coverage": {}, "last_scope": "reset"}
         self._last_feedback = {"event": "reset", "task_id": selected_task}
         self._baseline_cache = {}
         self._evaluation_cache = {}
@@ -129,7 +135,7 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
         self._base_table_stats = {table.name: self._collect_table_stats(table.name) for table in self._task.tables}
         self._state = SchemaOptState(episode_id=str(uuid4()) if episode_id is None else episode_id, step_count=0, done=False, task_id=self._task.task_id, difficulty=self._task.difficulty, derived_object_count=0, checkpoint_count=0, retrieval_count=0, benchmark_runs=0, storage_used_multiplier=0.0, final_score=None, last_error=None)
         payload = self._task.reset_payload()
-        return SchemaOptObservation(status="ok", message=f"Initialized task {self._task.task_id}", catalog_summary=self._catalog_summary(payload), workload_summary=payload["workload_summary"], retrieval_context=self._retrieval_context, benchmark_context=self._benchmark_context, action_feedback=self._last_feedback, reward=0.0, done=False, metadata={"task": payload["task"]})
+        return SchemaOptObservation(status="ok", message=f"Initialized task {self._task.task_id}", catalog_summary=self._catalog_summary(payload), workload_summary=payload["workload_summary"], retrieval_context=self._retrieval_context, benchmark_context=self._benchmark_context, router_summary=self._router_summary, action_feedback=self._last_feedback, reward=0.0, done=False, metadata={"task": payload["task"]})
 
     @property
     def state(self) -> State:
@@ -186,7 +192,7 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
 
     def _build_observation(self, status: str, message: str, reward: float, done: bool, feedback: Dict[str, Any]) -> SchemaOptObservation:
         payload = self._task.reset_payload()
-        return SchemaOptObservation(status=status, message=message, catalog_summary=self._catalog_summary(payload), workload_summary=payload["workload_summary"], retrieval_context=self._retrieval_context, benchmark_context=self._benchmark_context, action_feedback=feedback, reward=round(reward, 6), done=done, metadata={"task": payload["task"]})
+        return SchemaOptObservation(status=status, message=message, catalog_summary=self._catalog_summary(payload), workload_summary=payload["workload_summary"], retrieval_context=self._retrieval_context, benchmark_context=self._benchmark_context, router_summary=self._router_summary, action_feedback=feedback, reward=round(reward, 6), done=done, metadata={"task": payload["task"]})
     def step(self, action: SchemaOptAction, timeout_s: Optional[float] = None, **kwargs: Any) -> SchemaOptObservation:
         self._state.step_count += 1
         reward = 0.0
@@ -213,8 +219,13 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
                 feedback = self._inspect_query_plan(action.target_id or "")
                 message = f"Plan summary returned for {action.target_id}."
             elif action.operation == "inspect_router_status":
-                query_ids = list(action.query_ids) if action.query_ids else list(self._visible_query_lookup.keys())
-                feedback = {"event": "inspect_router_status", "routes": [self._route_summary(query_id, self._evaluate_query(self._get_visible_query(query_id), False)) for query_id in query_ids]}
+                if action.query_ids:
+                    query_ids = list(action.query_ids)
+                elif action.cluster_id:
+                    query_ids = [query.query_id for query in visible_queries_for_cluster(self._task, action.cluster_id)]
+                else:
+                    query_ids = list(self._visible_query_lookup.keys())
+                feedback = self._inspect_router_status(query_ids, action.cluster_id)
                 message = "Router status returned."
             elif action.operation == "retrieve_queries":
                 feedback = self._retrieve_queries(action)
@@ -226,12 +237,12 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
                 message = f"Returned full context for {len(action.query_ids)} queries."
             elif action.operation == "create_derived_object":
                 feedback = self._upsert_derived_object(action, False)
-                reward += 0.01
-                message = f"Created derived object {action.name}."
+                reward += feedback.get("reward_delta", 0.0)
+                message = feedback.get("message", f"Created derived object {action.name}.")
             elif action.operation == "modify_derived_object":
                 feedback = self._upsert_derived_object(action, True)
-                reward += 0.005
-                message = f"Modified derived object {action.name}."
+                reward += feedback.get("reward_delta", 0.0)
+                message = feedback.get("message", f"Modified derived object {action.name}.")
             elif action.operation == "drop_derived_object":
                 removed = self._derived_objects.pop(action.target_id or "")
                 self._con.execute(f"DROP TABLE IF EXISTS derived.{removed.name}")
@@ -295,7 +306,21 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
         query = self._get_visible_query(query_id)
         baseline = self._baseline_for_query(query)
         decision = self._evaluate_query(query, False)
-        return {"event": "inspect_query_plan", "query_id": query_id, "baseline_plan": baseline.plan.summary(), "current_plan": self._route_summary(query_id, decision)}
+        route_summary = self._route_summary(query_id, decision)
+        self._router_summary = self._summarize_routes([route_summary], f"query:{query_id}")
+        return {
+            "event": "inspect_query_plan",
+            "query_id": query_id,
+            "baseline_plan": baseline.plan.summary(),
+            "current_plan": route_summary,
+            "top_rewrite_candidate": decision.get("top_rewrite_candidate"),
+            "dominant_rejection_reason": route_summary.get("top_rejection_reason"),
+        }
+
+    def _inspect_router_status(self, query_ids: Sequence[str], cluster_id: Optional[str]) -> Dict[str, Any]:
+        routes = [self._route_summary(query_id, self._evaluate_query(self._get_visible_query(query_id), False)) for query_id in query_ids]
+        self._router_summary = self._summarize_routes(routes, f"cluster:{cluster_id}" if cluster_id else "explicit_query_set")
+        return {"event": "inspect_router_status", "routes": routes, "router_summary": self._router_summary}
 
     def _retrieve_queries(self, action: SchemaOptAction) -> Dict[str, Any]:
         mode = self._resolve_retrieval_mode(action)
@@ -317,8 +342,27 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
         if not modify and name in self._derived_objects:
             raise ValueError(f"Derived object '{name}' already exists")
         parsed = self._parse_sql_metadata(action.sql_definition or "")
-        if sorted(parsed.tables) != sorted(source.lower() for source in action.source_objects):
+        source_objects = [self._canonicalize_table_name(source) for source in action.source_objects]
+        if sorted(parsed.canonical_tables) != sorted(source_objects):
             raise ValueError("source_objects must match sql_definition tables")
+        grain_dims = [item.strip().lower() for item in (action.grain_hint or "").split(",") if item.strip()] or list(parsed.group_by)
+        signature = self._signature_from_components(action.object_kind or "agg_matview", parsed, grain_dims)
+        similar_existing = [obj.name for obj in self._derived_objects.values() if obj.name != name and obj.signature == signature]
+        if similar_existing:
+            self._router_summary = {
+                "queries_routed": 0,
+                "queries_unrouted": len(self._task.visible_queries),
+                "dominant_rejection_reason": "duplicate_signature",
+                "candidate_object_coverage": {existing: 0 for existing in similar_existing},
+                "last_scope": f"duplicate:{name}",
+            }
+            return {
+                "event": "modify_derived_object" if modify else "create_derived_object",
+                "message": f"Skipped {name}: duplicate of existing derived object signature.",
+                "duplicate_signature": True,
+                "similar_existing_objects": similar_existing,
+                "reward_delta": -0.02,
+            }
         if modify:
             self._con.execute(f"DROP TABLE IF EXISTS derived.{name}")
         start = time.perf_counter()
@@ -328,18 +372,41 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
         column_types = {str(row[0]).lower(): str(row[1]) for row in describe_rows}
         available_columns = list(column_types.keys())
         row_count = int(self._con.execute(f"SELECT COUNT(*) FROM derived.{name}").fetchone()[0])
-        grain_dims = [item.strip().lower() for item in (action.grain_hint or "").split(",") if item.strip()] or list(parsed.group_by)
-        obj = DerivedObject(name=name, object_kind=action.object_kind or "agg_matview", sql_definition=action.sql_definition or "", source_objects=[source.lower() for source in action.source_objects], grain_dims=grain_dims, available_columns=available_columns, column_types=column_types, parsed_sql=parsed, row_count=row_count, storage_bytes_estimate=self._estimate_storage_bytes(row_count, column_types), build_runtime_ms=build_runtime_ms)
+        obj = DerivedObject(name=name, object_kind=action.object_kind or "agg_matview", sql_definition=action.sql_definition or "", source_objects=source_objects, grain_dims=grain_dims, available_columns=available_columns, column_types=column_types, parsed_sql=parsed, row_count=row_count, storage_bytes_estimate=self._estimate_storage_bytes(row_count, column_types), build_runtime_ms=build_runtime_ms, signature=signature)
         self._derived_objects[name] = obj
         self._evaluation_cache = {}
-        return {"event": "modify_derived_object" if modify else "create_derived_object", "derived_object": obj.summary()}
+        diagnostics = self._derived_object_diagnostics(obj, action.intended_clusters)
+        reward_delta = 0.01 if diagnostics["eligible_visible_queries"] else 0.0
+        if diagnostics["is_empty_object"]:
+            reward_delta = -0.02
+        self._router_summary = {
+            "queries_routed": diagnostics["eligible_visible_queries"],
+            "queries_unrouted": max(0, len(self._task.visible_queries) - diagnostics["eligible_visible_queries"]),
+            "dominant_rejection_reason": diagnostics["top_rejection_reason"],
+            "candidate_object_coverage": {obj.name: diagnostics["eligible_visible_queries"]},
+            "last_scope": f"derived_object:{obj.name}",
+        }
+        return {
+            "event": "modify_derived_object" if modify else "create_derived_object",
+            "message": (f"Modified derived object {name}." if modify else f"Created derived object {name}."),
+            "derived_object": obj.summary(),
+            "reward_delta": reward_delta,
+            **diagnostics,
+        }
+
     def _benchmark_action(self, queries: Sequence[QuerySpec], cluster_id: Optional[str]) -> Dict[str, Any]:
         summary = self._benchmark_queries(queries, True)
         prev_imp = self._latest_visible_benchmark.get("gated_improvement", 0.0)
         prev_corr = self._latest_visible_benchmark.get("correctness_coverage", 1.0)
-        reward_delta = max(-0.25, min(0.25, (summary["gated_improvement"] - prev_imp) + 0.10 * (summary["correctness_coverage"] - prev_corr) - summary["budget_penalty"] - 0.001 * len(queries)))
+        improvement_delta = summary["gated_improvement"] - prev_imp
+        correctness_delta = summary["correctness_coverage"] - prev_corr
+        reward_delta = improvement_delta + 0.05 * correctness_delta - summary["budget_penalty"]
+        if abs(improvement_delta) < 1e-9 and summary["incorrect_query_count"] == 0 and summary["budget_penalty"] == 0:
+            reward_delta = 0.0
+        reward_delta = max(-0.25, min(0.25, reward_delta))
         self._latest_visible_benchmark = {"gated_improvement": summary["gated_improvement"], "correctness_coverage": summary["correctness_coverage"]}
         self._benchmark_context = {"baseline_weighted_cost": summary["baseline_weighted_cost"], "current_weighted_cost": summary["actual_current_weighted_cost"], "raw_improvement": summary["raw_improvement"], "gated_improvement": summary["gated_improvement"], "correctness_coverage": summary["correctness_coverage"], "routed_query_count": summary["routed_query_count"], "incorrect_query_count": summary["incorrect_query_count"], "last_benchmarked_query_ids": [query.query_id for query in queries], "last_benchmarked_cluster_id": cluster_id, "latest_plan_deltas": summary["plan_deltas"]}
+        self._router_summary = self._summarize_routes(summary["per_query"], f"cluster:{cluster_id}" if cluster_id else "subset")
         self._state.benchmark_runs += 1
         summary["event"] = "benchmark_cluster" if cluster_id else "benchmark_subset"
         summary["reward_delta"] = round(reward_delta, 6)
@@ -354,6 +421,7 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
         correctness = round((visible["correctness_coverage"] * 0.6) + (holdout["correctness_coverage"] * 0.4), 6)
         final_score = round(0.45 * visible["gated_improvement"] + 0.20 * holdout["gated_improvement"] + 0.20 * correctness + 0.10 * migration + 0.05 * storage, 6)
         self._benchmark_context = {"baseline_weighted_cost": visible["baseline_weighted_cost"], "current_weighted_cost": visible["actual_current_weighted_cost"], "raw_improvement": visible["raw_improvement"], "gated_improvement": visible["gated_improvement"], "correctness_coverage": visible["correctness_coverage"], "routed_query_count": visible["routed_query_count"], "incorrect_query_count": visible["incorrect_query_count"], "last_benchmarked_query_ids": [query.query_id for query in self._task.visible_queries], "last_benchmarked_cluster_id": None, "latest_plan_deltas": visible["plan_deltas"]}
+        self._router_summary = self._summarize_routes(visible["per_query"], "submit")
         self._state.benchmark_runs += 1
         self._state.final_score = final_score
         SchemaOptEnvironment.LAST_GRADER_REPORT = {"available": True, "task_id": self._task.task_id, "episode_id": self._state.episode_id, "score": final_score, "visible_summary": visible, "holdout_summary": holdout, "migration_score": migration, "storage_score": storage}
@@ -364,6 +432,8 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
         routed_query_count = incorrect_query_count = 0
         deltas = {"depth_delta": 0.0, "operator_delta": 0.0, "runtime_delta_ms": 0.0}
         per_query: List[Dict[str, Any]] = []
+        rejection_histogram: Counter[str] = Counter()
+        routed_object_counter: Counter[str] = Counter()
         for query in queries:
             baseline = self._baseline_for_query(query)
             current = self._evaluate_query(query, mark_usage)
@@ -380,11 +450,17 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
             deltas["depth_delta"] += baseline.plan.plan_depth - current["plan"].plan_depth
             deltas["operator_delta"] += baseline.plan.operator_count - current["plan"].operator_count
             deltas["runtime_delta_ms"] += baseline.runtime_ms - current["runtime_ms"]
-            per_query.append(self._route_summary(query.query_id, current))
+            route_summary = self._route_summary(query.query_id, current)
+            per_query.append(route_summary)
+            if route_summary["routed"] and route_summary["object_name"]:
+                routed_object_counter[route_summary["object_name"]] += 1
+            for item in route_summary.get("rejection_reasons", []):
+                rejection_histogram[item.get("reason") or "rewrite_not_applicable"] += 1
         raw_improvement = 0.0 if baseline_weighted_cost == 0 else max(0.0, 1.0 - (actual_current_weighted_cost / baseline_weighted_cost))
         gated_improvement = 0.0 if baseline_weighted_cost == 0 else max(0.0, 1.0 - (gated_current_weighted_cost / baseline_weighted_cost))
         correctness_coverage = 1.0 if weight_total == 0 else correctness_weight_total / weight_total
-        return {"baseline_weighted_cost": round(baseline_weighted_cost, 6), "actual_current_weighted_cost": round(actual_current_weighted_cost, 6), "gated_current_weighted_cost": round(gated_current_weighted_cost, 6), "raw_improvement": round(raw_improvement, 6), "gated_improvement": round(gated_improvement, 6), "correctness_coverage": round(correctness_coverage, 6), "routed_query_count": routed_query_count, "incorrect_query_count": incorrect_query_count, "budget_penalty": round(self._budget_penalty(), 6), "plan_deltas": {key: round(value, 4) for key, value in deltas.items()}, "per_query": per_query, "unused_derived_objects": sorted(name for name, obj in self._derived_objects.items() if not obj.used_by_visible_queries)}
+        best_candidate_object = routed_object_counter.most_common(1)[0][0] if routed_object_counter else None
+        return {"baseline_weighted_cost": round(baseline_weighted_cost, 6), "actual_current_weighted_cost": round(actual_current_weighted_cost, 6), "gated_current_weighted_cost": round(gated_current_weighted_cost, 6), "raw_improvement": round(raw_improvement, 6), "gated_improvement": round(gated_improvement, 6), "correctness_coverage": round(correctness_coverage, 6), "routed_query_count": routed_query_count, "incorrect_query_count": incorrect_query_count, "budget_penalty": round(self._budget_penalty(), 6), "plan_deltas": {key: round(value, 4) for key, value in deltas.items()}, "per_query": per_query, "unused_derived_objects": sorted(name for name, obj in self._derived_objects.items() if not obj.used_by_visible_queries), "best_candidate_object": best_candidate_object, "rejection_reason_histogram": dict(sorted(rejection_histogram.items()))}
 
     def _baseline_for_query(self, query: QuerySpec) -> QueryExecution:
         if query.query_id not in self._baseline_cache:
@@ -408,17 +484,14 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
             "plan": baseline.plan,
             "route_reason": "base plan",
             "rejection_reasons": [],
+            "top_rewrite_candidate": None,
         }
         best_correct_runtime = baseline.runtime_ms
+        best_incorrect_runtime = baseline.runtime_ms
         for obj in self._derived_objects.values():
             rewrite, rejection_reason = self._build_rewrite(query, obj)
             if rewrite is None:
-                best["rejection_reasons"].append(
-                    {
-                        "object_name": obj.name,
-                        "reason": rejection_reason or "rewrite_not_applicable",
-                    }
-                )
+                best["rejection_reasons"].append({"object_name": obj.name, "reason": rejection_reason or "rewrite_not_applicable"})
                 continue
             current = self._execute_query(rewrite["sql"])
             correctness = self._compare_results(baseline, current)
@@ -431,12 +504,16 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
                 "plan": current.plan,
                 "route_reason": rewrite["reason"],
                 "rejection_reasons": list(best["rejection_reasons"]),
+                "top_rewrite_candidate": {"object_name": obj.name, "reason": rewrite["reason"], "runtime_ms": round(current.runtime_ms, 6), "correctness_pass": correctness},
             }
             if correctness and current.runtime_ms < best_correct_runtime:
                 best = candidate
                 best_correct_runtime = current.runtime_ms
-            elif best["object_name"] is None and current.runtime_ms < best["runtime_ms"]:
+            elif best["object_name"] is None and current.runtime_ms < best_incorrect_runtime:
                 best = candidate
+                best_incorrect_runtime = current.runtime_ms
+        if not best["routed"] and best["rejection_reasons"]:
+            best["top_rewrite_candidate"] = best["rejection_reasons"][0]
         self._evaluation_cache[state_key] = copy.deepcopy(best)
         if mark_usage and best["routed"] and best["object_name"]:
             self._mark_usage(best["object_name"], query)
@@ -471,9 +548,11 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
         return PlanArtifact(raw_explain_text=raw_text, raw_explain_json=raw_json, plan_depth=depth, operator_count=operators, join_count=joins, blocking_operator_count=blocking, operators=names)
 
     def _build_rewrite(self, query: QuerySpec, obj: DerivedObject) -> Tuple[Optional[Dict[str, str]], Optional[str]]:
-        if sorted(table.lower() for table in query.tables) != sorted(obj.parsed_sql.tables):
+        if obj.row_count == 0:
+            return None, "empty_derived_object"
+        if sorted(query.canonical_tables) != sorted(obj.parsed_sql.canonical_tables):
             return None, "table_mismatch"
-        if [self._normalize_predicate(item) for item in query.filter_predicates] != obj.parsed_sql.filter_predicates:
+        if set(query.canonical_filter_predicates) != set(obj.parsed_sql.canonical_filter_predicates):
             return None, "predicate_mismatch"
         query_dims = [item.lower() for item in query.group_by]
         if not set(query_dims).issubset(set(obj.parsed_sql.group_by)):
@@ -493,6 +572,8 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
         return {"sql": sql, "reason": "rollup over derived object"}, None
 
     def _route_summary(self, query_id: str, route: Dict[str, Any]) -> Dict[str, Any]:
+        rejection_reasons = list(route.get("rejection_reasons", []))
+        top_rejection_reason = rejection_reasons[0]["reason"] if rejection_reasons else None
         return {
             "query_id": query_id,
             "routed": route["routed"],
@@ -501,7 +582,9 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
             "runtime_ms": round(route["runtime_ms"], 6),
             "correctness_pass": route["correctness_pass"],
             "route_reason": route["route_reason"],
-            "rejection_reasons": list(route.get("rejection_reasons", [])),
+            "rejection_reasons": rejection_reasons,
+            "top_rewrite_candidate": route.get("top_rewrite_candidate"),
+            "top_rejection_reason": top_rejection_reason,
             "plan_depth": route["plan"].plan_depth,
             "operator_count": route["plan"].operator_count,
             "join_count": route["plan"].join_count,
@@ -639,6 +722,63 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
             per_row += next((value for key, value in sizes.items() if key in upper), 16)
         return int(max(1, row_count) * max(1, per_row))
 
+    def _canonicalize_table_name(self, table_name: str) -> str:
+        return table_name.replace('"', '').strip().lower()
+
+    def _signature_from_components(self, object_kind: str, parsed: ParsedSQL, grain_dims: Sequence[str]) -> str:
+        material = {
+            "object_kind": object_kind,
+            "tables": sorted(parsed.canonical_tables),
+            "predicates": sorted(parsed.canonical_filter_predicates),
+            "group_by": [item.lower() for item in grain_dims],
+            "measures": sorted(parsed.measure_columns),
+            "aggregate_functions": sorted(parsed.aggregate_functions),
+        }
+        return hashlib.md5(json.dumps(material, sort_keys=True).encode('utf-8')).hexdigest()
+
+    def _derived_object_diagnostics(self, obj: DerivedObject, intended_clusters: Sequence[str]) -> Dict[str, Any]:
+        target_queries = [query for query in self._task.visible_queries if not intended_clusters or query.cluster_id in intended_clusters]
+        matched_query_ids: List[str] = []
+        rejection_histogram: Counter[str] = Counter()
+        matched_clusters: set[str] = set()
+        for query in target_queries:
+            rewrite, rejection_reason = self._build_rewrite(query, obj)
+            if rewrite is not None:
+                matched_query_ids.append(query.query_id)
+                matched_clusters.add(query.cluster_id)
+            else:
+                rejection_histogram[rejection_reason or 'rewrite_not_applicable'] += 1
+        similar_existing = [existing.name for existing in self._derived_objects.values() if existing.name != obj.name and existing.signature == obj.signature]
+        top_rejection_reason = rejection_histogram.most_common(1)[0][0] if rejection_histogram else None
+        return {
+            "eligible_visible_queries": len(matched_query_ids),
+            "eligible_visible_clusters": sorted(matched_clusters),
+            "matched_query_ids": matched_query_ids,
+            "top_rejection_reasons": dict(rejection_histogram.most_common(5)),
+            "top_rejection_reason": top_rejection_reason,
+            "is_empty_object": obj.row_count == 0,
+            "similar_existing_objects": similar_existing,
+        }
+
+    def _summarize_routes(self, routes: Sequence[Dict[str, Any]], scope: str) -> Dict[str, Any]:
+        rejection_histogram: Counter[str] = Counter()
+        object_coverage: Counter[str] = Counter()
+        routed_count = 0
+        for route in routes:
+            if route.get("routed"):
+                routed_count += 1
+            if route.get("object_name"):
+                object_coverage[route["object_name"]] += 1
+            for rejection in route.get("rejection_reasons", []):
+                rejection_histogram[rejection.get("reason") or "rewrite_not_applicable"] += 1
+        return {
+            "queries_routed": routed_count,
+            "queries_unrouted": max(0, len(routes) - routed_count),
+            "dominant_rejection_reason": rejection_histogram.most_common(1)[0][0] if rejection_histogram else None,
+            "candidate_object_coverage": dict(sorted(object_coverage.items())),
+            "last_scope": scope,
+        }
+
     def _parse_sql_metadata(self, sql: str) -> ParsedSQL:
         normalized = sql.strip().rstrip(";")
         lowered = normalized.lower()
@@ -650,18 +790,24 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
         after_from = normalized[from_start + 6:]
         where_match = re.search(r"\bwhere\b", after_from, re.IGNORECASE)
         group_match = re.search(r"\bgroup\s+by\b", after_from, re.IGNORECASE)
-        from_end = len(after_from)
-        if where_match:
-            from_end = min(from_end, where_match.start())
-        if group_match:
-            from_end = min(from_end, group_match.start())
         where_clause = after_from[where_match.end():group_match.start() if group_match else len(after_from)] if where_match else ""
         group_clause = after_from[group_match.end():] if group_match else ""
         parts = self._split_sql_list(select_clause)
         aliases = [self._extract_alias(part).lower() for part in parts]
         measures = [alias for alias, part in zip(aliases, parts) if self._aggregate_function(part)]
         funcs = [self._aggregate_function(part) for part in parts if self._aggregate_function(part)]
-        return ParsedSQL(tables=[item.strip('"').lower() for item in re.findall(r'(?:from|join)\s+([A-Za-z0-9_\.\"]+)', normalized, flags=re.IGNORECASE)], projection_aliases=aliases, group_by=[item.lower() for item in self._parse_group_by(group_clause, aliases)], filter_predicates=[self._normalize_predicate(item) for item in self._split_predicates(where_clause)], measure_columns=measures, aggregate_functions=[item.lower() for item in funcs if item])
+        raw_filter_predicates = self._split_predicates(where_clause)
+        tables = [item.strip('"').lower() for item in re.findall(r'(?:from|join)\s+([A-Za-z0-9_\."]+)', normalized, flags=re.IGNORECASE)]
+        return ParsedSQL(
+            tables=tables,
+            canonical_tables=[self._canonicalize_table_name(item) for item in tables],
+            projection_aliases=aliases,
+            group_by=[item.lower() for item in self._parse_group_by(group_clause, aliases)],
+            raw_filter_predicates=raw_filter_predicates,
+            canonical_filter_predicates=[self._normalize_predicate(item) for item in raw_filter_predicates],
+            measure_columns=measures,
+            aggregate_functions=[item.lower() for item in funcs if item],
+        )
 
     def _split_sql_list(self, clause: str) -> List[str]:
         parts: List[str] = []
@@ -694,7 +840,11 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
         return [part.strip() for part in re.split(r'\s+AND\s+', clause, flags=re.IGNORECASE) if part.strip()] if clause else []
 
     def _normalize_predicate(self, predicate: str) -> str:
-        return " ".join(predicate.strip().lower().split())
+        normalized = " ".join(predicate.strip().lower().split())
+        normalized = re.sub(r'\b[a-zA-Z_][a-zA-Z0-9_]*\.((?:"[^"]+")|(?:[a-zA-Z_][a-zA-Z0-9_]*))', lambda match: match.group(1), normalized)
+        normalized = normalized.replace("\"", "")
+        normalized = normalized.replace("( ", "(").replace(" )", ")")
+        return normalized
 
     def _parse_group_by(self, clause: str, aliases: Sequence[str]) -> List[str]:
         clause = clause.strip()

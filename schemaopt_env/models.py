@@ -73,6 +73,7 @@ try:
         workload_summary: Dict[str, Any] = Field(default_factory=dict)
         retrieval_context: Dict[str, Any] = Field(default_factory=dict)
         benchmark_context: Dict[str, Any] = Field(default_factory=dict)
+        router_summary: Dict[str, Any] = Field(default_factory=dict)
         action_feedback: Dict[str, Any] = Field(default_factory=dict)
 
     class SchemaOptState(State):
@@ -147,6 +148,7 @@ except ImportError:
         workload_summary: Dict[str, Any] = field(default_factory=dict)
         retrieval_context: Dict[str, Any] = field(default_factory=dict)
         benchmark_context: Dict[str, Any] = field(default_factory=dict)
+        router_summary: Dict[str, Any] = field(default_factory=dict)
         action_feedback: Dict[str, Any] = field(default_factory=dict)
 
     @dataclass

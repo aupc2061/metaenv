@@ -12,6 +12,7 @@ Environment variables:
 
 from __future__ import annotations
 
+from collections import Counter
 import json
 import os
 import re
@@ -42,8 +43,8 @@ from schemaopt_env.server.schemaopt_environment import SchemaOptEnvironment
 MODEL_NAME = os.getenv("MODEL_NAME", "gpt-5.4")
 API_BASE_URL = os.getenv("API_BASE_URL")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY") or os.getenv("HF_TOKEN")
-MAX_STEPS = int(os.getenv("MAX_STEPS", "20"))
-TASK_ID = os.getenv("TASK_ID", "schemaopt_easy_customer360")
+MAX_STEPS = int(os.getenv("MAX_STEPS", "25"))
+TASK_ID = os.getenv("TASK_ID", "schemaopt_hard_google_play")
 MAX_ACTION_RETRIES = int(os.getenv("MAX_ACTION_RETRIES", "4"))
 
 SYSTEM_PROMPT = """You are operating a workload-adaptive schema optimization environment.
@@ -54,9 +55,36 @@ You cannot rewrite workload queries. Query text is fixed. You must use environme
 Important strategy:
 1. Inspect hotspot clusters first.
 2. Retrieve query summaries and full context for a small hotspot subset.
-3. Create one focused derived object that matches the hotspot cluster's tables, dimensions, and filters.
-4. Benchmark a cluster or subset before creating more objects.
-5. Submit once you have a positive gated improvement or step budget is low.
+3. Copy the target query's predicates, tables, dimensions, and measures exactly unless router diagnostics show a concrete mismatch to fix.
+4. Create or modify one focused derived object, then benchmark or inspect router status before making another schema change.
+5. Submit once routed improvement is positive, or when repeated router checks show no routeable progress, or when step budget is low.
+
+Operation guide:
+- inspect_cluster: inspect one cluster profile and representative query hints using target_id.
+- inspect_query: inspect one visible query summary using target_id.
+- inspect_query_plan: show baseline vs current routed plan summary for one visible query using target_id.
+- inspect_router_status: show route decision, top candidate, and rejection reasons for selected visible queries. Always pass cluster_id or query_ids; never call it unscoped.
+- retrieve_queries: retrieve visible query summaries by cluster/pattern/table/column/plan features.
+- get_query_context: return full context for specific query_ids, including SQL, exact predicates, canonical predicates, and rewrite template hints.
+- create_derived_object: create one derived object from SQL and metadata.
+- modify_derived_object: replace an existing derived object definition.
+- drop_derived_object: remove one derived object by target_id.
+- list_derived_objects: list all derived objects currently available.
+- checkpoint: save current derived object set.
+- revert_checkpoint: restore to a previous checkpoint.
+- benchmark_subset: benchmark specific visible query_ids.
+- benchmark_cluster: benchmark all visible queries in one cluster_id.
+- submit: run final visible+holdout evaluation and finish episode.
+
+Decision triggers:
+- Before the first create_derived_object for a cluster, call inspect_query_plan at least once for that cluster.
+- After create_derived_object or modify_derived_object, the next schema-related action must be inspect_router_status or benchmark_cluster/benchmark_subset, scoped to the same intended cluster or explicit query_ids.
+- If inspect_router_status shows only predicate_mismatch for the current object, the next schema-related action must be modify_derived_object or drop_derived_object.
+- If two consecutive benchmarks show routed_query_count == 0, either submit or explicitly switch clusters based on hotspot evidence.
+- If step budget remaining is <= 3, strongly prefer submit.
+- Prefer modify_derived_object over creating near-duplicate objects in the same cluster.
+- Do not request the same get_query_context for the same query_ids repeatedly unless new router evidence justifies it.
+- For inspect_router_status, always include cluster_id or query_ids. Unscoped router checks mix unrelated clusters and are low value.
 
 Action schema:
 {
@@ -76,7 +104,7 @@ Action schema:
   "object_kind": "optional join_matview|agg_matview|filtered_projection|denorm_table",
   "name": "optional object name",
   "sql_definition": "optional SQL definition",
-  "source_objects": ["optional source objects"],
+  "source_objects": ["required for create/modify"],
   "grain_hint": "optional comma-separated grain columns",
   "intended_clusters": ["optional cluster ids"],
   "routing_tags": ["optional routing tags"]
@@ -86,16 +114,15 @@ Rules:
 - Return ONLY a JSON object, with no markdown and no explanation.
 - Do not invent query ids or cluster ids; use only ids provided in the observation.
 - For inspect_cluster, pass the cluster identifier in target_id (not cluster_id).
-- Prefer benchmarking before submitting.
 - Derived object names must be valid SQL identifiers matching ^[A-Za-z_][A-Za-z0-9_]*$.
-- Never use dots, spaces, or schema prefixes in the `name` field. Use names like `agg_installs_monthly`.
+- Never use dots, spaces, or schema prefixes in the name field.
+- For create_derived_object and modify_derived_object, always include source_objects and ensure they match tables used in sql_definition.
 - Never rely on any local heuristic policy. If earlier attempts were invalid, fix the output format and return a valid action.
 """
 
 
 def _extract_json_object_candidates(text: str) -> List[Dict[str, Any]]:
     text = text.strip()
-    # print(f"Extracting JSON object from model response: {text[:500]}")
     candidates: List[Dict[str, Any]] = []
 
     code_fence_match = re.search(r"```(?:json)?\s*(\{.*\})\s*```", text, re.DOTALL)
@@ -114,24 +141,14 @@ def _extract_json_object_candidates(text: str) -> List[Dict[str, Any]]:
         start = text.find("{", cursor)
         if start == -1:
             break
-
         try:
             payload, offset = decoder.raw_decode(text[start:])
         except json.JSONDecodeError:
             cursor = start + 1
             continue
-
         if isinstance(payload, dict):
             candidates.append(payload)
-
         cursor = start + offset
-
-    if candidates:
-        # print(f"Extracted {len(candidates)} JSON object candidate(s) from text.")
-        for payload in candidates[:3]:
-            # print(f"  Candidate: {json.dumps(payload, ensure_ascii=True)}")
-            pass
-
     return candidates
 
 
@@ -167,19 +184,44 @@ def parse_action(response_text: str) -> Optional[SchemaOptAction]:
     return None
 
 
-def build_user_prompt(observation: Any, history: List[str], parse_errors: Optional[List[str]] = None) -> str:
+def build_user_prompt(
+    observation: Any,
+    history: List[str],
+    step: int,
+    benchmark_history: List[Dict[str, Any]],
+    cluster_attempts: Dict[str, int],
+    query_context_requests: Dict[str, int],
+    parse_errors: Optional[List[str]] = None,
+) -> str:
     metadata = observation.metadata or {}
     task = metadata.get("task", {})
     history_text = "\n".join(history[-6:]) if history else "(none)"
-
+    budgets = task.get("budgets", {})
+    max_steps = int(budgets.get("max_steps") or MAX_STEPS)
+    derived_objects = (observation.catalog_summary or {}).get("derived_objects", [])
+    repeated_context_requests = {key: value for key, value in query_context_requests.items() if value > 1}
     prompt_payload = {
         "task": task,
         "catalog_summary": observation.catalog_summary,
         "workload_summary": observation.workload_summary,
         "retrieval_context": observation.retrieval_context,
         "benchmark_context": observation.benchmark_context,
+        "router_summary": getattr(observation, "router_summary", {}) or {},
         "action_feedback": observation.action_feedback,
         "recent_history": history_text,
+        "recent_benchmark_history": benchmark_history[-2:],
+        "cluster_attempts": dict(cluster_attempts),
+        "derived_object_summaries": derived_objects,
+        "repeated_query_context_requests": repeated_context_requests,
+        "remaining_budget_summary": {
+            "steps_remaining": max(0, min(MAX_STEPS, max_steps) - step + 1),
+            "max_steps": max_steps,
+            "max_new_derived_objects": budgets.get("max_new_derived_objects"),
+            "max_storage_bytes": budgets.get("max_storage_bytes"),
+            "max_refresh_runtime_ms": budgets.get("max_refresh_runtime_ms"),
+            "current_derived_object_count": len(derived_objects),
+            "current_routed_query_count": (observation.benchmark_context or {}).get("routed_query_count"),
+        },
         "step_reward": observation.reward,
         "done": observation.done,
     }
@@ -216,12 +258,26 @@ def request_model_action(user_content: str) -> str:
         raise RuntimeError(f"Model request failed: {exc}") from exc
 
 
-def choose_action(observation: Any, history: List[str], step: int) -> SchemaOptAction:
+def choose_action(
+    observation: Any,
+    history: List[str],
+    step: int,
+    benchmark_history: List[Dict[str, Any]],
+    cluster_attempts: Dict[str, int],
+    query_context_requests: Dict[str, int],
+) -> SchemaOptAction:
     errors: List[str] = []
     for attempt in range(1, MAX_ACTION_RETRIES + 1):
-        user_content = build_user_prompt(observation, history, parse_errors=errors)
+        user_content = build_user_prompt(
+            observation,
+            history,
+            step,
+            benchmark_history,
+            cluster_attempts,
+            query_context_requests,
+            parse_errors=errors,
+        )
         response_text = request_model_action(user_content)
-        # print(f"Response text: {response_text}")
         if not response_text.strip():
             errors.append("empty model response")
             continue
@@ -241,6 +297,9 @@ def run_episode(task_id: str = TASK_ID) -> Dict[str, Any]:
     env = SchemaOptEnvironment()
     observation = env.reset(task_id=task_id)
     history: List[str] = []
+    benchmark_history: List[Dict[str, Any]] = []
+    cluster_attempts: Counter[str] = Counter()
+    query_context_requests: Counter[str] = Counter()
     total_reward = 0.0
 
     print(f"Starting schema optimization inference run for {task_id}")
@@ -248,16 +307,33 @@ def run_episode(task_id: str = TASK_ID) -> Dict[str, Any]:
     terminated_due_to_max_steps = False
 
     for step in range(1, MAX_STEPS + 1):
-        action = choose_action(observation, history, step)
+        action = choose_action(observation, history, step, benchmark_history, dict(cluster_attempts), dict(query_context_requests))
         print(f"Step {step}: {json.dumps(action.model_dump(exclude_none=True), ensure_ascii=True)}")
 
         observation = env.step(action)
         reward = observation.reward or 0.0
         total_reward += reward
 
+        if action.operation in {"benchmark_cluster", "benchmark_subset"}:
+            benchmark_history.append(
+                {
+                    "operation": action.operation,
+                    "cluster_id": action.cluster_id,
+                    "query_ids": list(action.query_ids),
+                    "benchmark_context": observation.benchmark_context,
+                    "router_summary": getattr(observation, "router_summary", {}) or {},
+                }
+            )
+        if action.operation in {"create_derived_object", "modify_derived_object"}:
+            cluster_key = ",".join(action.intended_clusters) if action.intended_clusters else "(unscoped)"
+            cluster_attempts[cluster_key] += 1
+        if action.operation == "get_query_context":
+            query_context_requests["|".join(sorted(action.query_ids))] += 1
+
         history_line = (
             f"Step {step}: {action.operation} -> reward {reward:+.3f}, "
-            f"status={observation.status}, done={observation.done}"
+            f"status={observation.status}, done={observation.done}, "
+            f"router={json.dumps(getattr(observation, 'router_summary', {}) or {}, ensure_ascii=True)}"
         )
         history.append(history_line)
 
@@ -282,6 +358,7 @@ def run_episode(task_id: str = TASK_ID) -> Dict[str, Any]:
         "terminated_due_to_max_steps": terminated_due_to_max_steps,
         "done": observation.done,
         "benchmark_context": observation.benchmark_context,
+        "router_summary": getattr(observation, "router_summary", {}) or {},
         "final_feedback": final_feedback,
     }
 
@@ -297,4 +374,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

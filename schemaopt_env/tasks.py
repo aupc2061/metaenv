@@ -5,10 +5,28 @@ from __future__ import annotations
 from dataclasses import dataclass
 import json
 from pathlib import Path
+import re
 from typing import Any, Dict, Iterable, List, Optional, Sequence
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _TASK_ASSET_ROOT = Path(__file__).resolve().parent / "task_assets"
+_ALIAS_TOKEN_RE = re.compile(r'\b[a-zA-Z_][a-zA-Z0-9_]*\.((?:"[^"]+")|(?:[a-zA-Z_][a-zA-Z0-9_]*))')
+
+
+def _normalize_sql(sql: str) -> str:
+    return " ".join(sql.strip().lower().split())
+
+
+def _canonicalize_table_name(table_name: str) -> str:
+    return table_name.replace('"', '').strip().lower()
+
+
+def _canonicalize_predicate(predicate: str) -> str:
+    normalized = " ".join(predicate.strip().lower().split())
+    normalized = _ALIAS_TOKEN_RE.sub(lambda match: match.group(1), normalized)
+    normalized = normalized.replace('"', '')
+    normalized = normalized.replace('( ', '(').replace(' )', ')')
+    return normalized
 
 
 @dataclass(frozen=True)
@@ -39,10 +57,12 @@ class QuerySpec:
     frequency_weight: float
     priority_weight: float
     tables: tuple[str, ...]
+    canonical_tables: tuple[str, ...]
     columns: tuple[str, ...]
     group_by: tuple[str, ...]
     filter_tokens: tuple[str, ...]
     filter_predicates: tuple[str, ...]
+    canonical_filter_predicates: tuple[str, ...]
     measure_columns: tuple[str, ...]
     aggregate_functions: tuple[str, ...]
     plan_features: tuple[str, ...]
@@ -51,6 +71,16 @@ class QuerySpec:
     @property
     def weighted_cost(self) -> float:
         return round(self.frequency_weight * self.priority_weight, 6)
+
+    @property
+    def rewrite_template_hint(self) -> Dict[str, Any]:
+        return {
+            "canonical_source_tables": list(self.canonical_tables),
+            "canonical_predicates": list(self.canonical_filter_predicates),
+            "required_dimensions": list(self.group_by),
+            "required_measures": list(self.measure_columns),
+            "aggregate_functions": list(self.aggregate_functions),
+        }
 
     def summary(self) -> Dict[str, Any]:
         return {
@@ -61,6 +91,7 @@ class QuerySpec:
             "priority_weight": self.priority_weight,
             "weighted_cost": self.weighted_cost,
             "tables": list(self.tables),
+            "canonical_tables": list(self.canonical_tables),
             "columns": list(self.columns),
             "group_by": list(self.group_by),
             "filter_tokens": list(self.filter_tokens),
@@ -68,6 +99,7 @@ class QuerySpec:
             "aggregate_functions": list(self.aggregate_functions),
             "plan_features": list(self.plan_features),
             "description": self.description,
+            "rewrite_template_hint": self.rewrite_template_hint,
         }
 
     def context(self, similar_ids: Sequence[str]) -> Dict[str, Any]:
@@ -76,7 +108,16 @@ class QuerySpec:
             {
                 "sql": self.sql,
                 "filter_predicates": list(self.filter_predicates),
+                "canonical_filter_predicates": list(self.canonical_filter_predicates),
                 "similar_query_ids": list(similar_ids),
+                "suggested_exact_derived_shape": {
+                    "object_kind": "agg_matview",
+                    "source_objects": list(self.tables),
+                    "group_by": list(self.group_by),
+                    "canonical_predicates": list(self.canonical_filter_predicates),
+                    "measure_columns": list(self.measure_columns),
+                    "aggregate_functions": list(self.aggregate_functions),
+                },
             }
         )
         return payload
@@ -99,6 +140,10 @@ class ClusterSpec:
     representative_measures: tuple[str, ...]
     hotspot_rank: int
     preferred_object_kind: str
+    representative_query_id: Optional[str] = None
+    cluster_grain_emphasis: tuple[str, ...] = ()
+    suggested_exact_derived_shape: Dict[str, Any] | None = None
+    reference_rewrite_feasible: bool = True
 
     def to_summary(self) -> Dict[str, Any]:
         return {
@@ -114,6 +159,10 @@ class ClusterSpec:
             "representative_measures": list(self.representative_measures),
             "hotspot_rank": self.hotspot_rank,
             "preferred_object_kind": self.preferred_object_kind,
+            "representative_query_id": self.representative_query_id,
+            "cluster_grain_emphasis": list(self.cluster_grain_emphasis),
+            "suggested_exact_derived_shape": dict(self.suggested_exact_derived_shape or {}),
+            "reference_rewrite_feasible": self.reference_rewrite_feasible,
         }
 
 
@@ -192,10 +241,6 @@ class TaskSpec:
         }
 
 
-def _normalize_sql(sql: str) -> str:
-    return " ".join(sql.strip().lower().split())
-
-
 def _resolve_repo_path(path_str: str) -> str:
     path = Path(path_str)
     if path.is_absolute():
@@ -213,6 +258,9 @@ def _load_table(payload: Dict[str, Any]) -> TableSpec:
 
 def _load_query(payload: Dict[str, Any]) -> QuerySpec:
     sql = payload["sql"]
+    tables = tuple(payload.get("tables", []))
+    filter_predicates = tuple(payload.get("filter_predicates", []))
+    canonical_filter_predicates = tuple(_canonicalize_predicate(item) for item in filter_predicates)
     return QuerySpec(
         query_id=payload["query_id"],
         sql=sql,
@@ -221,11 +269,13 @@ def _load_query(payload: Dict[str, Any]) -> QuerySpec:
         business_tag=payload.get("business_tag", payload["cluster_id"]),
         frequency_weight=float(payload.get("frequency_weight", 1.0)),
         priority_weight=float(payload.get("priority_weight", 1.0)),
-        tables=tuple(payload.get("tables", [])),
+        tables=tables,
+        canonical_tables=tuple(payload.get("canonical_tables") or [_canonicalize_table_name(item) for item in tables]),
         columns=tuple(column.lower() for column in payload.get("columns", [])),
         group_by=tuple(column.lower() for column in payload.get("group_by", [])),
         filter_tokens=tuple(token.lower() for token in payload.get("filter_tokens", [])),
-        filter_predicates=tuple(payload.get("filter_predicates", [])),
+        filter_predicates=filter_predicates,
+        canonical_filter_predicates=canonical_filter_predicates,
         measure_columns=tuple(column.lower() for column in payload.get("measure_columns", [])),
         aggregate_functions=tuple(function.lower() for function in payload.get("aggregate_functions", [])),
         plan_features=tuple(feature.lower() for feature in payload.get("plan_features", [])),
@@ -248,7 +298,43 @@ def _load_cluster(payload: Dict[str, Any]) -> ClusterSpec:
         representative_measures=tuple(column.lower() for column in payload.get("representative_measures", [])),
         hotspot_rank=int(payload.get("hotspot_rank") or 0),
         preferred_object_kind=payload.get("preferred_object_kind", "agg_matview"),
+        representative_query_id=payload.get("representative_query_id"),
+        cluster_grain_emphasis=tuple(column.lower() for column in payload.get("cluster_grain_emphasis", [])),
+        suggested_exact_derived_shape=dict(payload.get("suggested_exact_derived_shape", {})) if payload.get("suggested_exact_derived_shape") else None,
+        reference_rewrite_feasible=bool(payload.get("reference_rewrite_feasible", True)),
     )
+
+
+def _enrich_clusters(clusters: Sequence[ClusterSpec], visible_queries: Sequence[QuerySpec]) -> tuple[ClusterSpec, ...]:
+    query_by_id = {query.query_id: query for query in visible_queries}
+    enriched: List[ClusterSpec] = []
+    for cluster in clusters:
+        representative_query = query_by_id.get(cluster.representative_query_id or "")
+        if representative_query is None:
+            representative_query = next((query for query in visible_queries if query.cluster_id == cluster.cluster_id), None)
+        suggested_shape = cluster.suggested_exact_derived_shape or (representative_query.context([]).get("suggested_exact_derived_shape") if representative_query else {})
+        enriched.append(
+            ClusterSpec(
+                cluster_id=cluster.cluster_id,
+                label=cluster.label,
+                business_label=cluster.business_label,
+                query_ids=cluster.query_ids,
+                query_count=cluster.query_count,
+                total_frequency_weight=cluster.total_frequency_weight,
+                total_weighted_baseline_cost=cluster.total_weighted_baseline_cost,
+                top_tables=cluster.top_tables,
+                common_operator_patterns=cluster.common_operator_patterns,
+                representative_dimensions=cluster.representative_dimensions,
+                representative_measures=cluster.representative_measures,
+                hotspot_rank=cluster.hotspot_rank,
+                preferred_object_kind=cluster.preferred_object_kind,
+                representative_query_id=representative_query.query_id if representative_query else cluster.representative_query_id,
+                cluster_grain_emphasis=cluster.cluster_grain_emphasis or (representative_query.group_by if representative_query else ()),
+                suggested_exact_derived_shape=suggested_shape,
+                reference_rewrite_feasible=cluster.reference_rewrite_feasible,
+            )
+        )
+    return tuple(enriched)
 
 
 def load_task_manifest(task_manifest_path: str | Path) -> TaskSpec:
@@ -259,7 +345,7 @@ def load_task_manifest(task_manifest_path: str | Path) -> TaskSpec:
     tables = tuple(_load_table(item) for item in payload.get("tables", []))
     visible_queries = tuple(_load_query(item) for item in payload.get("visible_queries", []))
     holdout_queries = tuple(_load_query(item) for item in payload.get("holdout_queries", []))
-    clusters = tuple(_load_cluster(item) for item in payload.get("clusters", []))
+    clusters = _enrich_clusters(tuple(_load_cluster(item) for item in payload.get("clusters", [])), visible_queries)
     return TaskSpec(
         task_id=payload["task_id"],
         difficulty=payload["difficulty"],
@@ -356,8 +442,6 @@ def match_queries(
     if mode == "regex":
         if not pattern_lc:
             return []
-        import re
-
         compiled = re.compile(pattern_lc)
         matches = [query for query in queries if compiled.search(query.normalized_sql)]
         return _sorted_matches(matches, top_k)
