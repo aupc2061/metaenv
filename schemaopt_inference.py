@@ -43,7 +43,7 @@ MODEL_NAME = os.getenv("MODEL_NAME", "gpt-5.4")
 API_BASE_URL = os.getenv("API_BASE_URL")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY") or os.getenv("HF_TOKEN")
 MAX_STEPS = int(os.getenv("MAX_STEPS", "20"))
-TASK_ID = os.getenv("TASK_ID", "schemaopt_hard_google_play")
+TASK_ID = os.getenv("TASK_ID", "schemaopt_easy_customer360")
 MAX_ACTION_RETRIES = int(os.getenv("MAX_ACTION_RETRIES", "4"))
 
 SYSTEM_PROMPT = """You are operating a workload-adaptive schema optimization environment.
@@ -286,7 +286,7 @@ def run_episode(task_id: str = TASK_ID) -> Dict[str, Any]:
     }
 
     print("\nFinal result:")
-    with open(f"inference_result_{task_id}.json", "w") as f:
+    with open(f"inference_result_{task_id}_{MODEL_NAME}.json", "w") as f:
         json.dump(result, f, indent=2)
     return result
 

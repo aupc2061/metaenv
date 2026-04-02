@@ -290,7 +290,7 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
         if done:
             self._state.final_score = feedback.get("final_score")
         return self._build_observation(status, message, reward, done, feedback)
-
+    
     def _inspect_query_plan(self, query_id: str) -> Dict[str, Any]:
         query = self._get_visible_query(query_id)
         baseline = self._baseline_for_query(query)
@@ -399,15 +399,39 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
                 self._mark_usage(cached["object_name"], query)
             return cached
         baseline = self._baseline_for_query(query)
-        best = {"routed": False, "object_name": None, "rewritten_sql": None, "runtime_ms": baseline.runtime_ms, "correctness_pass": True, "plan": baseline.plan, "route_reason": "base plan"}
+        best = {
+            "routed": False,
+            "object_name": None,
+            "rewritten_sql": None,
+            "runtime_ms": baseline.runtime_ms,
+            "correctness_pass": True,
+            "plan": baseline.plan,
+            "route_reason": "base plan",
+            "rejection_reasons": [],
+        }
         best_correct_runtime = baseline.runtime_ms
         for obj in self._derived_objects.values():
-            rewrite = self._build_rewrite(query, obj)
+            rewrite, rejection_reason = self._build_rewrite(query, obj)
             if rewrite is None:
+                best["rejection_reasons"].append(
+                    {
+                        "object_name": obj.name,
+                        "reason": rejection_reason or "rewrite_not_applicable",
+                    }
+                )
                 continue
             current = self._execute_query(rewrite["sql"])
             correctness = self._compare_results(baseline, current)
-            candidate = {"routed": True, "object_name": obj.name, "rewritten_sql": rewrite["sql"], "runtime_ms": current.runtime_ms, "correctness_pass": correctness, "plan": current.plan, "route_reason": rewrite["reason"]}
+            candidate = {
+                "routed": True,
+                "object_name": obj.name,
+                "rewritten_sql": rewrite["sql"],
+                "runtime_ms": current.runtime_ms,
+                "correctness_pass": correctness,
+                "plan": current.plan,
+                "route_reason": rewrite["reason"],
+                "rejection_reasons": list(best["rejection_reasons"]),
+            }
             if correctness and current.runtime_ms < best_correct_runtime:
                 best = candidate
                 best_correct_runtime = current.runtime_ms
@@ -446,30 +470,44 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
         depth, operators, joins, blocking, names = self._summarize_plan(raw_json, raw_text)
         return PlanArtifact(raw_explain_text=raw_text, raw_explain_json=raw_json, plan_depth=depth, operator_count=operators, join_count=joins, blocking_operator_count=blocking, operators=names)
 
-    def _build_rewrite(self, query: QuerySpec, obj: DerivedObject) -> Optional[Dict[str, str]]:
+    def _build_rewrite(self, query: QuerySpec, obj: DerivedObject) -> Tuple[Optional[Dict[str, str]], Optional[str]]:
         if sorted(table.lower() for table in query.tables) != sorted(obj.parsed_sql.tables):
-            return None
+            return None, "table_mismatch"
         if [self._normalize_predicate(item) for item in query.filter_predicates] != obj.parsed_sql.filter_predicates:
-            return None
+            return None, "predicate_mismatch"
         query_dims = [item.lower() for item in query.group_by]
         if not set(query_dims).issubset(set(obj.parsed_sql.group_by)):
-            return None
+            return None, "group_by_not_subset"
         if not set(query.measure_columns).issubset(set(obj.available_columns)):
-            return None
+            return None, "measure_columns_missing"
         if query_dims == obj.parsed_sql.group_by and set(query.columns).issubset(set(obj.available_columns)):
-            return {"sql": f"SELECT {', '.join(query.columns)} FROM derived.{obj.name}", "reason": "exact derived object match"}
+            return {"sql": f"SELECT {', '.join(query.columns)} FROM derived.{obj.name}", "reason": "exact derived object match"}, None
         if obj.object_kind not in {"agg_matview", "denorm_table", "join_matview"}:
-            return None
+            return None, "object_kind_not_rollup_compatible"
         if not all(func in {"count", "sum"} for func in query.aggregate_functions):
-            return None
+            return None, "aggregate_functions_not_supported"
         select_cols = list(query_dims) + [f"SUM({measure}) AS {measure}" for measure in query.measure_columns]
         sql = f"SELECT {', '.join(select_cols)} FROM derived.{obj.name}"
         if query_dims:
             sql += " GROUP BY " + ", ".join(query_dims)
-        return {"sql": sql, "reason": "rollup over derived object"}
+        return {"sql": sql, "reason": "rollup over derived object"}, None
 
     def _route_summary(self, query_id: str, route: Dict[str, Any]) -> Dict[str, Any]:
-        return {"query_id": query_id, "routed": route["routed"], "object_name": route["object_name"], "rewritten_sql": route["rewritten_sql"], "runtime_ms": round(route["runtime_ms"], 6), "correctness_pass": route["correctness_pass"], "route_reason": route["route_reason"], "plan_depth": route["plan"].plan_depth, "operator_count": route["plan"].operator_count, "join_count": route["plan"].join_count, "blocking_operator_count": route["plan"].blocking_operator_count, "operators": list(route["plan"].operators)}
+        return {
+            "query_id": query_id,
+            "routed": route["routed"],
+            "object_name": route["object_name"],
+            "rewritten_sql": route["rewritten_sql"],
+            "runtime_ms": round(route["runtime_ms"], 6),
+            "correctness_pass": route["correctness_pass"],
+            "route_reason": route["route_reason"],
+            "rejection_reasons": list(route.get("rejection_reasons", [])),
+            "plan_depth": route["plan"].plan_depth,
+            "operator_count": route["plan"].operator_count,
+            "join_count": route["plan"].join_count,
+            "blocking_operator_count": route["plan"].blocking_operator_count,
+            "operators": list(route["plan"].operators),
+        }
     def _compare_results(self, baseline: QueryExecution, current: QueryExecution) -> bool:
         if baseline.column_names != current.column_names or len(baseline.rows) != len(current.rows):
             return False
