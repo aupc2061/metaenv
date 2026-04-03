@@ -11489,8 +11489,8 @@
   "visible_queries": [
     {
       "query_id": "schemaopt_medium_ad_reporting_vq_c01_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, b.\"placement\" AS placement, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_campaign_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period, placement",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, b.\"placement\" as placement, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_campaign_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period, placement",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, b.\"placement\" AS placement, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_campaign_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period, placement",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, b.\"placement\" as placement, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_campaign_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period, placement",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_01",
       "business_tag": "ad_reporting twitter_campaign_report_data analytics",
       "frequency_weight": 1.45,
@@ -11509,11 +11509,11 @@
         "placement"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -11535,8 +11535,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_vq_c01_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_campaign_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_campaign_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_campaign_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_campaign_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_01",
       "business_tag": "ad_reporting twitter_campaign_report_data analytics",
       "frequency_weight": 1.6,
@@ -11553,11 +11553,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -11578,8 +11578,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_vq_c01_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, b.\"placement\" AS placement, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_campaign_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period, placement",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, b.\"placement\" as placement, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_campaign_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period, placement",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, b.\"placement\" AS placement, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_campaign_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period, placement",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, b.\"placement\" as placement, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_campaign_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period, placement",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_01",
       "business_tag": "ad_reporting twitter_campaign_report_data analytics",
       "frequency_weight": 1.75,
@@ -11598,11 +11598,11 @@
         "placement"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -11624,8 +11624,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_vq_c01_04",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_campaign_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_campaign_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_campaign_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_campaign_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_01",
       "business_tag": "ad_reporting twitter_campaign_report_data analytics",
       "frequency_weight": 1.45,
@@ -11642,11 +11642,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -11667,8 +11667,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_vq_c01_05",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, b.\"placement\" AS placement, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_campaign_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period, placement",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, b.\"placement\" as placement, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_campaign_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period, placement",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, b.\"placement\" AS placement, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_campaign_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period, placement",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, b.\"placement\" as placement, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_campaign_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period, placement",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_01",
       "business_tag": "ad_reporting twitter_campaign_report_data analytics",
       "frequency_weight": 1.6,
@@ -11687,11 +11687,11 @@
         "placement"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -11713,8 +11713,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_vq_c01_06",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_campaign_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_campaign_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_campaign_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_campaign_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_01",
       "business_tag": "ad_reporting twitter_campaign_report_data analytics",
       "frequency_weight": 1.75,
@@ -11731,11 +11731,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -11756,8 +11756,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_vq_c02_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, b.\"placement\" AS placement, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period, placement",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, b.\"placement\" as placement, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period, placement",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, b.\"placement\" AS placement, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period, placement",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, b.\"placement\" as placement, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period, placement",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_02",
       "business_tag": "ad_reporting twitter_line_item_report_data analytics",
       "frequency_weight": 1.9,
@@ -11776,11 +11776,11 @@
         "placement"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -11802,8 +11802,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_vq_c02_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_02",
       "business_tag": "ad_reporting twitter_line_item_report_data analytics",
       "frequency_weight": 2.05,
@@ -11820,11 +11820,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -11845,8 +11845,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_vq_c02_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, b.\"placement\" AS placement, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period, placement",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, b.\"placement\" as placement, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period, placement",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, b.\"placement\" AS placement, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period, placement",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, b.\"placement\" as placement, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period, placement",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_02",
       "business_tag": "ad_reporting twitter_line_item_report_data analytics",
       "frequency_weight": 2.2,
@@ -11865,11 +11865,11 @@
         "placement"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -11891,8 +11891,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_vq_c02_04",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_02",
       "business_tag": "ad_reporting twitter_line_item_report_data analytics",
       "frequency_weight": 1.9,
@@ -11909,11 +11909,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -11934,8 +11934,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_vq_c02_05",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, b.\"placement\" AS placement, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period, placement",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, b.\"placement\" as placement, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period, placement",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, b.\"placement\" AS placement, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period, placement",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, b.\"placement\" as placement, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period, placement",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_02",
       "business_tag": "ad_reporting twitter_line_item_report_data analytics",
       "frequency_weight": 2.05,
@@ -11954,11 +11954,11 @@
         "placement"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -11980,8 +11980,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_vq_c02_06",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_02",
       "business_tag": "ad_reporting twitter_line_item_report_data analytics",
       "frequency_weight": 2.2,
@@ -11998,11 +11998,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -12023,8 +12023,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_vq_c03_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, b.\"placement\" AS placement, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_keywords_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period, placement",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, b.\"placement\" as placement, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_keywords_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period, placement",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, b.\"placement\" AS placement, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_keywords_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period, placement",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, b.\"placement\" as placement, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_keywords_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period, placement",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_03",
       "business_tag": "ad_reporting twitter_line_item_keywords_report_data analytics",
       "frequency_weight": 2.35,
@@ -12043,11 +12043,11 @@
         "placement"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -12069,8 +12069,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_vq_c03_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_keywords_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_keywords_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_keywords_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_keywords_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_03",
       "business_tag": "ad_reporting twitter_line_item_keywords_report_data analytics",
       "frequency_weight": 2.5,
@@ -12087,11 +12087,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -12112,8 +12112,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_vq_c03_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, b.\"placement\" AS placement, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_keywords_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period, placement",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, b.\"placement\" as placement, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_keywords_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period, placement",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, b.\"placement\" AS placement, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_keywords_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period, placement",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, b.\"placement\" as placement, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_keywords_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period, placement",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_03",
       "business_tag": "ad_reporting twitter_line_item_keywords_report_data analytics",
       "frequency_weight": 2.65,
@@ -12132,11 +12132,11 @@
         "placement"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -12158,8 +12158,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_vq_c03_04",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_keywords_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_keywords_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_keywords_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_keywords_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_03",
       "business_tag": "ad_reporting twitter_line_item_keywords_report_data analytics",
       "frequency_weight": 2.35,
@@ -12176,11 +12176,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -12201,8 +12201,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_vq_c03_05",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, b.\"placement\" AS placement, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_keywords_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period, placement",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, b.\"placement\" as placement, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_keywords_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period, placement",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, b.\"placement\" AS placement, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_keywords_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period, placement",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, b.\"placement\" as placement, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_keywords_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period, placement",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_03",
       "business_tag": "ad_reporting twitter_line_item_keywords_report_data analytics",
       "frequency_weight": 2.5,
@@ -12221,11 +12221,11 @@
         "placement"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -12247,8 +12247,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_vq_c03_06",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_keywords_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_keywords_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_keywords_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_keywords_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_03",
       "business_tag": "ad_reporting twitter_line_item_keywords_report_data analytics",
       "frequency_weight": 2.65,
@@ -12265,11 +12265,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -12290,8 +12290,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_vq_c04_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"updated_at\" AS TIMESTAMP)) AS metric_period, b.\"create_time\" AS create_time, COUNT(*) AS row_count FROM raw.tiktok_adgroup_history_data b WHERE try_cast(b.\"updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"create_time\" IS NOT NULL GROUP BY metric_period, create_time",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"updated_at\" as timestamp)) as metric_period, b.\"create_time\" as create_time, count(*) as row_count from raw.tiktok_adgroup_history_data b where try_cast(b.\"updated_at\" as timestamp) is not null and b.\"create_time\" is not null group by metric_period, create_time",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP))) AS metric_period, b.\"create_time\" AS create_time, COUNT(*) AS row_count FROM raw.tiktok_adgroup_history_data b WHERE coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"create_time\" IS NOT NULL GROUP BY metric_period, create_time",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"updated_at\" as timestamp))) as metric_period, b.\"create_time\" as create_time, count(*) as row_count from raw.tiktok_adgroup_history_data b where coalesce(try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"updated_at\" as timestamp)) is not null and b.\"create_time\" is not null group by metric_period, create_time",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_04",
       "business_tag": "ad_reporting tiktok_adgroup_history_data analytics",
       "frequency_weight": 2.8,
@@ -12309,11 +12309,11 @@
         "create_time"
       ],
       "filter_tokens": [
-        "try_cast(b.\"updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"updated_at\"_as_timestamp))_is_not_null",
         "b.\"create_time\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"create_time\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -12332,8 +12332,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_vq_c04_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"updated_at\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count FROM raw.tiktok_adgroup_history_data b WHERE try_cast(b.\"updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"create_time\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"updated_at\" as timestamp)) as metric_period, count(*) as row_count from raw.tiktok_adgroup_history_data b where try_cast(b.\"updated_at\" as timestamp) is not null and b.\"create_time\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count FROM raw.tiktok_adgroup_history_data b WHERE coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"create_time\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"updated_at\" as timestamp))) as metric_period, count(*) as row_count from raw.tiktok_adgroup_history_data b where coalesce(try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"updated_at\" as timestamp)) is not null and b.\"create_time\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_04",
       "business_tag": "ad_reporting tiktok_adgroup_history_data analytics",
       "frequency_weight": 2.95,
@@ -12349,11 +12349,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"updated_at\"_as_timestamp))_is_not_null",
         "b.\"create_time\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"create_time\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -12371,8 +12371,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_vq_c04_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"updated_at\" AS TIMESTAMP)) AS metric_period, b.\"create_time\" AS create_time, COUNT(*) AS row_count FROM raw.tiktok_adgroup_history_data b WHERE try_cast(b.\"updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"create_time\" IS NOT NULL GROUP BY metric_period, create_time",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"updated_at\" as timestamp)) as metric_period, b.\"create_time\" as create_time, count(*) as row_count from raw.tiktok_adgroup_history_data b where try_cast(b.\"updated_at\" as timestamp) is not null and b.\"create_time\" is not null group by metric_period, create_time",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP))) AS metric_period, b.\"create_time\" AS create_time, COUNT(*) AS row_count FROM raw.tiktok_adgroup_history_data b WHERE coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"create_time\" IS NOT NULL GROUP BY metric_period, create_time",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"updated_at\" as timestamp))) as metric_period, b.\"create_time\" as create_time, count(*) as row_count from raw.tiktok_adgroup_history_data b where coalesce(try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"updated_at\" as timestamp)) is not null and b.\"create_time\" is not null group by metric_period, create_time",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_04",
       "business_tag": "ad_reporting tiktok_adgroup_history_data analytics",
       "frequency_weight": 3.1,
@@ -12390,11 +12390,11 @@
         "create_time"
       ],
       "filter_tokens": [
-        "try_cast(b.\"updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"updated_at\"_as_timestamp))_is_not_null",
         "b.\"create_time\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"create_time\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -12413,8 +12413,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_vq_c04_04",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"updated_at\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count FROM raw.tiktok_adgroup_history_data b WHERE try_cast(b.\"updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"create_time\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"updated_at\" as timestamp)) as metric_period, count(*) as row_count from raw.tiktok_adgroup_history_data b where try_cast(b.\"updated_at\" as timestamp) is not null and b.\"create_time\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count FROM raw.tiktok_adgroup_history_data b WHERE coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"create_time\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"updated_at\" as timestamp))) as metric_period, count(*) as row_count from raw.tiktok_adgroup_history_data b where coalesce(try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"updated_at\" as timestamp)) is not null and b.\"create_time\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_04",
       "business_tag": "ad_reporting tiktok_adgroup_history_data analytics",
       "frequency_weight": 2.8,
@@ -12430,11 +12430,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"updated_at\"_as_timestamp))_is_not_null",
         "b.\"create_time\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"create_time\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -12452,8 +12452,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_vq_c04_05",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"updated_at\" AS TIMESTAMP)) AS metric_period, b.\"create_time\" AS create_time, COUNT(*) AS row_count FROM raw.tiktok_adgroup_history_data b WHERE try_cast(b.\"updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"create_time\" IS NOT NULL GROUP BY metric_period, create_time",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"updated_at\" as timestamp)) as metric_period, b.\"create_time\" as create_time, count(*) as row_count from raw.tiktok_adgroup_history_data b where try_cast(b.\"updated_at\" as timestamp) is not null and b.\"create_time\" is not null group by metric_period, create_time",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP))) AS metric_period, b.\"create_time\" AS create_time, COUNT(*) AS row_count FROM raw.tiktok_adgroup_history_data b WHERE coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"create_time\" IS NOT NULL GROUP BY metric_period, create_time",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"updated_at\" as timestamp))) as metric_period, b.\"create_time\" as create_time, count(*) as row_count from raw.tiktok_adgroup_history_data b where coalesce(try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"updated_at\" as timestamp)) is not null and b.\"create_time\" is not null group by metric_period, create_time",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_04",
       "business_tag": "ad_reporting tiktok_adgroup_history_data analytics",
       "frequency_weight": 2.95,
@@ -12471,11 +12471,11 @@
         "create_time"
       ],
       "filter_tokens": [
-        "try_cast(b.\"updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"updated_at\"_as_timestamp))_is_not_null",
         "b.\"create_time\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"create_time\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -12494,8 +12494,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_vq_c04_06",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"updated_at\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count FROM raw.tiktok_adgroup_history_data b WHERE try_cast(b.\"updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"create_time\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"updated_at\" as timestamp)) as metric_period, count(*) as row_count from raw.tiktok_adgroup_history_data b where try_cast(b.\"updated_at\" as timestamp) is not null and b.\"create_time\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count FROM raw.tiktok_adgroup_history_data b WHERE coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"create_time\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"updated_at\" as timestamp))) as metric_period, count(*) as row_count from raw.tiktok_adgroup_history_data b where coalesce(try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"updated_at\" as timestamp)) is not null and b.\"create_time\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_04",
       "business_tag": "ad_reporting tiktok_adgroup_history_data analytics",
       "frequency_weight": 3.1,
@@ -12511,11 +12511,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"updated_at\"_as_timestamp))_is_not_null",
         "b.\"create_time\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"create_time\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -12535,8 +12535,8 @@
   "holdout_queries": [
     {
       "query_id": "schemaopt_medium_ad_reporting_hq_c01_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_campaign_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_campaign_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_campaign_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_campaign_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_01",
       "business_tag": "ad_reporting twitter_campaign_report_data analytics",
       "frequency_weight": 1.1,
@@ -12553,11 +12553,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -12578,8 +12578,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_hq_c01_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, b.\"placement\" AS placement, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_campaign_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period, placement",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, b.\"placement\" as placement, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_campaign_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period, placement",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, b.\"placement\" AS placement, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_campaign_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period, placement",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, b.\"placement\" as placement, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_campaign_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period, placement",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_01",
       "business_tag": "ad_reporting twitter_campaign_report_data analytics",
       "frequency_weight": 1.2,
@@ -12598,11 +12598,11 @@
         "placement"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -12624,8 +12624,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_hq_c01_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_campaign_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_campaign_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_campaign_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_campaign_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_01",
       "business_tag": "ad_reporting twitter_campaign_report_data analytics",
       "frequency_weight": 1.1,
@@ -12642,11 +12642,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -12667,8 +12667,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_hq_c02_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_02",
       "business_tag": "ad_reporting twitter_line_item_report_data analytics",
       "frequency_weight": 1.4,
@@ -12685,11 +12685,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -12710,8 +12710,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_hq_c02_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, b.\"placement\" AS placement, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period, placement",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, b.\"placement\" as placement, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period, placement",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, b.\"placement\" AS placement, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period, placement",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, b.\"placement\" as placement, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period, placement",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_02",
       "business_tag": "ad_reporting twitter_line_item_report_data analytics",
       "frequency_weight": 1.5,
@@ -12730,11 +12730,11 @@
         "placement"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -12756,8 +12756,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_hq_c02_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_02",
       "business_tag": "ad_reporting twitter_line_item_report_data analytics",
       "frequency_weight": 1.4,
@@ -12774,11 +12774,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -12799,8 +12799,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_hq_c03_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_keywords_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_keywords_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_keywords_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_keywords_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_03",
       "business_tag": "ad_reporting twitter_line_item_keywords_report_data analytics",
       "frequency_weight": 1.7,
@@ -12817,11 +12817,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -12842,8 +12842,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_hq_c03_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, b.\"placement\" AS placement, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_keywords_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period, placement",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, b.\"placement\" as placement, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_keywords_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period, placement",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, b.\"placement\" AS placement, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_keywords_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period, placement",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, b.\"placement\" as placement, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_keywords_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period, placement",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_03",
       "business_tag": "ad_reporting twitter_line_item_keywords_report_data analytics",
       "frequency_weight": 1.8,
@@ -12862,11 +12862,11 @@
         "placement"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -12888,8 +12888,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_hq_c03_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_keywords_report_data b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_keywords_report_data b where try_cast(b.\"date\" as timestamp) is not null and b.\"placement\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"app_clicks\") AS sum_app_clicks FROM raw.twitter_line_item_keywords_report_data b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"placement\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"app_clicks\") as sum_app_clicks from raw.twitter_line_item_keywords_report_data b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"placement\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_03",
       "business_tag": "ad_reporting twitter_line_item_keywords_report_data analytics",
       "frequency_weight": 1.7,
@@ -12906,11 +12906,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"placement\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"placement\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -12931,8 +12931,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_hq_c04_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"updated_at\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count FROM raw.tiktok_adgroup_history_data b WHERE try_cast(b.\"updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"create_time\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"updated_at\" as timestamp)) as metric_period, count(*) as row_count from raw.tiktok_adgroup_history_data b where try_cast(b.\"updated_at\" as timestamp) is not null and b.\"create_time\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count FROM raw.tiktok_adgroup_history_data b WHERE coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"create_time\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"updated_at\" as timestamp))) as metric_period, count(*) as row_count from raw.tiktok_adgroup_history_data b where coalesce(try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"updated_at\" as timestamp)) is not null and b.\"create_time\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_04",
       "business_tag": "ad_reporting tiktok_adgroup_history_data analytics",
       "frequency_weight": 2.0,
@@ -12948,11 +12948,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"updated_at\"_as_timestamp))_is_not_null",
         "b.\"create_time\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"create_time\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -12970,8 +12970,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_hq_c04_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"updated_at\" AS TIMESTAMP)) AS metric_period, b.\"create_time\" AS create_time, COUNT(*) AS row_count FROM raw.tiktok_adgroup_history_data b WHERE try_cast(b.\"updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"create_time\" IS NOT NULL GROUP BY metric_period, create_time",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"updated_at\" as timestamp)) as metric_period, b.\"create_time\" as create_time, count(*) as row_count from raw.tiktok_adgroup_history_data b where try_cast(b.\"updated_at\" as timestamp) is not null and b.\"create_time\" is not null group by metric_period, create_time",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP))) AS metric_period, b.\"create_time\" AS create_time, COUNT(*) AS row_count FROM raw.tiktok_adgroup_history_data b WHERE coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"create_time\" IS NOT NULL GROUP BY metric_period, create_time",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"updated_at\" as timestamp))) as metric_period, b.\"create_time\" as create_time, count(*) as row_count from raw.tiktok_adgroup_history_data b where coalesce(try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"updated_at\" as timestamp)) is not null and b.\"create_time\" is not null group by metric_period, create_time",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_04",
       "business_tag": "ad_reporting tiktok_adgroup_history_data analytics",
       "frequency_weight": 2.1,
@@ -12989,11 +12989,11 @@
         "create_time"
       ],
       "filter_tokens": [
-        "try_cast(b.\"updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"updated_at\"_as_timestamp))_is_not_null",
         "b.\"create_time\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"create_time\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -13012,8 +13012,8 @@
     },
     {
       "query_id": "schemaopt_medium_ad_reporting_hq_c04_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"updated_at\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count FROM raw.tiktok_adgroup_history_data b WHERE try_cast(b.\"updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"create_time\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"updated_at\" as timestamp)) as metric_period, count(*) as row_count from raw.tiktok_adgroup_history_data b where try_cast(b.\"updated_at\" as timestamp) is not null and b.\"create_time\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count FROM raw.tiktok_adgroup_history_data b WHERE coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"create_time\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"updated_at\" as timestamp))) as metric_period, count(*) as row_count from raw.tiktok_adgroup_history_data b where coalesce(try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"updated_at\" as timestamp)) is not null and b.\"create_time\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_ad_reporting_cluster_04",
       "business_tag": "ad_reporting tiktok_adgroup_history_data analytics",
       "frequency_weight": 2.0,
@@ -13029,11 +13029,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"updated_at\"_as_timestamp))_is_not_null",
         "b.\"create_time\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"create_time\" IS NOT NULL"
       ],
       "measure_columns": [

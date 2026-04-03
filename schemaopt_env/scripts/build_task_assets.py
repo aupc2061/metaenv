@@ -133,6 +133,22 @@ def _pick_time_column(columns: Dict[str, str]) -> Optional[str]:
     return None
 
 
+def _time_parse_expression(column: str, dtype: str, alias: str = "b") -> str:
+    column_ref = f"{alias}.{_quoted(column)}"
+    dtype_lc = dtype.lower()
+    if any(token in dtype_lc for token in ["char", "text", "string", "varchar"]):
+        return (
+            f"coalesce("
+            f"try_strptime({column_ref}, '%Y-%m-%d %H:%M:%S.%f %z'), "
+            f"try_strptime({column_ref}, '%Y-%m-%d %H:%M:%S %z'), "
+            f"try_strptime({column_ref}, '%Y-%m-%d %H:%M:%S.%f'), "
+            f"try_strptime({column_ref}, '%Y-%m-%d %H:%M:%S'), "
+            f"try_cast({column_ref} AS TIMESTAMP)"
+            f")"
+        )
+    return f"try_cast({column_ref} AS TIMESTAMP)"
+
+
 def _pick_dimension_columns(columns: Dict[str, str], excluded: Iterable[str]) -> List[str]:
     blocked = {value.lower() for value in excluded}
     dims: List[str] = []
@@ -208,8 +224,9 @@ def _build_query_shapes(domain: str, difficulty: str, schema: Dict[str, Dict[str
         plan_features: List[str] = ["aggregate", "filter"]
 
         if time_col:
-            dims.append(("metric_period", f"date_trunc('month', try_cast(b.{_quoted(time_col)} AS TIMESTAMP))"))
-            filters.append(f"try_cast(b.{_quoted(time_col)} AS TIMESTAMP) IS NOT NULL")
+            time_expr = _time_parse_expression(time_col, base_cols[time_col])
+            dims.append(("metric_period", f"date_trunc('month', {time_expr})"))
+            filters.append(f"{time_expr} IS NOT NULL")
             plan_features.append("time_bucket")
 
         base_dim_candidates = _pick_dimension_columns(base_cols, excluded=[time_col or ""])[:2]

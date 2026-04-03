@@ -1505,8 +1505,8 @@
   "visible_queries": [
     {
       "query_id": "schemaopt_medium_app_reporting_vq_c01_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, b.\"app_name\" AS app_name, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_summary b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"app_name\" IS NOT NULL GROUP BY metric_period, app_name",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, b.\"app_name\" as app_name, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_summary b where try_cast(b.\"date\" as timestamp) is not null and b.\"app_name\" is not null group by metric_period, app_name",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, b.\"app_name\" AS app_name, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_summary b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"app_name\" IS NOT NULL GROUP BY metric_period, app_name",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, b.\"app_name\" as app_name, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_summary b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"app_name\" is not null group by metric_period, app_name",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_01",
       "business_tag": "app_reporting sales_subscription_summary analytics",
       "frequency_weight": 1.45,
@@ -1525,11 +1525,11 @@
         "app_name"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"app_name\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"app_name\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1551,8 +1551,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_vq_c01_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_summary b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"app_name\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_summary b where try_cast(b.\"date\" as timestamp) is not null and b.\"app_name\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_summary b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"app_name\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_summary b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"app_name\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_01",
       "business_tag": "app_reporting sales_subscription_summary analytics",
       "frequency_weight": 1.6,
@@ -1569,11 +1569,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"app_name\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"app_name\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1594,8 +1594,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_vq_c01_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, b.\"app_name\" AS app_name, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_summary b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"app_name\" IS NOT NULL GROUP BY metric_period, app_name",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, b.\"app_name\" as app_name, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_summary b where try_cast(b.\"date\" as timestamp) is not null and b.\"app_name\" is not null group by metric_period, app_name",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, b.\"app_name\" AS app_name, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_summary b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"app_name\" IS NOT NULL GROUP BY metric_period, app_name",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, b.\"app_name\" as app_name, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_summary b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"app_name\" is not null group by metric_period, app_name",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_01",
       "business_tag": "app_reporting sales_subscription_summary analytics",
       "frequency_weight": 1.75,
@@ -1614,11 +1614,11 @@
         "app_name"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"app_name\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"app_name\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1640,8 +1640,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_vq_c01_04",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_summary b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"app_name\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_summary b where try_cast(b.\"date\" as timestamp) is not null and b.\"app_name\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_summary b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"app_name\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_summary b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"app_name\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_01",
       "business_tag": "app_reporting sales_subscription_summary analytics",
       "frequency_weight": 1.45,
@@ -1658,11 +1658,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"app_name\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"app_name\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1683,8 +1683,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_vq_c01_05",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, b.\"app_name\" AS app_name, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_summary b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"app_name\" IS NOT NULL GROUP BY metric_period, app_name",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, b.\"app_name\" as app_name, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_summary b where try_cast(b.\"date\" as timestamp) is not null and b.\"app_name\" is not null group by metric_period, app_name",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, b.\"app_name\" AS app_name, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_summary b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"app_name\" IS NOT NULL GROUP BY metric_period, app_name",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, b.\"app_name\" as app_name, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_summary b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"app_name\" is not null group by metric_period, app_name",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_01",
       "business_tag": "app_reporting sales_subscription_summary analytics",
       "frequency_weight": 1.6,
@@ -1703,11 +1703,11 @@
         "app_name"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"app_name\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"app_name\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1729,8 +1729,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_vq_c01_06",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_summary b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"app_name\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_summary b where try_cast(b.\"date\" as timestamp) is not null and b.\"app_name\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_summary b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"app_name\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_summary b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"app_name\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_01",
       "business_tag": "app_reporting sales_subscription_summary analytics",
       "frequency_weight": 1.75,
@@ -1747,11 +1747,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"app_name\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"app_name\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1772,8 +1772,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_vq_c02_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"event_date\" AS TIMESTAMP)) AS metric_period, b.\"event\" AS event, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_event_summary b WHERE try_cast(b.\"event_date\" AS TIMESTAMP) IS NOT NULL AND b.\"event\" IS NOT NULL GROUP BY metric_period, event",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"event_date\" as timestamp)) as metric_period, b.\"event\" as event, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_event_summary b where try_cast(b.\"event_date\" as timestamp) is not null and b.\"event\" is not null group by metric_period, event",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP))) AS metric_period, b.\"event\" AS event, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_event_summary b WHERE coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"event\" IS NOT NULL GROUP BY metric_period, event",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"event_date\" as timestamp))) as metric_period, b.\"event\" as event, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_event_summary b where coalesce(try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"event_date\" as timestamp)) is not null and b.\"event\" is not null group by metric_period, event",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_02",
       "business_tag": "app_reporting sales_subscription_event_summary analytics",
       "frequency_weight": 1.9,
@@ -1792,11 +1792,11 @@
         "event"
       ],
       "filter_tokens": [
-        "try_cast(b.\"event_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"event_date\"_as_timestamp))_is_not_null",
         "b.\"event\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"event_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"event\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1818,8 +1818,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_vq_c02_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"event_date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_event_summary b WHERE try_cast(b.\"event_date\" AS TIMESTAMP) IS NOT NULL AND b.\"event\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"event_date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_event_summary b where try_cast(b.\"event_date\" as timestamp) is not null and b.\"event\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_event_summary b WHERE coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"event\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"event_date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_event_summary b where coalesce(try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"event_date\" as timestamp)) is not null and b.\"event\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_02",
       "business_tag": "app_reporting sales_subscription_event_summary analytics",
       "frequency_weight": 2.05,
@@ -1836,11 +1836,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"event_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"event_date\"_as_timestamp))_is_not_null",
         "b.\"event\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"event_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"event\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1861,8 +1861,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_vq_c02_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"event_date\" AS TIMESTAMP)) AS metric_period, b.\"event\" AS event, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_event_summary b WHERE try_cast(b.\"event_date\" AS TIMESTAMP) IS NOT NULL AND b.\"event\" IS NOT NULL GROUP BY metric_period, event",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"event_date\" as timestamp)) as metric_period, b.\"event\" as event, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_event_summary b where try_cast(b.\"event_date\" as timestamp) is not null and b.\"event\" is not null group by metric_period, event",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP))) AS metric_period, b.\"event\" AS event, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_event_summary b WHERE coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"event\" IS NOT NULL GROUP BY metric_period, event",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"event_date\" as timestamp))) as metric_period, b.\"event\" as event, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_event_summary b where coalesce(try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"event_date\" as timestamp)) is not null and b.\"event\" is not null group by metric_period, event",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_02",
       "business_tag": "app_reporting sales_subscription_event_summary analytics",
       "frequency_weight": 2.2,
@@ -1881,11 +1881,11 @@
         "event"
       ],
       "filter_tokens": [
-        "try_cast(b.\"event_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"event_date\"_as_timestamp))_is_not_null",
         "b.\"event\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"event_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"event\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1907,8 +1907,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_vq_c02_04",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"event_date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_event_summary b WHERE try_cast(b.\"event_date\" AS TIMESTAMP) IS NOT NULL AND b.\"event\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"event_date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_event_summary b where try_cast(b.\"event_date\" as timestamp) is not null and b.\"event\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_event_summary b WHERE coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"event\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"event_date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_event_summary b where coalesce(try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"event_date\" as timestamp)) is not null and b.\"event\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_02",
       "business_tag": "app_reporting sales_subscription_event_summary analytics",
       "frequency_weight": 1.9,
@@ -1925,11 +1925,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"event_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"event_date\"_as_timestamp))_is_not_null",
         "b.\"event\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"event_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"event\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1950,8 +1950,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_vq_c02_05",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"event_date\" AS TIMESTAMP)) AS metric_period, b.\"event\" AS event, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_event_summary b WHERE try_cast(b.\"event_date\" AS TIMESTAMP) IS NOT NULL AND b.\"event\" IS NOT NULL GROUP BY metric_period, event",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"event_date\" as timestamp)) as metric_period, b.\"event\" as event, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_event_summary b where try_cast(b.\"event_date\" as timestamp) is not null and b.\"event\" is not null group by metric_period, event",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP))) AS metric_period, b.\"event\" AS event, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_event_summary b WHERE coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"event\" IS NOT NULL GROUP BY metric_period, event",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"event_date\" as timestamp))) as metric_period, b.\"event\" as event, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_event_summary b where coalesce(try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"event_date\" as timestamp)) is not null and b.\"event\" is not null group by metric_period, event",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_02",
       "business_tag": "app_reporting sales_subscription_event_summary analytics",
       "frequency_weight": 2.05,
@@ -1970,11 +1970,11 @@
         "event"
       ],
       "filter_tokens": [
-        "try_cast(b.\"event_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"event_date\"_as_timestamp))_is_not_null",
         "b.\"event\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"event_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"event\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1996,8 +1996,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_vq_c02_06",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"event_date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_event_summary b WHERE try_cast(b.\"event_date\" AS TIMESTAMP) IS NOT NULL AND b.\"event\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"event_date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_event_summary b where try_cast(b.\"event_date\" as timestamp) is not null and b.\"event\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_event_summary b WHERE coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"event\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"event_date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_event_summary b where coalesce(try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"event_date\" as timestamp)) is not null and b.\"event\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_02",
       "business_tag": "app_reporting sales_subscription_event_summary analytics",
       "frequency_weight": 2.2,
@@ -2014,11 +2014,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"event_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"event_date\"_as_timestamp))_is_not_null",
         "b.\"event\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"event_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"event\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2039,8 +2039,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_vq_c03_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"transaction_date\" AS TIMESTAMP)) AS metric_period, b.\"_file\" AS _file, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.earnings b WHERE try_cast(b.\"transaction_date\" AS TIMESTAMP) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period, _file",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"transaction_date\" as timestamp)) as metric_period, b.\"_file\" as _file, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.earnings b where try_cast(b.\"transaction_date\" as timestamp) is not null and b.\"_file\" is not null group by metric_period, _file",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP))) AS metric_period, b.\"_file\" AS _file, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.earnings b WHERE coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period, _file",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"transaction_date\" as timestamp))) as metric_period, b.\"_file\" as _file, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.earnings b where coalesce(try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"transaction_date\" as timestamp)) is not null and b.\"_file\" is not null group by metric_period, _file",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_03",
       "business_tag": "app_reporting earnings analytics",
       "frequency_weight": 2.35,
@@ -2059,11 +2059,11 @@
         "_file"
       ],
       "filter_tokens": [
-        "try_cast(b.\"transaction_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"transaction_date\"_as_timestamp))_is_not_null",
         "b.\"_file\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"transaction_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"_file\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2085,8 +2085,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_vq_c03_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"transaction_date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.earnings b WHERE try_cast(b.\"transaction_date\" AS TIMESTAMP) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"transaction_date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.earnings b where try_cast(b.\"transaction_date\" as timestamp) is not null and b.\"_file\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.earnings b WHERE coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"transaction_date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.earnings b where coalesce(try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"transaction_date\" as timestamp)) is not null and b.\"_file\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_03",
       "business_tag": "app_reporting earnings analytics",
       "frequency_weight": 2.5,
@@ -2103,11 +2103,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"transaction_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"transaction_date\"_as_timestamp))_is_not_null",
         "b.\"_file\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"transaction_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"_file\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2128,8 +2128,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_vq_c03_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"transaction_date\" AS TIMESTAMP)) AS metric_period, b.\"_file\" AS _file, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.earnings b WHERE try_cast(b.\"transaction_date\" AS TIMESTAMP) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period, _file",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"transaction_date\" as timestamp)) as metric_period, b.\"_file\" as _file, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.earnings b where try_cast(b.\"transaction_date\" as timestamp) is not null and b.\"_file\" is not null group by metric_period, _file",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP))) AS metric_period, b.\"_file\" AS _file, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.earnings b WHERE coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period, _file",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"transaction_date\" as timestamp))) as metric_period, b.\"_file\" as _file, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.earnings b where coalesce(try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"transaction_date\" as timestamp)) is not null and b.\"_file\" is not null group by metric_period, _file",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_03",
       "business_tag": "app_reporting earnings analytics",
       "frequency_weight": 2.65,
@@ -2148,11 +2148,11 @@
         "_file"
       ],
       "filter_tokens": [
-        "try_cast(b.\"transaction_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"transaction_date\"_as_timestamp))_is_not_null",
         "b.\"_file\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"transaction_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"_file\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2174,8 +2174,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_vq_c03_04",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"transaction_date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.earnings b WHERE try_cast(b.\"transaction_date\" AS TIMESTAMP) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"transaction_date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.earnings b where try_cast(b.\"transaction_date\" as timestamp) is not null and b.\"_file\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.earnings b WHERE coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"transaction_date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.earnings b where coalesce(try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"transaction_date\" as timestamp)) is not null and b.\"_file\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_03",
       "business_tag": "app_reporting earnings analytics",
       "frequency_weight": 2.35,
@@ -2192,11 +2192,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"transaction_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"transaction_date\"_as_timestamp))_is_not_null",
         "b.\"_file\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"transaction_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"_file\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2217,8 +2217,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_vq_c03_05",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"transaction_date\" AS TIMESTAMP)) AS metric_period, b.\"_file\" AS _file, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.earnings b WHERE try_cast(b.\"transaction_date\" AS TIMESTAMP) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period, _file",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"transaction_date\" as timestamp)) as metric_period, b.\"_file\" as _file, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.earnings b where try_cast(b.\"transaction_date\" as timestamp) is not null and b.\"_file\" is not null group by metric_period, _file",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP))) AS metric_period, b.\"_file\" AS _file, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.earnings b WHERE coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period, _file",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"transaction_date\" as timestamp))) as metric_period, b.\"_file\" as _file, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.earnings b where coalesce(try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"transaction_date\" as timestamp)) is not null and b.\"_file\" is not null group by metric_period, _file",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_03",
       "business_tag": "app_reporting earnings analytics",
       "frequency_weight": 2.5,
@@ -2237,11 +2237,11 @@
         "_file"
       ],
       "filter_tokens": [
-        "try_cast(b.\"transaction_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"transaction_date\"_as_timestamp))_is_not_null",
         "b.\"_file\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"transaction_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"_file\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2263,8 +2263,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_vq_c03_06",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"transaction_date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.earnings b WHERE try_cast(b.\"transaction_date\" AS TIMESTAMP) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"transaction_date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.earnings b where try_cast(b.\"transaction_date\" as timestamp) is not null and b.\"_file\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.earnings b WHERE coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"transaction_date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.earnings b where coalesce(try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"transaction_date\" as timestamp)) is not null and b.\"_file\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_03",
       "business_tag": "app_reporting earnings analytics",
       "frequency_weight": 2.65,
@@ -2281,11 +2281,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"transaction_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"transaction_date\"_as_timestamp))_is_not_null",
         "b.\"_file\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"transaction_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"_file\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2306,8 +2306,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_vq_c04_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, b.\"_file\" AS _file, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.stats_installs_app_version b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period, _file",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, b.\"_file\" as _file, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.stats_installs_app_version b where try_cast(b.\"date\" as timestamp) is not null and b.\"_file\" is not null group by metric_period, _file",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, b.\"_file\" AS _file, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.stats_installs_app_version b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period, _file",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, b.\"_file\" as _file, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.stats_installs_app_version b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"_file\" is not null group by metric_period, _file",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_04",
       "business_tag": "app_reporting stats_installs_app_version analytics",
       "frequency_weight": 2.8,
@@ -2326,11 +2326,11 @@
         "_file"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"_file\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"_file\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2352,8 +2352,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_vq_c04_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.stats_installs_app_version b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.stats_installs_app_version b where try_cast(b.\"date\" as timestamp) is not null and b.\"_file\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.stats_installs_app_version b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.stats_installs_app_version b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"_file\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_04",
       "business_tag": "app_reporting stats_installs_app_version analytics",
       "frequency_weight": 2.95,
@@ -2370,11 +2370,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"_file\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"_file\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2395,8 +2395,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_vq_c04_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, b.\"_file\" AS _file, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.stats_installs_app_version b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period, _file",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, b.\"_file\" as _file, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.stats_installs_app_version b where try_cast(b.\"date\" as timestamp) is not null and b.\"_file\" is not null group by metric_period, _file",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, b.\"_file\" AS _file, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.stats_installs_app_version b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period, _file",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, b.\"_file\" as _file, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.stats_installs_app_version b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"_file\" is not null group by metric_period, _file",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_04",
       "business_tag": "app_reporting stats_installs_app_version analytics",
       "frequency_weight": 3.1,
@@ -2415,11 +2415,11 @@
         "_file"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"_file\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"_file\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2441,8 +2441,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_vq_c04_04",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.stats_installs_app_version b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.stats_installs_app_version b where try_cast(b.\"date\" as timestamp) is not null and b.\"_file\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.stats_installs_app_version b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.stats_installs_app_version b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"_file\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_04",
       "business_tag": "app_reporting stats_installs_app_version analytics",
       "frequency_weight": 2.8,
@@ -2459,11 +2459,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"_file\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"_file\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2484,8 +2484,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_vq_c04_05",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, b.\"_file\" AS _file, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.stats_installs_app_version b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period, _file",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, b.\"_file\" as _file, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.stats_installs_app_version b where try_cast(b.\"date\" as timestamp) is not null and b.\"_file\" is not null group by metric_period, _file",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, b.\"_file\" AS _file, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.stats_installs_app_version b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period, _file",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, b.\"_file\" as _file, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.stats_installs_app_version b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"_file\" is not null group by metric_period, _file",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_04",
       "business_tag": "app_reporting stats_installs_app_version analytics",
       "frequency_weight": 2.95,
@@ -2504,11 +2504,11 @@
         "_file"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"_file\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"_file\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2530,8 +2530,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_vq_c04_06",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.stats_installs_app_version b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.stats_installs_app_version b where try_cast(b.\"date\" as timestamp) is not null and b.\"_file\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.stats_installs_app_version b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.stats_installs_app_version b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"_file\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_04",
       "business_tag": "app_reporting stats_installs_app_version analytics",
       "frequency_weight": 3.1,
@@ -2548,11 +2548,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"_file\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"_file\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2575,8 +2575,8 @@
   "holdout_queries": [
     {
       "query_id": "schemaopt_medium_app_reporting_hq_c01_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_summary b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"app_name\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_summary b where try_cast(b.\"date\" as timestamp) is not null and b.\"app_name\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_summary b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"app_name\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_summary b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"app_name\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_01",
       "business_tag": "app_reporting sales_subscription_summary analytics",
       "frequency_weight": 1.1,
@@ -2593,11 +2593,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"app_name\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"app_name\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2618,8 +2618,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_hq_c01_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, b.\"app_name\" AS app_name, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_summary b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"app_name\" IS NOT NULL GROUP BY metric_period, app_name",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, b.\"app_name\" as app_name, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_summary b where try_cast(b.\"date\" as timestamp) is not null and b.\"app_name\" is not null group by metric_period, app_name",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, b.\"app_name\" AS app_name, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_summary b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"app_name\" IS NOT NULL GROUP BY metric_period, app_name",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, b.\"app_name\" as app_name, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_summary b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"app_name\" is not null group by metric_period, app_name",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_01",
       "business_tag": "app_reporting sales_subscription_summary analytics",
       "frequency_weight": 1.2,
@@ -2638,11 +2638,11 @@
         "app_name"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"app_name\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"app_name\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2664,8 +2664,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_hq_c01_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_summary b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"app_name\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_summary b where try_cast(b.\"date\" as timestamp) is not null and b.\"app_name\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_summary b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"app_name\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_summary b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"app_name\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_01",
       "business_tag": "app_reporting sales_subscription_summary analytics",
       "frequency_weight": 1.1,
@@ -2682,11 +2682,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"app_name\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"app_name\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2707,8 +2707,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_hq_c02_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"event_date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_event_summary b WHERE try_cast(b.\"event_date\" AS TIMESTAMP) IS NOT NULL AND b.\"event\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"event_date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_event_summary b where try_cast(b.\"event_date\" as timestamp) is not null and b.\"event\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_event_summary b WHERE coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"event\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"event_date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_event_summary b where coalesce(try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"event_date\" as timestamp)) is not null and b.\"event\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_02",
       "business_tag": "app_reporting sales_subscription_event_summary analytics",
       "frequency_weight": 1.4,
@@ -2725,11 +2725,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"event_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"event_date\"_as_timestamp))_is_not_null",
         "b.\"event\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"event_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"event\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2750,8 +2750,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_hq_c02_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"event_date\" AS TIMESTAMP)) AS metric_period, b.\"event\" AS event, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_event_summary b WHERE try_cast(b.\"event_date\" AS TIMESTAMP) IS NOT NULL AND b.\"event\" IS NOT NULL GROUP BY metric_period, event",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"event_date\" as timestamp)) as metric_period, b.\"event\" as event, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_event_summary b where try_cast(b.\"event_date\" as timestamp) is not null and b.\"event\" is not null group by metric_period, event",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP))) AS metric_period, b.\"event\" AS event, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_event_summary b WHERE coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"event\" IS NOT NULL GROUP BY metric_period, event",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"event_date\" as timestamp))) as metric_period, b.\"event\" as event, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_event_summary b where coalesce(try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"event_date\" as timestamp)) is not null and b.\"event\" is not null group by metric_period, event",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_02",
       "business_tag": "app_reporting sales_subscription_event_summary analytics",
       "frequency_weight": 1.5,
@@ -2770,11 +2770,11 @@
         "event"
       ],
       "filter_tokens": [
-        "try_cast(b.\"event_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"event_date\"_as_timestamp))_is_not_null",
         "b.\"event\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"event_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"event\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2796,8 +2796,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_hq_c02_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"event_date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_event_summary b WHERE try_cast(b.\"event_date\" AS TIMESTAMP) IS NOT NULL AND b.\"event\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"event_date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_event_summary b where try_cast(b.\"event_date\" as timestamp) is not null and b.\"event\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"vendor_number\") AS sum_vendor_number FROM raw.sales_subscription_event_summary b WHERE coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"event\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"event_date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"vendor_number\") as sum_vendor_number from raw.sales_subscription_event_summary b where coalesce(try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"event_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"event_date\" as timestamp)) is not null and b.\"event\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_02",
       "business_tag": "app_reporting sales_subscription_event_summary analytics",
       "frequency_weight": 1.4,
@@ -2814,11 +2814,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"event_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"event_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"event_date\"_as_timestamp))_is_not_null",
         "b.\"event\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"event_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"event_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"event_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"event\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2839,8 +2839,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_hq_c03_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"transaction_date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.earnings b WHERE try_cast(b.\"transaction_date\" AS TIMESTAMP) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"transaction_date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.earnings b where try_cast(b.\"transaction_date\" as timestamp) is not null and b.\"_file\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.earnings b WHERE coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"transaction_date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.earnings b where coalesce(try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"transaction_date\" as timestamp)) is not null and b.\"_file\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_03",
       "business_tag": "app_reporting earnings analytics",
       "frequency_weight": 1.7,
@@ -2857,11 +2857,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"transaction_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"transaction_date\"_as_timestamp))_is_not_null",
         "b.\"_file\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"transaction_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"_file\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2882,8 +2882,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_hq_c03_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"transaction_date\" AS TIMESTAMP)) AS metric_period, b.\"_file\" AS _file, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.earnings b WHERE try_cast(b.\"transaction_date\" AS TIMESTAMP) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period, _file",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"transaction_date\" as timestamp)) as metric_period, b.\"_file\" as _file, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.earnings b where try_cast(b.\"transaction_date\" as timestamp) is not null and b.\"_file\" is not null group by metric_period, _file",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP))) AS metric_period, b.\"_file\" AS _file, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.earnings b WHERE coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period, _file",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"transaction_date\" as timestamp))) as metric_period, b.\"_file\" as _file, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.earnings b where coalesce(try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"transaction_date\" as timestamp)) is not null and b.\"_file\" is not null group by metric_period, _file",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_03",
       "business_tag": "app_reporting earnings analytics",
       "frequency_weight": 1.8,
@@ -2902,11 +2902,11 @@
         "_file"
       ],
       "filter_tokens": [
-        "try_cast(b.\"transaction_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"transaction_date\"_as_timestamp))_is_not_null",
         "b.\"_file\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"transaction_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"_file\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2928,8 +2928,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_hq_c03_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"transaction_date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.earnings b WHERE try_cast(b.\"transaction_date\" AS TIMESTAMP) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"transaction_date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.earnings b where try_cast(b.\"transaction_date\" as timestamp) is not null and b.\"_file\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.earnings b WHERE coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"transaction_date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.earnings b where coalesce(try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"transaction_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"transaction_date\" as timestamp)) is not null and b.\"_file\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_03",
       "business_tag": "app_reporting earnings analytics",
       "frequency_weight": 1.7,
@@ -2946,11 +2946,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"transaction_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"transaction_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"transaction_date\"_as_timestamp))_is_not_null",
         "b.\"_file\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"transaction_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"transaction_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"transaction_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"_file\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2971,8 +2971,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_hq_c04_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.stats_installs_app_version b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.stats_installs_app_version b where try_cast(b.\"date\" as timestamp) is not null and b.\"_file\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.stats_installs_app_version b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.stats_installs_app_version b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"_file\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_04",
       "business_tag": "app_reporting stats_installs_app_version analytics",
       "frequency_weight": 2.0,
@@ -2989,11 +2989,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"_file\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"_file\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -3014,8 +3014,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_hq_c04_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, b.\"_file\" AS _file, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.stats_installs_app_version b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period, _file",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, b.\"_file\" as _file, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.stats_installs_app_version b where try_cast(b.\"date\" as timestamp) is not null and b.\"_file\" is not null group by metric_period, _file",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, b.\"_file\" AS _file, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.stats_installs_app_version b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period, _file",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, b.\"_file\" as _file, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.stats_installs_app_version b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"_file\" is not null group by metric_period, _file",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_04",
       "business_tag": "app_reporting stats_installs_app_version analytics",
       "frequency_weight": 2.1,
@@ -3034,11 +3034,11 @@
         "_file"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"_file\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"_file\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -3060,8 +3060,8 @@
     },
     {
       "query_id": "schemaopt_medium_app_reporting_hq_c04_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.stats_installs_app_version b WHERE try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"date\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.stats_installs_app_version b where try_cast(b.\"date\" as timestamp) is not null and b.\"_file\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"_line\") AS sum__line FROM raw.stats_installs_app_version b WHERE coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL AND b.\"_file\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"_line\") as sum__line from raw.stats_installs_app_version b where coalesce(try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"date\" as timestamp)) is not null and b.\"_file\" is not null group by metric_period",
       "cluster_id": "schemaopt_medium_app_reporting_cluster_04",
       "business_tag": "app_reporting stats_installs_app_version analytics",
       "frequency_weight": 2.0,
@@ -3078,11 +3078,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"date\"_as_timestamp))_is_not_null",
         "b.\"_file\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"_file\" IS NOT NULL"
       ],
       "measure_columns": [

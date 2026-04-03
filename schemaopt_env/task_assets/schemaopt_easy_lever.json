@@ -851,8 +851,8 @@
   "visible_queries": [
     {
       "query_id": "schemaopt_easy_lever_vq_c01_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"archived_at\" AS TIMESTAMP)) AS metric_period, b.\"contact\" AS contact, j.\"text\" AS stage_text, COUNT(*) AS row_count FROM raw.opportunity b JOIN raw.stage j ON b.\"stage_id\" = j.id WHERE try_cast(b.\"archived_at\" AS TIMESTAMP) IS NOT NULL AND b.\"contact\" IS NOT NULL AND j.\"text\" IS NOT NULL GROUP BY metric_period, contact, stage_text",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"archived_at\" as timestamp)) as metric_period, b.\"contact\" as contact, j.\"text\" as stage_text, count(*) as row_count from raw.opportunity b join raw.stage j on b.\"stage_id\" = j.id where try_cast(b.\"archived_at\" as timestamp) is not null and b.\"contact\" is not null and j.\"text\" is not null group by metric_period, contact, stage_text",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"archived_at\" AS TIMESTAMP))) AS metric_period, b.\"contact\" AS contact, j.\"text\" AS stage_text, COUNT(*) AS row_count FROM raw.opportunity b JOIN raw.stage j ON b.\"stage_id\" = j.id WHERE coalesce(try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"archived_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"contact\" IS NOT NULL AND j.\"text\" IS NOT NULL GROUP BY metric_period, contact, stage_text",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"archived_at\" as timestamp))) as metric_period, b.\"contact\" as contact, j.\"text\" as stage_text, count(*) as row_count from raw.opportunity b join raw.stage j on b.\"stage_id\" = j.id where coalesce(try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"archived_at\" as timestamp)) is not null and b.\"contact\" is not null and j.\"text\" is not null group by metric_period, contact, stage_text",
       "cluster_id": "schemaopt_easy_lever_cluster_01",
       "business_tag": "lever opportunity analytics",
       "frequency_weight": 1.45,
@@ -873,12 +873,12 @@
         "stage_text"
       ],
       "filter_tokens": [
-        "try_cast(b.\"archived_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"archived_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"archived_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"archived_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"archived_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"archived_at\"_as_timestamp))_is_not_null",
         "b.\"contact\"_is_not_null",
         "j.\"text\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"archived_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"archived_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"contact\" IS NOT NULL",
         "j.\"text\" IS NOT NULL"
       ],
@@ -899,8 +899,8 @@
     },
     {
       "query_id": "schemaopt_easy_lever_vq_c01_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"archived_at\" AS TIMESTAMP)) AS metric_period, b.\"contact\" AS contact, COUNT(*) AS row_count FROM raw.opportunity b JOIN raw.stage j ON b.\"stage_id\" = j.id WHERE try_cast(b.\"archived_at\" AS TIMESTAMP) IS NOT NULL AND b.\"contact\" IS NOT NULL AND j.\"text\" IS NOT NULL GROUP BY metric_period, contact",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"archived_at\" as timestamp)) as metric_period, b.\"contact\" as contact, count(*) as row_count from raw.opportunity b join raw.stage j on b.\"stage_id\" = j.id where try_cast(b.\"archived_at\" as timestamp) is not null and b.\"contact\" is not null and j.\"text\" is not null group by metric_period, contact",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"archived_at\" AS TIMESTAMP))) AS metric_period, b.\"contact\" AS contact, COUNT(*) AS row_count FROM raw.opportunity b JOIN raw.stage j ON b.\"stage_id\" = j.id WHERE coalesce(try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"archived_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"contact\" IS NOT NULL AND j.\"text\" IS NOT NULL GROUP BY metric_period, contact",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"archived_at\" as timestamp))) as metric_period, b.\"contact\" as contact, count(*) as row_count from raw.opportunity b join raw.stage j on b.\"stage_id\" = j.id where coalesce(try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"archived_at\" as timestamp)) is not null and b.\"contact\" is not null and j.\"text\" is not null group by metric_period, contact",
       "cluster_id": "schemaopt_easy_lever_cluster_01",
       "business_tag": "lever opportunity analytics",
       "frequency_weight": 1.6,
@@ -919,12 +919,12 @@
         "contact"
       ],
       "filter_tokens": [
-        "try_cast(b.\"archived_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"archived_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"archived_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"archived_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"archived_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"archived_at\"_as_timestamp))_is_not_null",
         "b.\"contact\"_is_not_null",
         "j.\"text\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"archived_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"archived_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"contact\" IS NOT NULL",
         "j.\"text\" IS NOT NULL"
       ],
@@ -945,8 +945,8 @@
     },
     {
       "query_id": "schemaopt_easy_lever_vq_c01_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"archived_at\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count FROM raw.opportunity b JOIN raw.stage j ON b.\"stage_id\" = j.id WHERE try_cast(b.\"archived_at\" AS TIMESTAMP) IS NOT NULL AND b.\"contact\" IS NOT NULL AND j.\"text\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"archived_at\" as timestamp)) as metric_period, count(*) as row_count from raw.opportunity b join raw.stage j on b.\"stage_id\" = j.id where try_cast(b.\"archived_at\" as timestamp) is not null and b.\"contact\" is not null and j.\"text\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"archived_at\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count FROM raw.opportunity b JOIN raw.stage j ON b.\"stage_id\" = j.id WHERE coalesce(try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"archived_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"contact\" IS NOT NULL AND j.\"text\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"archived_at\" as timestamp))) as metric_period, count(*) as row_count from raw.opportunity b join raw.stage j on b.\"stage_id\" = j.id where coalesce(try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"archived_at\" as timestamp)) is not null and b.\"contact\" is not null and j.\"text\" is not null group by metric_period",
       "cluster_id": "schemaopt_easy_lever_cluster_01",
       "business_tag": "lever opportunity analytics",
       "frequency_weight": 1.75,
@@ -963,12 +963,12 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"archived_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"archived_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"archived_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"archived_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"archived_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"archived_at\"_as_timestamp))_is_not_null",
         "b.\"contact\"_is_not_null",
         "j.\"text\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"archived_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"archived_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"contact\" IS NOT NULL",
         "j.\"text\" IS NOT NULL"
       ],
@@ -988,8 +988,8 @@
     },
     {
       "query_id": "schemaopt_easy_lever_vq_c01_04",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"archived_at\" AS TIMESTAMP)) AS metric_period, b.\"contact\" AS contact, j.\"text\" AS stage_text, COUNT(*) AS row_count FROM raw.opportunity b JOIN raw.stage j ON b.\"stage_id\" = j.id WHERE try_cast(b.\"archived_at\" AS TIMESTAMP) IS NOT NULL AND b.\"contact\" IS NOT NULL AND j.\"text\" IS NOT NULL GROUP BY metric_period, contact, stage_text",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"archived_at\" as timestamp)) as metric_period, b.\"contact\" as contact, j.\"text\" as stage_text, count(*) as row_count from raw.opportunity b join raw.stage j on b.\"stage_id\" = j.id where try_cast(b.\"archived_at\" as timestamp) is not null and b.\"contact\" is not null and j.\"text\" is not null group by metric_period, contact, stage_text",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"archived_at\" AS TIMESTAMP))) AS metric_period, b.\"contact\" AS contact, j.\"text\" AS stage_text, COUNT(*) AS row_count FROM raw.opportunity b JOIN raw.stage j ON b.\"stage_id\" = j.id WHERE coalesce(try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"archived_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"contact\" IS NOT NULL AND j.\"text\" IS NOT NULL GROUP BY metric_period, contact, stage_text",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"archived_at\" as timestamp))) as metric_period, b.\"contact\" as contact, j.\"text\" as stage_text, count(*) as row_count from raw.opportunity b join raw.stage j on b.\"stage_id\" = j.id where coalesce(try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"archived_at\" as timestamp)) is not null and b.\"contact\" is not null and j.\"text\" is not null group by metric_period, contact, stage_text",
       "cluster_id": "schemaopt_easy_lever_cluster_01",
       "business_tag": "lever opportunity analytics",
       "frequency_weight": 1.45,
@@ -1010,12 +1010,12 @@
         "stage_text"
       ],
       "filter_tokens": [
-        "try_cast(b.\"archived_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"archived_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"archived_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"archived_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"archived_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"archived_at\"_as_timestamp))_is_not_null",
         "b.\"contact\"_is_not_null",
         "j.\"text\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"archived_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"archived_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"contact\" IS NOT NULL",
         "j.\"text\" IS NOT NULL"
       ],
@@ -1036,8 +1036,8 @@
     },
     {
       "query_id": "schemaopt_easy_lever_vq_c02_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"created_at\" AS TIMESTAMP)) AS metric_period, b.\"backfill\" AS backfill, COUNT(*) AS row_count, SUM(b.\"compensation_band_max\") AS sum_compensation_band_max FROM raw.requisition b WHERE try_cast(b.\"created_at\" AS TIMESTAMP) IS NOT NULL AND b.\"backfill\" IS NOT NULL GROUP BY metric_period, backfill",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"created_at\" as timestamp)) as metric_period, b.\"backfill\" as backfill, count(*) as row_count, sum(b.\"compensation_band_max\") as sum_compensation_band_max from raw.requisition b where try_cast(b.\"created_at\" as timestamp) is not null and b.\"backfill\" is not null group by metric_period, backfill",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP))) AS metric_period, b.\"backfill\" AS backfill, COUNT(*) AS row_count, SUM(b.\"compensation_band_max\") AS sum_compensation_band_max FROM raw.requisition b WHERE coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"backfill\" IS NOT NULL GROUP BY metric_period, backfill",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"created_at\" as timestamp))) as metric_period, b.\"backfill\" as backfill, count(*) as row_count, sum(b.\"compensation_band_max\") as sum_compensation_band_max from raw.requisition b where coalesce(try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"created_at\" as timestamp)) is not null and b.\"backfill\" is not null group by metric_period, backfill",
       "cluster_id": "schemaopt_easy_lever_cluster_02",
       "business_tag": "lever requisition analytics",
       "frequency_weight": 1.9,
@@ -1056,11 +1056,11 @@
         "backfill"
       ],
       "filter_tokens": [
-        "try_cast(b.\"created_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"created_at\"_as_timestamp))_is_not_null",
         "b.\"backfill\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"created_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"backfill\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1082,8 +1082,8 @@
     },
     {
       "query_id": "schemaopt_easy_lever_vq_c02_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"created_at\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"compensation_band_max\") AS sum_compensation_band_max FROM raw.requisition b WHERE try_cast(b.\"created_at\" AS TIMESTAMP) IS NOT NULL AND b.\"backfill\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"created_at\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"compensation_band_max\") as sum_compensation_band_max from raw.requisition b where try_cast(b.\"created_at\" as timestamp) is not null and b.\"backfill\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"compensation_band_max\") AS sum_compensation_band_max FROM raw.requisition b WHERE coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"backfill\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"created_at\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"compensation_band_max\") as sum_compensation_band_max from raw.requisition b where coalesce(try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"created_at\" as timestamp)) is not null and b.\"backfill\" is not null group by metric_period",
       "cluster_id": "schemaopt_easy_lever_cluster_02",
       "business_tag": "lever requisition analytics",
       "frequency_weight": 2.05,
@@ -1100,11 +1100,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"created_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"created_at\"_as_timestamp))_is_not_null",
         "b.\"backfill\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"created_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"backfill\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1125,8 +1125,8 @@
     },
     {
       "query_id": "schemaopt_easy_lever_vq_c02_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"created_at\" AS TIMESTAMP)) AS metric_period, b.\"backfill\" AS backfill, COUNT(*) AS row_count, SUM(b.\"compensation_band_max\") AS sum_compensation_band_max FROM raw.requisition b WHERE try_cast(b.\"created_at\" AS TIMESTAMP) IS NOT NULL AND b.\"backfill\" IS NOT NULL GROUP BY metric_period, backfill",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"created_at\" as timestamp)) as metric_period, b.\"backfill\" as backfill, count(*) as row_count, sum(b.\"compensation_band_max\") as sum_compensation_band_max from raw.requisition b where try_cast(b.\"created_at\" as timestamp) is not null and b.\"backfill\" is not null group by metric_period, backfill",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP))) AS metric_period, b.\"backfill\" AS backfill, COUNT(*) AS row_count, SUM(b.\"compensation_band_max\") AS sum_compensation_band_max FROM raw.requisition b WHERE coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"backfill\" IS NOT NULL GROUP BY metric_period, backfill",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"created_at\" as timestamp))) as metric_period, b.\"backfill\" as backfill, count(*) as row_count, sum(b.\"compensation_band_max\") as sum_compensation_band_max from raw.requisition b where coalesce(try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"created_at\" as timestamp)) is not null and b.\"backfill\" is not null group by metric_period, backfill",
       "cluster_id": "schemaopt_easy_lever_cluster_02",
       "business_tag": "lever requisition analytics",
       "frequency_weight": 2.2,
@@ -1145,11 +1145,11 @@
         "backfill"
       ],
       "filter_tokens": [
-        "try_cast(b.\"created_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"created_at\"_as_timestamp))_is_not_null",
         "b.\"backfill\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"created_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"backfill\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1171,8 +1171,8 @@
     },
     {
       "query_id": "schemaopt_easy_lever_vq_c02_04",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"created_at\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"compensation_band_max\") AS sum_compensation_band_max FROM raw.requisition b WHERE try_cast(b.\"created_at\" AS TIMESTAMP) IS NOT NULL AND b.\"backfill\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"created_at\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"compensation_band_max\") as sum_compensation_band_max from raw.requisition b where try_cast(b.\"created_at\" as timestamp) is not null and b.\"backfill\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"compensation_band_max\") AS sum_compensation_band_max FROM raw.requisition b WHERE coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"backfill\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"created_at\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"compensation_band_max\") as sum_compensation_band_max from raw.requisition b where coalesce(try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"created_at\" as timestamp)) is not null and b.\"backfill\" is not null group by metric_period",
       "cluster_id": "schemaopt_easy_lever_cluster_02",
       "business_tag": "lever requisition analytics",
       "frequency_weight": 1.9,
@@ -1189,11 +1189,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"created_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"created_at\"_as_timestamp))_is_not_null",
         "b.\"backfill\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"created_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"backfill\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1214,8 +1214,8 @@
     },
     {
       "query_id": "schemaopt_easy_lever_vq_c03_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"created_at\" AS TIMESTAMP)) AS metric_period, b.\"categories_commitment\" AS categories_commitment, COUNT(*) AS row_count FROM raw.posting b WHERE try_cast(b.\"created_at\" AS TIMESTAMP) IS NOT NULL AND b.\"categories_commitment\" IS NOT NULL GROUP BY metric_period, categories_commitment",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"created_at\" as timestamp)) as metric_period, b.\"categories_commitment\" as categories_commitment, count(*) as row_count from raw.posting b where try_cast(b.\"created_at\" as timestamp) is not null and b.\"categories_commitment\" is not null group by metric_period, categories_commitment",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP))) AS metric_period, b.\"categories_commitment\" AS categories_commitment, COUNT(*) AS row_count FROM raw.posting b WHERE coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"categories_commitment\" IS NOT NULL GROUP BY metric_period, categories_commitment",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"created_at\" as timestamp))) as metric_period, b.\"categories_commitment\" as categories_commitment, count(*) as row_count from raw.posting b where coalesce(try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"created_at\" as timestamp)) is not null and b.\"categories_commitment\" is not null group by metric_period, categories_commitment",
       "cluster_id": "schemaopt_easy_lever_cluster_03",
       "business_tag": "lever posting analytics",
       "frequency_weight": 2.35,
@@ -1233,11 +1233,11 @@
         "categories_commitment"
       ],
       "filter_tokens": [
-        "try_cast(b.\"created_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"created_at\"_as_timestamp))_is_not_null",
         "b.\"categories_commitment\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"created_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"categories_commitment\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1256,8 +1256,8 @@
     },
     {
       "query_id": "schemaopt_easy_lever_vq_c03_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"created_at\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count FROM raw.posting b WHERE try_cast(b.\"created_at\" AS TIMESTAMP) IS NOT NULL AND b.\"categories_commitment\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"created_at\" as timestamp)) as metric_period, count(*) as row_count from raw.posting b where try_cast(b.\"created_at\" as timestamp) is not null and b.\"categories_commitment\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count FROM raw.posting b WHERE coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"categories_commitment\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"created_at\" as timestamp))) as metric_period, count(*) as row_count from raw.posting b where coalesce(try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"created_at\" as timestamp)) is not null and b.\"categories_commitment\" is not null group by metric_period",
       "cluster_id": "schemaopt_easy_lever_cluster_03",
       "business_tag": "lever posting analytics",
       "frequency_weight": 2.5,
@@ -1273,11 +1273,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"created_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"created_at\"_as_timestamp))_is_not_null",
         "b.\"categories_commitment\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"created_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"categories_commitment\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1295,8 +1295,8 @@
     },
     {
       "query_id": "schemaopt_easy_lever_vq_c03_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"created_at\" AS TIMESTAMP)) AS metric_period, b.\"categories_commitment\" AS categories_commitment, COUNT(*) AS row_count FROM raw.posting b WHERE try_cast(b.\"created_at\" AS TIMESTAMP) IS NOT NULL AND b.\"categories_commitment\" IS NOT NULL GROUP BY metric_period, categories_commitment",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"created_at\" as timestamp)) as metric_period, b.\"categories_commitment\" as categories_commitment, count(*) as row_count from raw.posting b where try_cast(b.\"created_at\" as timestamp) is not null and b.\"categories_commitment\" is not null group by metric_period, categories_commitment",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP))) AS metric_period, b.\"categories_commitment\" AS categories_commitment, COUNT(*) AS row_count FROM raw.posting b WHERE coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"categories_commitment\" IS NOT NULL GROUP BY metric_period, categories_commitment",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"created_at\" as timestamp))) as metric_period, b.\"categories_commitment\" as categories_commitment, count(*) as row_count from raw.posting b where coalesce(try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"created_at\" as timestamp)) is not null and b.\"categories_commitment\" is not null group by metric_period, categories_commitment",
       "cluster_id": "schemaopt_easy_lever_cluster_03",
       "business_tag": "lever posting analytics",
       "frequency_weight": 2.65,
@@ -1314,11 +1314,11 @@
         "categories_commitment"
       ],
       "filter_tokens": [
-        "try_cast(b.\"created_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"created_at\"_as_timestamp))_is_not_null",
         "b.\"categories_commitment\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"created_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"categories_commitment\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1337,8 +1337,8 @@
     },
     {
       "query_id": "schemaopt_easy_lever_vq_c03_04",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"created_at\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count FROM raw.posting b WHERE try_cast(b.\"created_at\" AS TIMESTAMP) IS NOT NULL AND b.\"categories_commitment\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"created_at\" as timestamp)) as metric_period, count(*) as row_count from raw.posting b where try_cast(b.\"created_at\" as timestamp) is not null and b.\"categories_commitment\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count FROM raw.posting b WHERE coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"categories_commitment\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"created_at\" as timestamp))) as metric_period, count(*) as row_count from raw.posting b where coalesce(try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"created_at\" as timestamp)) is not null and b.\"categories_commitment\" is not null group by metric_period",
       "cluster_id": "schemaopt_easy_lever_cluster_03",
       "business_tag": "lever posting analytics",
       "frequency_weight": 2.35,
@@ -1354,11 +1354,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"created_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"created_at\"_as_timestamp))_is_not_null",
         "b.\"categories_commitment\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"created_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"categories_commitment\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1378,8 +1378,8 @@
   "holdout_queries": [
     {
       "query_id": "schemaopt_easy_lever_hq_c01_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"archived_at\" AS TIMESTAMP)) AS metric_period, b.\"contact\" AS contact, COUNT(*) AS row_count FROM raw.opportunity b JOIN raw.stage j ON b.\"stage_id\" = j.id WHERE try_cast(b.\"archived_at\" AS TIMESTAMP) IS NOT NULL AND b.\"contact\" IS NOT NULL AND j.\"text\" IS NOT NULL GROUP BY metric_period, contact",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"archived_at\" as timestamp)) as metric_period, b.\"contact\" as contact, count(*) as row_count from raw.opportunity b join raw.stage j on b.\"stage_id\" = j.id where try_cast(b.\"archived_at\" as timestamp) is not null and b.\"contact\" is not null and j.\"text\" is not null group by metric_period, contact",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"archived_at\" AS TIMESTAMP))) AS metric_period, b.\"contact\" AS contact, COUNT(*) AS row_count FROM raw.opportunity b JOIN raw.stage j ON b.\"stage_id\" = j.id WHERE coalesce(try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"archived_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"contact\" IS NOT NULL AND j.\"text\" IS NOT NULL GROUP BY metric_period, contact",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"archived_at\" as timestamp))) as metric_period, b.\"contact\" as contact, count(*) as row_count from raw.opportunity b join raw.stage j on b.\"stage_id\" = j.id where coalesce(try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"archived_at\" as timestamp)) is not null and b.\"contact\" is not null and j.\"text\" is not null group by metric_period, contact",
       "cluster_id": "schemaopt_easy_lever_cluster_01",
       "business_tag": "lever opportunity analytics",
       "frequency_weight": 1.1,
@@ -1398,12 +1398,12 @@
         "contact"
       ],
       "filter_tokens": [
-        "try_cast(b.\"archived_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"archived_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"archived_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"archived_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"archived_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"archived_at\"_as_timestamp))_is_not_null",
         "b.\"contact\"_is_not_null",
         "j.\"text\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"archived_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"archived_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"contact\" IS NOT NULL",
         "j.\"text\" IS NOT NULL"
       ],
@@ -1424,8 +1424,8 @@
     },
     {
       "query_id": "schemaopt_easy_lever_hq_c01_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"archived_at\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count FROM raw.opportunity b JOIN raw.stage j ON b.\"stage_id\" = j.id WHERE try_cast(b.\"archived_at\" AS TIMESTAMP) IS NOT NULL AND b.\"contact\" IS NOT NULL AND j.\"text\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"archived_at\" as timestamp)) as metric_period, count(*) as row_count from raw.opportunity b join raw.stage j on b.\"stage_id\" = j.id where try_cast(b.\"archived_at\" as timestamp) is not null and b.\"contact\" is not null and j.\"text\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"archived_at\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count FROM raw.opportunity b JOIN raw.stage j ON b.\"stage_id\" = j.id WHERE coalesce(try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"archived_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"contact\" IS NOT NULL AND j.\"text\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"archived_at\" as timestamp))) as metric_period, count(*) as row_count from raw.opportunity b join raw.stage j on b.\"stage_id\" = j.id where coalesce(try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"archived_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"archived_at\" as timestamp)) is not null and b.\"contact\" is not null and j.\"text\" is not null group by metric_period",
       "cluster_id": "schemaopt_easy_lever_cluster_01",
       "business_tag": "lever opportunity analytics",
       "frequency_weight": 1.2,
@@ -1442,12 +1442,12 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"archived_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"archived_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"archived_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"archived_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"archived_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"archived_at\"_as_timestamp))_is_not_null",
         "b.\"contact\"_is_not_null",
         "j.\"text\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"archived_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"archived_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"archived_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"contact\" IS NOT NULL",
         "j.\"text\" IS NOT NULL"
       ],
@@ -1467,8 +1467,8 @@
     },
     {
       "query_id": "schemaopt_easy_lever_hq_c02_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"created_at\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"compensation_band_max\") AS sum_compensation_band_max FROM raw.requisition b WHERE try_cast(b.\"created_at\" AS TIMESTAMP) IS NOT NULL AND b.\"backfill\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"created_at\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"compensation_band_max\") as sum_compensation_band_max from raw.requisition b where try_cast(b.\"created_at\" as timestamp) is not null and b.\"backfill\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"compensation_band_max\") AS sum_compensation_band_max FROM raw.requisition b WHERE coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"backfill\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"created_at\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"compensation_band_max\") as sum_compensation_band_max from raw.requisition b where coalesce(try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"created_at\" as timestamp)) is not null and b.\"backfill\" is not null group by metric_period",
       "cluster_id": "schemaopt_easy_lever_cluster_02",
       "business_tag": "lever requisition analytics",
       "frequency_weight": 1.4,
@@ -1485,11 +1485,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"created_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"created_at\"_as_timestamp))_is_not_null",
         "b.\"backfill\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"created_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"backfill\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1510,8 +1510,8 @@
     },
     {
       "query_id": "schemaopt_easy_lever_hq_c02_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"created_at\" AS TIMESTAMP)) AS metric_period, b.\"backfill\" AS backfill, COUNT(*) AS row_count, SUM(b.\"compensation_band_max\") AS sum_compensation_band_max FROM raw.requisition b WHERE try_cast(b.\"created_at\" AS TIMESTAMP) IS NOT NULL AND b.\"backfill\" IS NOT NULL GROUP BY metric_period, backfill",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"created_at\" as timestamp)) as metric_period, b.\"backfill\" as backfill, count(*) as row_count, sum(b.\"compensation_band_max\") as sum_compensation_band_max from raw.requisition b where try_cast(b.\"created_at\" as timestamp) is not null and b.\"backfill\" is not null group by metric_period, backfill",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP))) AS metric_period, b.\"backfill\" AS backfill, COUNT(*) AS row_count, SUM(b.\"compensation_band_max\") AS sum_compensation_band_max FROM raw.requisition b WHERE coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"backfill\" IS NOT NULL GROUP BY metric_period, backfill",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"created_at\" as timestamp))) as metric_period, b.\"backfill\" as backfill, count(*) as row_count, sum(b.\"compensation_band_max\") as sum_compensation_band_max from raw.requisition b where coalesce(try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"created_at\" as timestamp)) is not null and b.\"backfill\" is not null group by metric_period, backfill",
       "cluster_id": "schemaopt_easy_lever_cluster_02",
       "business_tag": "lever requisition analytics",
       "frequency_weight": 1.5,
@@ -1530,11 +1530,11 @@
         "backfill"
       ],
       "filter_tokens": [
-        "try_cast(b.\"created_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"created_at\"_as_timestamp))_is_not_null",
         "b.\"backfill\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"created_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"backfill\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1556,8 +1556,8 @@
     },
     {
       "query_id": "schemaopt_easy_lever_hq_c03_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"created_at\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count FROM raw.posting b WHERE try_cast(b.\"created_at\" AS TIMESTAMP) IS NOT NULL AND b.\"categories_commitment\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"created_at\" as timestamp)) as metric_period, count(*) as row_count from raw.posting b where try_cast(b.\"created_at\" as timestamp) is not null and b.\"categories_commitment\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count FROM raw.posting b WHERE coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"categories_commitment\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"created_at\" as timestamp))) as metric_period, count(*) as row_count from raw.posting b where coalesce(try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"created_at\" as timestamp)) is not null and b.\"categories_commitment\" is not null group by metric_period",
       "cluster_id": "schemaopt_easy_lever_cluster_03",
       "business_tag": "lever posting analytics",
       "frequency_weight": 1.7,
@@ -1573,11 +1573,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"created_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"created_at\"_as_timestamp))_is_not_null",
         "b.\"categories_commitment\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"created_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"categories_commitment\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1595,8 +1595,8 @@
     },
     {
       "query_id": "schemaopt_easy_lever_hq_c03_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"created_at\" AS TIMESTAMP)) AS metric_period, b.\"categories_commitment\" AS categories_commitment, COUNT(*) AS row_count FROM raw.posting b WHERE try_cast(b.\"created_at\" AS TIMESTAMP) IS NOT NULL AND b.\"categories_commitment\" IS NOT NULL GROUP BY metric_period, categories_commitment",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"created_at\" as timestamp)) as metric_period, b.\"categories_commitment\" as categories_commitment, count(*) as row_count from raw.posting b where try_cast(b.\"created_at\" as timestamp) is not null and b.\"categories_commitment\" is not null group by metric_period, categories_commitment",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP))) AS metric_period, b.\"categories_commitment\" AS categories_commitment, COUNT(*) AS row_count FROM raw.posting b WHERE coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"categories_commitment\" IS NOT NULL GROUP BY metric_period, categories_commitment",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"created_at\" as timestamp))) as metric_period, b.\"categories_commitment\" as categories_commitment, count(*) as row_count from raw.posting b where coalesce(try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"created_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"created_at\" as timestamp)) is not null and b.\"categories_commitment\" is not null group by metric_period, categories_commitment",
       "cluster_id": "schemaopt_easy_lever_cluster_03",
       "business_tag": "lever posting analytics",
       "frequency_weight": 1.8,
@@ -1614,11 +1614,11 @@
         "categories_commitment"
       ],
       "filter_tokens": [
-        "try_cast(b.\"created_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"created_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"created_at\"_as_timestamp))_is_not_null",
         "b.\"categories_commitment\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"created_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"created_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"created_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"categories_commitment\" IS NOT NULL"
       ],
       "measure_columns": [

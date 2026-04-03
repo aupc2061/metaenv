@@ -1064,8 +1064,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c02_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"update_author_id\" AS TIMESTAMP)) AS metric_period, b.\"body\" AS body, j.\"assignee\" AS issue_assignee, COUNT(*) AS row_count FROM raw.comment b JOIN raw.issue j ON b.\"issue_id\" = j.id WHERE try_cast(b.\"update_author_id\" AS TIMESTAMP) IS NOT NULL AND b.\"body\" IS NOT NULL AND j.\"assignee\" IS NOT NULL GROUP BY metric_period, body, issue_assignee",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"update_author_id\" as timestamp)) as metric_period, b.\"body\" as body, j.\"assignee\" as issue_assignee, count(*) as row_count from raw.comment b join raw.issue j on b.\"issue_id\" = j.id where try_cast(b.\"update_author_id\" as timestamp) is not null and b.\"body\" is not null and j.\"assignee\" is not null group by metric_period, body, issue_assignee",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP))) AS metric_period, b.\"body\" AS body, j.\"assignee\" AS issue_assignee, COUNT(*) AS row_count FROM raw.comment b JOIN raw.issue j ON b.\"issue_id\" = j.id WHERE coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP)) IS NOT NULL AND b.\"body\" IS NOT NULL AND j.\"assignee\" IS NOT NULL GROUP BY metric_period, body, issue_assignee",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"update_author_id\" as timestamp))) as metric_period, b.\"body\" as body, j.\"assignee\" as issue_assignee, count(*) as row_count from raw.comment b join raw.issue j on b.\"issue_id\" = j.id where coalesce(try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"update_author_id\" as timestamp)) is not null and b.\"body\" is not null and j.\"assignee\" is not null group by metric_period, body, issue_assignee",
       "cluster_id": "schemaopt_hard_jira_cluster_02",
       "business_tag": "jira comment analytics",
       "frequency_weight": 1.9,
@@ -1086,12 +1086,12 @@
         "issue_assignee"
       ],
       "filter_tokens": [
-        "try_cast(b.\"update_author_id\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"update_author_id\"_as_timestamp))_is_not_null",
         "b.\"body\"_is_not_null",
         "j.\"assignee\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"update_author_id\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"body\" IS NOT NULL",
         "j.\"assignee\" IS NOT NULL"
       ],
@@ -1112,8 +1112,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c02_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"update_author_id\" AS TIMESTAMP)) AS metric_period, b.\"body\" AS body, COUNT(*) AS row_count FROM raw.comment b JOIN raw.issue j ON b.\"issue_id\" = j.id WHERE try_cast(b.\"update_author_id\" AS TIMESTAMP) IS NOT NULL AND b.\"body\" IS NOT NULL AND j.\"assignee\" IS NOT NULL GROUP BY metric_period, body",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"update_author_id\" as timestamp)) as metric_period, b.\"body\" as body, count(*) as row_count from raw.comment b join raw.issue j on b.\"issue_id\" = j.id where try_cast(b.\"update_author_id\" as timestamp) is not null and b.\"body\" is not null and j.\"assignee\" is not null group by metric_period, body",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP))) AS metric_period, b.\"body\" AS body, COUNT(*) AS row_count FROM raw.comment b JOIN raw.issue j ON b.\"issue_id\" = j.id WHERE coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP)) IS NOT NULL AND b.\"body\" IS NOT NULL AND j.\"assignee\" IS NOT NULL GROUP BY metric_period, body",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"update_author_id\" as timestamp))) as metric_period, b.\"body\" as body, count(*) as row_count from raw.comment b join raw.issue j on b.\"issue_id\" = j.id where coalesce(try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"update_author_id\" as timestamp)) is not null and b.\"body\" is not null and j.\"assignee\" is not null group by metric_period, body",
       "cluster_id": "schemaopt_hard_jira_cluster_02",
       "business_tag": "jira comment analytics",
       "frequency_weight": 2.05,
@@ -1132,12 +1132,12 @@
         "body"
       ],
       "filter_tokens": [
-        "try_cast(b.\"update_author_id\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"update_author_id\"_as_timestamp))_is_not_null",
         "b.\"body\"_is_not_null",
         "j.\"assignee\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"update_author_id\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"body\" IS NOT NULL",
         "j.\"assignee\" IS NOT NULL"
       ],
@@ -1158,8 +1158,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c02_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"update_author_id\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count FROM raw.comment b JOIN raw.issue j ON b.\"issue_id\" = j.id WHERE try_cast(b.\"update_author_id\" AS TIMESTAMP) IS NOT NULL AND b.\"body\" IS NOT NULL AND j.\"assignee\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"update_author_id\" as timestamp)) as metric_period, count(*) as row_count from raw.comment b join raw.issue j on b.\"issue_id\" = j.id where try_cast(b.\"update_author_id\" as timestamp) is not null and b.\"body\" is not null and j.\"assignee\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count FROM raw.comment b JOIN raw.issue j ON b.\"issue_id\" = j.id WHERE coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP)) IS NOT NULL AND b.\"body\" IS NOT NULL AND j.\"assignee\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"update_author_id\" as timestamp))) as metric_period, count(*) as row_count from raw.comment b join raw.issue j on b.\"issue_id\" = j.id where coalesce(try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"update_author_id\" as timestamp)) is not null and b.\"body\" is not null and j.\"assignee\" is not null group by metric_period",
       "cluster_id": "schemaopt_hard_jira_cluster_02",
       "business_tag": "jira comment analytics",
       "frequency_weight": 2.2,
@@ -1176,12 +1176,12 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"update_author_id\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"update_author_id\"_as_timestamp))_is_not_null",
         "b.\"body\"_is_not_null",
         "j.\"assignee\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"update_author_id\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"body\" IS NOT NULL",
         "j.\"assignee\" IS NOT NULL"
       ],
@@ -1201,8 +1201,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c02_04",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"update_author_id\" AS TIMESTAMP)) AS metric_period, b.\"body\" AS body, j.\"assignee\" AS issue_assignee, COUNT(*) AS row_count FROM raw.comment b JOIN raw.issue j ON b.\"issue_id\" = j.id WHERE try_cast(b.\"update_author_id\" AS TIMESTAMP) IS NOT NULL AND b.\"body\" IS NOT NULL AND j.\"assignee\" IS NOT NULL GROUP BY metric_period, body, issue_assignee",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"update_author_id\" as timestamp)) as metric_period, b.\"body\" as body, j.\"assignee\" as issue_assignee, count(*) as row_count from raw.comment b join raw.issue j on b.\"issue_id\" = j.id where try_cast(b.\"update_author_id\" as timestamp) is not null and b.\"body\" is not null and j.\"assignee\" is not null group by metric_period, body, issue_assignee",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP))) AS metric_period, b.\"body\" AS body, j.\"assignee\" AS issue_assignee, COUNT(*) AS row_count FROM raw.comment b JOIN raw.issue j ON b.\"issue_id\" = j.id WHERE coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP)) IS NOT NULL AND b.\"body\" IS NOT NULL AND j.\"assignee\" IS NOT NULL GROUP BY metric_period, body, issue_assignee",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"update_author_id\" as timestamp))) as metric_period, b.\"body\" as body, j.\"assignee\" as issue_assignee, count(*) as row_count from raw.comment b join raw.issue j on b.\"issue_id\" = j.id where coalesce(try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"update_author_id\" as timestamp)) is not null and b.\"body\" is not null and j.\"assignee\" is not null group by metric_period, body, issue_assignee",
       "cluster_id": "schemaopt_hard_jira_cluster_02",
       "business_tag": "jira comment analytics",
       "frequency_weight": 1.9,
@@ -1223,12 +1223,12 @@
         "issue_assignee"
       ],
       "filter_tokens": [
-        "try_cast(b.\"update_author_id\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"update_author_id\"_as_timestamp))_is_not_null",
         "b.\"body\"_is_not_null",
         "j.\"assignee\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"update_author_id\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"body\" IS NOT NULL",
         "j.\"assignee\" IS NOT NULL"
       ],
@@ -1249,8 +1249,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c02_05",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"update_author_id\" AS TIMESTAMP)) AS metric_period, b.\"body\" AS body, COUNT(*) AS row_count FROM raw.comment b JOIN raw.issue j ON b.\"issue_id\" = j.id WHERE try_cast(b.\"update_author_id\" AS TIMESTAMP) IS NOT NULL AND b.\"body\" IS NOT NULL AND j.\"assignee\" IS NOT NULL GROUP BY metric_period, body",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"update_author_id\" as timestamp)) as metric_period, b.\"body\" as body, count(*) as row_count from raw.comment b join raw.issue j on b.\"issue_id\" = j.id where try_cast(b.\"update_author_id\" as timestamp) is not null and b.\"body\" is not null and j.\"assignee\" is not null group by metric_period, body",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP))) AS metric_period, b.\"body\" AS body, COUNT(*) AS row_count FROM raw.comment b JOIN raw.issue j ON b.\"issue_id\" = j.id WHERE coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP)) IS NOT NULL AND b.\"body\" IS NOT NULL AND j.\"assignee\" IS NOT NULL GROUP BY metric_period, body",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"update_author_id\" as timestamp))) as metric_period, b.\"body\" as body, count(*) as row_count from raw.comment b join raw.issue j on b.\"issue_id\" = j.id where coalesce(try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"update_author_id\" as timestamp)) is not null and b.\"body\" is not null and j.\"assignee\" is not null group by metric_period, body",
       "cluster_id": "schemaopt_hard_jira_cluster_02",
       "business_tag": "jira comment analytics",
       "frequency_weight": 2.05,
@@ -1269,12 +1269,12 @@
         "body"
       ],
       "filter_tokens": [
-        "try_cast(b.\"update_author_id\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"update_author_id\"_as_timestamp))_is_not_null",
         "b.\"body\"_is_not_null",
         "j.\"assignee\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"update_author_id\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"body\" IS NOT NULL",
         "j.\"assignee\" IS NOT NULL"
       ],
@@ -1295,8 +1295,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c02_06",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"update_author_id\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count FROM raw.comment b JOIN raw.issue j ON b.\"issue_id\" = j.id WHERE try_cast(b.\"update_author_id\" AS TIMESTAMP) IS NOT NULL AND b.\"body\" IS NOT NULL AND j.\"assignee\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"update_author_id\" as timestamp)) as metric_period, count(*) as row_count from raw.comment b join raw.issue j on b.\"issue_id\" = j.id where try_cast(b.\"update_author_id\" as timestamp) is not null and b.\"body\" is not null and j.\"assignee\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count FROM raw.comment b JOIN raw.issue j ON b.\"issue_id\" = j.id WHERE coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP)) IS NOT NULL AND b.\"body\" IS NOT NULL AND j.\"assignee\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"update_author_id\" as timestamp))) as metric_period, count(*) as row_count from raw.comment b join raw.issue j on b.\"issue_id\" = j.id where coalesce(try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"update_author_id\" as timestamp)) is not null and b.\"body\" is not null and j.\"assignee\" is not null group by metric_period",
       "cluster_id": "schemaopt_hard_jira_cluster_02",
       "business_tag": "jira comment analytics",
       "frequency_weight": 2.2,
@@ -1313,12 +1313,12 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"update_author_id\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"update_author_id\"_as_timestamp))_is_not_null",
         "b.\"body\"_is_not_null",
         "j.\"assignee\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"update_author_id\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"body\" IS NOT NULL",
         "j.\"assignee\" IS NOT NULL"
       ],
@@ -1338,8 +1338,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c02_07",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"update_author_id\" AS TIMESTAMP)) AS metric_period, b.\"body\" AS body, j.\"assignee\" AS issue_assignee, COUNT(*) AS row_count FROM raw.comment b JOIN raw.issue j ON b.\"issue_id\" = j.id WHERE try_cast(b.\"update_author_id\" AS TIMESTAMP) IS NOT NULL AND b.\"body\" IS NOT NULL AND j.\"assignee\" IS NOT NULL GROUP BY metric_period, body, issue_assignee",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"update_author_id\" as timestamp)) as metric_period, b.\"body\" as body, j.\"assignee\" as issue_assignee, count(*) as row_count from raw.comment b join raw.issue j on b.\"issue_id\" = j.id where try_cast(b.\"update_author_id\" as timestamp) is not null and b.\"body\" is not null and j.\"assignee\" is not null group by metric_period, body, issue_assignee",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP))) AS metric_period, b.\"body\" AS body, j.\"assignee\" AS issue_assignee, COUNT(*) AS row_count FROM raw.comment b JOIN raw.issue j ON b.\"issue_id\" = j.id WHERE coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP)) IS NOT NULL AND b.\"body\" IS NOT NULL AND j.\"assignee\" IS NOT NULL GROUP BY metric_period, body, issue_assignee",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"update_author_id\" as timestamp))) as metric_period, b.\"body\" as body, j.\"assignee\" as issue_assignee, count(*) as row_count from raw.comment b join raw.issue j on b.\"issue_id\" = j.id where coalesce(try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"update_author_id\" as timestamp)) is not null and b.\"body\" is not null and j.\"assignee\" is not null group by metric_period, body, issue_assignee",
       "cluster_id": "schemaopt_hard_jira_cluster_02",
       "business_tag": "jira comment analytics",
       "frequency_weight": 1.9,
@@ -1360,12 +1360,12 @@
         "issue_assignee"
       ],
       "filter_tokens": [
-        "try_cast(b.\"update_author_id\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"update_author_id\"_as_timestamp))_is_not_null",
         "b.\"body\"_is_not_null",
         "j.\"assignee\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"update_author_id\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"body\" IS NOT NULL",
         "j.\"assignee\" IS NOT NULL"
       ],
@@ -1386,8 +1386,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c03_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"release_date\" AS TIMESTAMP)) AS metric_period, b.\"archived\" AS archived, j.\"description\" AS project_description, COUNT(*) AS row_count FROM raw.version b JOIN raw.project j ON b.\"project_id\" = j.id WHERE try_cast(b.\"release_date\" AS TIMESTAMP) IS NOT NULL AND b.\"archived\" IS NOT NULL AND j.\"description\" IS NOT NULL GROUP BY metric_period, archived, project_description",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"release_date\" as timestamp)) as metric_period, b.\"archived\" as archived, j.\"description\" as project_description, count(*) as row_count from raw.version b join raw.project j on b.\"project_id\" = j.id where try_cast(b.\"release_date\" as timestamp) is not null and b.\"archived\" is not null and j.\"description\" is not null group by metric_period, archived, project_description",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP))) AS metric_period, b.\"archived\" AS archived, j.\"description\" AS project_description, COUNT(*) AS row_count FROM raw.version b JOIN raw.project j ON b.\"project_id\" = j.id WHERE coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"archived\" IS NOT NULL AND j.\"description\" IS NOT NULL GROUP BY metric_period, archived, project_description",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"release_date\" as timestamp))) as metric_period, b.\"archived\" as archived, j.\"description\" as project_description, count(*) as row_count from raw.version b join raw.project j on b.\"project_id\" = j.id where coalesce(try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"release_date\" as timestamp)) is not null and b.\"archived\" is not null and j.\"description\" is not null group by metric_period, archived, project_description",
       "cluster_id": "schemaopt_hard_jira_cluster_03",
       "business_tag": "jira version analytics",
       "frequency_weight": 2.35,
@@ -1408,12 +1408,12 @@
         "project_description"
       ],
       "filter_tokens": [
-        "try_cast(b.\"release_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"release_date\"_as_timestamp))_is_not_null",
         "b.\"archived\"_is_not_null",
         "j.\"description\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"release_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"archived\" IS NOT NULL",
         "j.\"description\" IS NOT NULL"
       ],
@@ -1434,8 +1434,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c03_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"release_date\" AS TIMESTAMP)) AS metric_period, b.\"archived\" AS archived, COUNT(*) AS row_count FROM raw.version b JOIN raw.project j ON b.\"project_id\" = j.id WHERE try_cast(b.\"release_date\" AS TIMESTAMP) IS NOT NULL AND b.\"archived\" IS NOT NULL AND j.\"description\" IS NOT NULL GROUP BY metric_period, archived",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"release_date\" as timestamp)) as metric_period, b.\"archived\" as archived, count(*) as row_count from raw.version b join raw.project j on b.\"project_id\" = j.id where try_cast(b.\"release_date\" as timestamp) is not null and b.\"archived\" is not null and j.\"description\" is not null group by metric_period, archived",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP))) AS metric_period, b.\"archived\" AS archived, COUNT(*) AS row_count FROM raw.version b JOIN raw.project j ON b.\"project_id\" = j.id WHERE coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"archived\" IS NOT NULL AND j.\"description\" IS NOT NULL GROUP BY metric_period, archived",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"release_date\" as timestamp))) as metric_period, b.\"archived\" as archived, count(*) as row_count from raw.version b join raw.project j on b.\"project_id\" = j.id where coalesce(try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"release_date\" as timestamp)) is not null and b.\"archived\" is not null and j.\"description\" is not null group by metric_period, archived",
       "cluster_id": "schemaopt_hard_jira_cluster_03",
       "business_tag": "jira version analytics",
       "frequency_weight": 2.5,
@@ -1454,12 +1454,12 @@
         "archived"
       ],
       "filter_tokens": [
-        "try_cast(b.\"release_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"release_date\"_as_timestamp))_is_not_null",
         "b.\"archived\"_is_not_null",
         "j.\"description\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"release_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"archived\" IS NOT NULL",
         "j.\"description\" IS NOT NULL"
       ],
@@ -1480,8 +1480,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c03_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"release_date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count FROM raw.version b JOIN raw.project j ON b.\"project_id\" = j.id WHERE try_cast(b.\"release_date\" AS TIMESTAMP) IS NOT NULL AND b.\"archived\" IS NOT NULL AND j.\"description\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"release_date\" as timestamp)) as metric_period, count(*) as row_count from raw.version b join raw.project j on b.\"project_id\" = j.id where try_cast(b.\"release_date\" as timestamp) is not null and b.\"archived\" is not null and j.\"description\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count FROM raw.version b JOIN raw.project j ON b.\"project_id\" = j.id WHERE coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"archived\" IS NOT NULL AND j.\"description\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"release_date\" as timestamp))) as metric_period, count(*) as row_count from raw.version b join raw.project j on b.\"project_id\" = j.id where coalesce(try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"release_date\" as timestamp)) is not null and b.\"archived\" is not null and j.\"description\" is not null group by metric_period",
       "cluster_id": "schemaopt_hard_jira_cluster_03",
       "business_tag": "jira version analytics",
       "frequency_weight": 2.65,
@@ -1498,12 +1498,12 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"release_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"release_date\"_as_timestamp))_is_not_null",
         "b.\"archived\"_is_not_null",
         "j.\"description\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"release_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"archived\" IS NOT NULL",
         "j.\"description\" IS NOT NULL"
       ],
@@ -1523,8 +1523,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c03_04",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"release_date\" AS TIMESTAMP)) AS metric_period, b.\"archived\" AS archived, j.\"description\" AS project_description, COUNT(*) AS row_count FROM raw.version b JOIN raw.project j ON b.\"project_id\" = j.id WHERE try_cast(b.\"release_date\" AS TIMESTAMP) IS NOT NULL AND b.\"archived\" IS NOT NULL AND j.\"description\" IS NOT NULL GROUP BY metric_period, archived, project_description",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"release_date\" as timestamp)) as metric_period, b.\"archived\" as archived, j.\"description\" as project_description, count(*) as row_count from raw.version b join raw.project j on b.\"project_id\" = j.id where try_cast(b.\"release_date\" as timestamp) is not null and b.\"archived\" is not null and j.\"description\" is not null group by metric_period, archived, project_description",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP))) AS metric_period, b.\"archived\" AS archived, j.\"description\" AS project_description, COUNT(*) AS row_count FROM raw.version b JOIN raw.project j ON b.\"project_id\" = j.id WHERE coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"archived\" IS NOT NULL AND j.\"description\" IS NOT NULL GROUP BY metric_period, archived, project_description",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"release_date\" as timestamp))) as metric_period, b.\"archived\" as archived, j.\"description\" as project_description, count(*) as row_count from raw.version b join raw.project j on b.\"project_id\" = j.id where coalesce(try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"release_date\" as timestamp)) is not null and b.\"archived\" is not null and j.\"description\" is not null group by metric_period, archived, project_description",
       "cluster_id": "schemaopt_hard_jira_cluster_03",
       "business_tag": "jira version analytics",
       "frequency_weight": 2.35,
@@ -1545,12 +1545,12 @@
         "project_description"
       ],
       "filter_tokens": [
-        "try_cast(b.\"release_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"release_date\"_as_timestamp))_is_not_null",
         "b.\"archived\"_is_not_null",
         "j.\"description\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"release_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"archived\" IS NOT NULL",
         "j.\"description\" IS NOT NULL"
       ],
@@ -1571,8 +1571,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c03_05",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"release_date\" AS TIMESTAMP)) AS metric_period, b.\"archived\" AS archived, COUNT(*) AS row_count FROM raw.version b JOIN raw.project j ON b.\"project_id\" = j.id WHERE try_cast(b.\"release_date\" AS TIMESTAMP) IS NOT NULL AND b.\"archived\" IS NOT NULL AND j.\"description\" IS NOT NULL GROUP BY metric_period, archived",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"release_date\" as timestamp)) as metric_period, b.\"archived\" as archived, count(*) as row_count from raw.version b join raw.project j on b.\"project_id\" = j.id where try_cast(b.\"release_date\" as timestamp) is not null and b.\"archived\" is not null and j.\"description\" is not null group by metric_period, archived",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP))) AS metric_period, b.\"archived\" AS archived, COUNT(*) AS row_count FROM raw.version b JOIN raw.project j ON b.\"project_id\" = j.id WHERE coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"archived\" IS NOT NULL AND j.\"description\" IS NOT NULL GROUP BY metric_period, archived",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"release_date\" as timestamp))) as metric_period, b.\"archived\" as archived, count(*) as row_count from raw.version b join raw.project j on b.\"project_id\" = j.id where coalesce(try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"release_date\" as timestamp)) is not null and b.\"archived\" is not null and j.\"description\" is not null group by metric_period, archived",
       "cluster_id": "schemaopt_hard_jira_cluster_03",
       "business_tag": "jira version analytics",
       "frequency_weight": 2.5,
@@ -1591,12 +1591,12 @@
         "archived"
       ],
       "filter_tokens": [
-        "try_cast(b.\"release_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"release_date\"_as_timestamp))_is_not_null",
         "b.\"archived\"_is_not_null",
         "j.\"description\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"release_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"archived\" IS NOT NULL",
         "j.\"description\" IS NOT NULL"
       ],
@@ -1617,8 +1617,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c03_06",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"release_date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count FROM raw.version b JOIN raw.project j ON b.\"project_id\" = j.id WHERE try_cast(b.\"release_date\" AS TIMESTAMP) IS NOT NULL AND b.\"archived\" IS NOT NULL AND j.\"description\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"release_date\" as timestamp)) as metric_period, count(*) as row_count from raw.version b join raw.project j on b.\"project_id\" = j.id where try_cast(b.\"release_date\" as timestamp) is not null and b.\"archived\" is not null and j.\"description\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count FROM raw.version b JOIN raw.project j ON b.\"project_id\" = j.id WHERE coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"archived\" IS NOT NULL AND j.\"description\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"release_date\" as timestamp))) as metric_period, count(*) as row_count from raw.version b join raw.project j on b.\"project_id\" = j.id where coalesce(try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"release_date\" as timestamp)) is not null and b.\"archived\" is not null and j.\"description\" is not null group by metric_period",
       "cluster_id": "schemaopt_hard_jira_cluster_03",
       "business_tag": "jira version analytics",
       "frequency_weight": 2.65,
@@ -1635,12 +1635,12 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"release_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"release_date\"_as_timestamp))_is_not_null",
         "b.\"archived\"_is_not_null",
         "j.\"description\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"release_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"archived\" IS NOT NULL",
         "j.\"description\" IS NOT NULL"
       ],
@@ -1660,8 +1660,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c03_07",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"release_date\" AS TIMESTAMP)) AS metric_period, b.\"archived\" AS archived, j.\"description\" AS project_description, COUNT(*) AS row_count FROM raw.version b JOIN raw.project j ON b.\"project_id\" = j.id WHERE try_cast(b.\"release_date\" AS TIMESTAMP) IS NOT NULL AND b.\"archived\" IS NOT NULL AND j.\"description\" IS NOT NULL GROUP BY metric_period, archived, project_description",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"release_date\" as timestamp)) as metric_period, b.\"archived\" as archived, j.\"description\" as project_description, count(*) as row_count from raw.version b join raw.project j on b.\"project_id\" = j.id where try_cast(b.\"release_date\" as timestamp) is not null and b.\"archived\" is not null and j.\"description\" is not null group by metric_period, archived, project_description",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP))) AS metric_period, b.\"archived\" AS archived, j.\"description\" AS project_description, COUNT(*) AS row_count FROM raw.version b JOIN raw.project j ON b.\"project_id\" = j.id WHERE coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"archived\" IS NOT NULL AND j.\"description\" IS NOT NULL GROUP BY metric_period, archived, project_description",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"release_date\" as timestamp))) as metric_period, b.\"archived\" as archived, j.\"description\" as project_description, count(*) as row_count from raw.version b join raw.project j on b.\"project_id\" = j.id where coalesce(try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"release_date\" as timestamp)) is not null and b.\"archived\" is not null and j.\"description\" is not null group by metric_period, archived, project_description",
       "cluster_id": "schemaopt_hard_jira_cluster_03",
       "business_tag": "jira version analytics",
       "frequency_weight": 2.35,
@@ -1682,12 +1682,12 @@
         "project_description"
       ],
       "filter_tokens": [
-        "try_cast(b.\"release_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"release_date\"_as_timestamp))_is_not_null",
         "b.\"archived\"_is_not_null",
         "j.\"description\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"release_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"archived\" IS NOT NULL",
         "j.\"description\" IS NOT NULL"
       ],
@@ -1708,8 +1708,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c04_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"time_zone\" AS TIMESTAMP)) AS metric_period, b.\"email\" AS email, COUNT(*) AS row_count FROM raw.user b WHERE try_cast(b.\"time_zone\" AS TIMESTAMP) IS NOT NULL AND b.\"email\" IS NOT NULL GROUP BY metric_period, email",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"time_zone\" as timestamp)) as metric_period, b.\"email\" as email, count(*) as row_count from raw.user b where try_cast(b.\"time_zone\" as timestamp) is not null and b.\"email\" is not null group by metric_period, email",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP))) AS metric_period, b.\"email\" AS email, COUNT(*) AS row_count FROM raw.user b WHERE coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP)) IS NOT NULL AND b.\"email\" IS NOT NULL GROUP BY metric_period, email",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"time_zone\" as timestamp))) as metric_period, b.\"email\" as email, count(*) as row_count from raw.user b where coalesce(try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"time_zone\" as timestamp)) is not null and b.\"email\" is not null group by metric_period, email",
       "cluster_id": "schemaopt_hard_jira_cluster_04",
       "business_tag": "jira user analytics",
       "frequency_weight": 2.8,
@@ -1727,11 +1727,11 @@
         "email"
       ],
       "filter_tokens": [
-        "try_cast(b.\"time_zone\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"time_zone\"_as_timestamp))_is_not_null",
         "b.\"email\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"time_zone\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"email\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1750,8 +1750,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c04_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"time_zone\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count FROM raw.user b WHERE try_cast(b.\"time_zone\" AS TIMESTAMP) IS NOT NULL AND b.\"email\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"time_zone\" as timestamp)) as metric_period, count(*) as row_count from raw.user b where try_cast(b.\"time_zone\" as timestamp) is not null and b.\"email\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count FROM raw.user b WHERE coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP)) IS NOT NULL AND b.\"email\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"time_zone\" as timestamp))) as metric_period, count(*) as row_count from raw.user b where coalesce(try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"time_zone\" as timestamp)) is not null and b.\"email\" is not null group by metric_period",
       "cluster_id": "schemaopt_hard_jira_cluster_04",
       "business_tag": "jira user analytics",
       "frequency_weight": 2.95,
@@ -1767,11 +1767,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"time_zone\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"time_zone\"_as_timestamp))_is_not_null",
         "b.\"email\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"time_zone\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"email\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1789,8 +1789,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c04_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"time_zone\" AS TIMESTAMP)) AS metric_period, b.\"email\" AS email, COUNT(*) AS row_count FROM raw.user b WHERE try_cast(b.\"time_zone\" AS TIMESTAMP) IS NOT NULL AND b.\"email\" IS NOT NULL GROUP BY metric_period, email",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"time_zone\" as timestamp)) as metric_period, b.\"email\" as email, count(*) as row_count from raw.user b where try_cast(b.\"time_zone\" as timestamp) is not null and b.\"email\" is not null group by metric_period, email",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP))) AS metric_period, b.\"email\" AS email, COUNT(*) AS row_count FROM raw.user b WHERE coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP)) IS NOT NULL AND b.\"email\" IS NOT NULL GROUP BY metric_period, email",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"time_zone\" as timestamp))) as metric_period, b.\"email\" as email, count(*) as row_count from raw.user b where coalesce(try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"time_zone\" as timestamp)) is not null and b.\"email\" is not null group by metric_period, email",
       "cluster_id": "schemaopt_hard_jira_cluster_04",
       "business_tag": "jira user analytics",
       "frequency_weight": 3.1,
@@ -1808,11 +1808,11 @@
         "email"
       ],
       "filter_tokens": [
-        "try_cast(b.\"time_zone\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"time_zone\"_as_timestamp))_is_not_null",
         "b.\"email\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"time_zone\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"email\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1831,8 +1831,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c04_04",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"time_zone\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count FROM raw.user b WHERE try_cast(b.\"time_zone\" AS TIMESTAMP) IS NOT NULL AND b.\"email\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"time_zone\" as timestamp)) as metric_period, count(*) as row_count from raw.user b where try_cast(b.\"time_zone\" as timestamp) is not null and b.\"email\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count FROM raw.user b WHERE coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP)) IS NOT NULL AND b.\"email\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"time_zone\" as timestamp))) as metric_period, count(*) as row_count from raw.user b where coalesce(try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"time_zone\" as timestamp)) is not null and b.\"email\" is not null group by metric_period",
       "cluster_id": "schemaopt_hard_jira_cluster_04",
       "business_tag": "jira user analytics",
       "frequency_weight": 2.8,
@@ -1848,11 +1848,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"time_zone\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"time_zone\"_as_timestamp))_is_not_null",
         "b.\"email\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"time_zone\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"email\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1870,8 +1870,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c04_05",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"time_zone\" AS TIMESTAMP)) AS metric_period, b.\"email\" AS email, COUNT(*) AS row_count FROM raw.user b WHERE try_cast(b.\"time_zone\" AS TIMESTAMP) IS NOT NULL AND b.\"email\" IS NOT NULL GROUP BY metric_period, email",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"time_zone\" as timestamp)) as metric_period, b.\"email\" as email, count(*) as row_count from raw.user b where try_cast(b.\"time_zone\" as timestamp) is not null and b.\"email\" is not null group by metric_period, email",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP))) AS metric_period, b.\"email\" AS email, COUNT(*) AS row_count FROM raw.user b WHERE coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP)) IS NOT NULL AND b.\"email\" IS NOT NULL GROUP BY metric_period, email",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"time_zone\" as timestamp))) as metric_period, b.\"email\" as email, count(*) as row_count from raw.user b where coalesce(try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"time_zone\" as timestamp)) is not null and b.\"email\" is not null group by metric_period, email",
       "cluster_id": "schemaopt_hard_jira_cluster_04",
       "business_tag": "jira user analytics",
       "frequency_weight": 2.95,
@@ -1889,11 +1889,11 @@
         "email"
       ],
       "filter_tokens": [
-        "try_cast(b.\"time_zone\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"time_zone\"_as_timestamp))_is_not_null",
         "b.\"email\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"time_zone\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"email\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1912,8 +1912,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c04_06",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"time_zone\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count FROM raw.user b WHERE try_cast(b.\"time_zone\" AS TIMESTAMP) IS NOT NULL AND b.\"email\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"time_zone\" as timestamp)) as metric_period, count(*) as row_count from raw.user b where try_cast(b.\"time_zone\" as timestamp) is not null and b.\"email\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count FROM raw.user b WHERE coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP)) IS NOT NULL AND b.\"email\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"time_zone\" as timestamp))) as metric_period, count(*) as row_count from raw.user b where coalesce(try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"time_zone\" as timestamp)) is not null and b.\"email\" is not null group by metric_period",
       "cluster_id": "schemaopt_hard_jira_cluster_04",
       "business_tag": "jira user analytics",
       "frequency_weight": 3.1,
@@ -1929,11 +1929,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"time_zone\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"time_zone\"_as_timestamp))_is_not_null",
         "b.\"email\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"time_zone\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"email\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1951,8 +1951,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c04_07",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"time_zone\" AS TIMESTAMP)) AS metric_period, b.\"email\" AS email, COUNT(*) AS row_count FROM raw.user b WHERE try_cast(b.\"time_zone\" AS TIMESTAMP) IS NOT NULL AND b.\"email\" IS NOT NULL GROUP BY metric_period, email",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"time_zone\" as timestamp)) as metric_period, b.\"email\" as email, count(*) as row_count from raw.user b where try_cast(b.\"time_zone\" as timestamp) is not null and b.\"email\" is not null group by metric_period, email",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP))) AS metric_period, b.\"email\" AS email, COUNT(*) AS row_count FROM raw.user b WHERE coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP)) IS NOT NULL AND b.\"email\" IS NOT NULL GROUP BY metric_period, email",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"time_zone\" as timestamp))) as metric_period, b.\"email\" as email, count(*) as row_count from raw.user b where coalesce(try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"time_zone\" as timestamp)) is not null and b.\"email\" is not null group by metric_period, email",
       "cluster_id": "schemaopt_hard_jira_cluster_04",
       "business_tag": "jira user analytics",
       "frequency_weight": 2.8,
@@ -1970,11 +1970,11 @@
         "email"
       ],
       "filter_tokens": [
-        "try_cast(b.\"time_zone\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"time_zone\"_as_timestamp))_is_not_null",
         "b.\"email\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"time_zone\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"email\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1993,8 +1993,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c05_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"complete_date\" AS TIMESTAMP)) AS metric_period, b.\"end_date\" AS end_date, j.\"name\" AS board_name, COUNT(*) AS row_count FROM raw.sprint b JOIN raw.board j ON b.\"board_id\" = j.id WHERE try_cast(b.\"complete_date\" AS TIMESTAMP) IS NOT NULL AND b.\"end_date\" IS NOT NULL AND j.\"name\" IS NOT NULL GROUP BY metric_period, end_date, board_name",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"complete_date\" as timestamp)) as metric_period, b.\"end_date\" as end_date, j.\"name\" as board_name, count(*) as row_count from raw.sprint b join raw.board j on b.\"board_id\" = j.id where try_cast(b.\"complete_date\" as timestamp) is not null and b.\"end_date\" is not null and j.\"name\" is not null group by metric_period, end_date, board_name",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP))) AS metric_period, b.\"end_date\" AS end_date, j.\"name\" AS board_name, COUNT(*) AS row_count FROM raw.sprint b JOIN raw.board j ON b.\"board_id\" = j.id WHERE coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"end_date\" IS NOT NULL AND j.\"name\" IS NOT NULL GROUP BY metric_period, end_date, board_name",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"complete_date\" as timestamp))) as metric_period, b.\"end_date\" as end_date, j.\"name\" as board_name, count(*) as row_count from raw.sprint b join raw.board j on b.\"board_id\" = j.id where coalesce(try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"complete_date\" as timestamp)) is not null and b.\"end_date\" is not null and j.\"name\" is not null group by metric_period, end_date, board_name",
       "cluster_id": "schemaopt_hard_jira_cluster_05",
       "business_tag": "jira sprint analytics",
       "frequency_weight": 3.25,
@@ -2015,12 +2015,12 @@
         "board_name"
       ],
       "filter_tokens": [
-        "try_cast(b.\"complete_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"complete_date\"_as_timestamp))_is_not_null",
         "b.\"end_date\"_is_not_null",
         "j.\"name\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"complete_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"end_date\" IS NOT NULL",
         "j.\"name\" IS NOT NULL"
       ],
@@ -2041,8 +2041,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c05_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"complete_date\" AS TIMESTAMP)) AS metric_period, b.\"end_date\" AS end_date, COUNT(*) AS row_count FROM raw.sprint b JOIN raw.board j ON b.\"board_id\" = j.id WHERE try_cast(b.\"complete_date\" AS TIMESTAMP) IS NOT NULL AND b.\"end_date\" IS NOT NULL AND j.\"name\" IS NOT NULL GROUP BY metric_period, end_date",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"complete_date\" as timestamp)) as metric_period, b.\"end_date\" as end_date, count(*) as row_count from raw.sprint b join raw.board j on b.\"board_id\" = j.id where try_cast(b.\"complete_date\" as timestamp) is not null and b.\"end_date\" is not null and j.\"name\" is not null group by metric_period, end_date",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP))) AS metric_period, b.\"end_date\" AS end_date, COUNT(*) AS row_count FROM raw.sprint b JOIN raw.board j ON b.\"board_id\" = j.id WHERE coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"end_date\" IS NOT NULL AND j.\"name\" IS NOT NULL GROUP BY metric_period, end_date",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"complete_date\" as timestamp))) as metric_period, b.\"end_date\" as end_date, count(*) as row_count from raw.sprint b join raw.board j on b.\"board_id\" = j.id where coalesce(try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"complete_date\" as timestamp)) is not null and b.\"end_date\" is not null and j.\"name\" is not null group by metric_period, end_date",
       "cluster_id": "schemaopt_hard_jira_cluster_05",
       "business_tag": "jira sprint analytics",
       "frequency_weight": 3.4,
@@ -2061,12 +2061,12 @@
         "end_date"
       ],
       "filter_tokens": [
-        "try_cast(b.\"complete_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"complete_date\"_as_timestamp))_is_not_null",
         "b.\"end_date\"_is_not_null",
         "j.\"name\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"complete_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"end_date\" IS NOT NULL",
         "j.\"name\" IS NOT NULL"
       ],
@@ -2087,8 +2087,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c05_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"complete_date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count FROM raw.sprint b JOIN raw.board j ON b.\"board_id\" = j.id WHERE try_cast(b.\"complete_date\" AS TIMESTAMP) IS NOT NULL AND b.\"end_date\" IS NOT NULL AND j.\"name\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"complete_date\" as timestamp)) as metric_period, count(*) as row_count from raw.sprint b join raw.board j on b.\"board_id\" = j.id where try_cast(b.\"complete_date\" as timestamp) is not null and b.\"end_date\" is not null and j.\"name\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count FROM raw.sprint b JOIN raw.board j ON b.\"board_id\" = j.id WHERE coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"end_date\" IS NOT NULL AND j.\"name\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"complete_date\" as timestamp))) as metric_period, count(*) as row_count from raw.sprint b join raw.board j on b.\"board_id\" = j.id where coalesce(try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"complete_date\" as timestamp)) is not null and b.\"end_date\" is not null and j.\"name\" is not null group by metric_period",
       "cluster_id": "schemaopt_hard_jira_cluster_05",
       "business_tag": "jira sprint analytics",
       "frequency_weight": 3.55,
@@ -2105,12 +2105,12 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"complete_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"complete_date\"_as_timestamp))_is_not_null",
         "b.\"end_date\"_is_not_null",
         "j.\"name\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"complete_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"end_date\" IS NOT NULL",
         "j.\"name\" IS NOT NULL"
       ],
@@ -2130,8 +2130,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c05_04",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"complete_date\" AS TIMESTAMP)) AS metric_period, b.\"end_date\" AS end_date, j.\"name\" AS board_name, COUNT(*) AS row_count FROM raw.sprint b JOIN raw.board j ON b.\"board_id\" = j.id WHERE try_cast(b.\"complete_date\" AS TIMESTAMP) IS NOT NULL AND b.\"end_date\" IS NOT NULL AND j.\"name\" IS NOT NULL GROUP BY metric_period, end_date, board_name",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"complete_date\" as timestamp)) as metric_period, b.\"end_date\" as end_date, j.\"name\" as board_name, count(*) as row_count from raw.sprint b join raw.board j on b.\"board_id\" = j.id where try_cast(b.\"complete_date\" as timestamp) is not null and b.\"end_date\" is not null and j.\"name\" is not null group by metric_period, end_date, board_name",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP))) AS metric_period, b.\"end_date\" AS end_date, j.\"name\" AS board_name, COUNT(*) AS row_count FROM raw.sprint b JOIN raw.board j ON b.\"board_id\" = j.id WHERE coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"end_date\" IS NOT NULL AND j.\"name\" IS NOT NULL GROUP BY metric_period, end_date, board_name",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"complete_date\" as timestamp))) as metric_period, b.\"end_date\" as end_date, j.\"name\" as board_name, count(*) as row_count from raw.sprint b join raw.board j on b.\"board_id\" = j.id where coalesce(try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"complete_date\" as timestamp)) is not null and b.\"end_date\" is not null and j.\"name\" is not null group by metric_period, end_date, board_name",
       "cluster_id": "schemaopt_hard_jira_cluster_05",
       "business_tag": "jira sprint analytics",
       "frequency_weight": 3.25,
@@ -2152,12 +2152,12 @@
         "board_name"
       ],
       "filter_tokens": [
-        "try_cast(b.\"complete_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"complete_date\"_as_timestamp))_is_not_null",
         "b.\"end_date\"_is_not_null",
         "j.\"name\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"complete_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"end_date\" IS NOT NULL",
         "j.\"name\" IS NOT NULL"
       ],
@@ -2178,8 +2178,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c05_05",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"complete_date\" AS TIMESTAMP)) AS metric_period, b.\"end_date\" AS end_date, COUNT(*) AS row_count FROM raw.sprint b JOIN raw.board j ON b.\"board_id\" = j.id WHERE try_cast(b.\"complete_date\" AS TIMESTAMP) IS NOT NULL AND b.\"end_date\" IS NOT NULL AND j.\"name\" IS NOT NULL GROUP BY metric_period, end_date",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"complete_date\" as timestamp)) as metric_period, b.\"end_date\" as end_date, count(*) as row_count from raw.sprint b join raw.board j on b.\"board_id\" = j.id where try_cast(b.\"complete_date\" as timestamp) is not null and b.\"end_date\" is not null and j.\"name\" is not null group by metric_period, end_date",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP))) AS metric_period, b.\"end_date\" AS end_date, COUNT(*) AS row_count FROM raw.sprint b JOIN raw.board j ON b.\"board_id\" = j.id WHERE coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"end_date\" IS NOT NULL AND j.\"name\" IS NOT NULL GROUP BY metric_period, end_date",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"complete_date\" as timestamp))) as metric_period, b.\"end_date\" as end_date, count(*) as row_count from raw.sprint b join raw.board j on b.\"board_id\" = j.id where coalesce(try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"complete_date\" as timestamp)) is not null and b.\"end_date\" is not null and j.\"name\" is not null group by metric_period, end_date",
       "cluster_id": "schemaopt_hard_jira_cluster_05",
       "business_tag": "jira sprint analytics",
       "frequency_weight": 3.4,
@@ -2198,12 +2198,12 @@
         "end_date"
       ],
       "filter_tokens": [
-        "try_cast(b.\"complete_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"complete_date\"_as_timestamp))_is_not_null",
         "b.\"end_date\"_is_not_null",
         "j.\"name\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"complete_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"end_date\" IS NOT NULL",
         "j.\"name\" IS NOT NULL"
       ],
@@ -2224,8 +2224,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c05_06",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"complete_date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count FROM raw.sprint b JOIN raw.board j ON b.\"board_id\" = j.id WHERE try_cast(b.\"complete_date\" AS TIMESTAMP) IS NOT NULL AND b.\"end_date\" IS NOT NULL AND j.\"name\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"complete_date\" as timestamp)) as metric_period, count(*) as row_count from raw.sprint b join raw.board j on b.\"board_id\" = j.id where try_cast(b.\"complete_date\" as timestamp) is not null and b.\"end_date\" is not null and j.\"name\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count FROM raw.sprint b JOIN raw.board j ON b.\"board_id\" = j.id WHERE coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"end_date\" IS NOT NULL AND j.\"name\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"complete_date\" as timestamp))) as metric_period, count(*) as row_count from raw.sprint b join raw.board j on b.\"board_id\" = j.id where coalesce(try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"complete_date\" as timestamp)) is not null and b.\"end_date\" is not null and j.\"name\" is not null group by metric_period",
       "cluster_id": "schemaopt_hard_jira_cluster_05",
       "business_tag": "jira sprint analytics",
       "frequency_weight": 3.55,
@@ -2242,12 +2242,12 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"complete_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"complete_date\"_as_timestamp))_is_not_null",
         "b.\"end_date\"_is_not_null",
         "j.\"name\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"complete_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"end_date\" IS NOT NULL",
         "j.\"name\" IS NOT NULL"
       ],
@@ -2267,8 +2267,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_vq_c05_07",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"complete_date\" AS TIMESTAMP)) AS metric_period, b.\"end_date\" AS end_date, j.\"name\" AS board_name, COUNT(*) AS row_count FROM raw.sprint b JOIN raw.board j ON b.\"board_id\" = j.id WHERE try_cast(b.\"complete_date\" AS TIMESTAMP) IS NOT NULL AND b.\"end_date\" IS NOT NULL AND j.\"name\" IS NOT NULL GROUP BY metric_period, end_date, board_name",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"complete_date\" as timestamp)) as metric_period, b.\"end_date\" as end_date, j.\"name\" as board_name, count(*) as row_count from raw.sprint b join raw.board j on b.\"board_id\" = j.id where try_cast(b.\"complete_date\" as timestamp) is not null and b.\"end_date\" is not null and j.\"name\" is not null group by metric_period, end_date, board_name",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP))) AS metric_period, b.\"end_date\" AS end_date, j.\"name\" AS board_name, COUNT(*) AS row_count FROM raw.sprint b JOIN raw.board j ON b.\"board_id\" = j.id WHERE coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"end_date\" IS NOT NULL AND j.\"name\" IS NOT NULL GROUP BY metric_period, end_date, board_name",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"complete_date\" as timestamp))) as metric_period, b.\"end_date\" as end_date, j.\"name\" as board_name, count(*) as row_count from raw.sprint b join raw.board j on b.\"board_id\" = j.id where coalesce(try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"complete_date\" as timestamp)) is not null and b.\"end_date\" is not null and j.\"name\" is not null group by metric_period, end_date, board_name",
       "cluster_id": "schemaopt_hard_jira_cluster_05",
       "business_tag": "jira sprint analytics",
       "frequency_weight": 3.25,
@@ -2289,12 +2289,12 @@
         "board_name"
       ],
       "filter_tokens": [
-        "try_cast(b.\"complete_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"complete_date\"_as_timestamp))_is_not_null",
         "b.\"end_date\"_is_not_null",
         "j.\"name\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"complete_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"end_date\" IS NOT NULL",
         "j.\"name\" IS NOT NULL"
       ],
@@ -2495,8 +2495,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_hq_c02_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"update_author_id\" AS TIMESTAMP)) AS metric_period, b.\"body\" AS body, COUNT(*) AS row_count FROM raw.comment b JOIN raw.issue j ON b.\"issue_id\" = j.id WHERE try_cast(b.\"update_author_id\" AS TIMESTAMP) IS NOT NULL AND b.\"body\" IS NOT NULL AND j.\"assignee\" IS NOT NULL GROUP BY metric_period, body",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"update_author_id\" as timestamp)) as metric_period, b.\"body\" as body, count(*) as row_count from raw.comment b join raw.issue j on b.\"issue_id\" = j.id where try_cast(b.\"update_author_id\" as timestamp) is not null and b.\"body\" is not null and j.\"assignee\" is not null group by metric_period, body",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP))) AS metric_period, b.\"body\" AS body, COUNT(*) AS row_count FROM raw.comment b JOIN raw.issue j ON b.\"issue_id\" = j.id WHERE coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP)) IS NOT NULL AND b.\"body\" IS NOT NULL AND j.\"assignee\" IS NOT NULL GROUP BY metric_period, body",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"update_author_id\" as timestamp))) as metric_period, b.\"body\" as body, count(*) as row_count from raw.comment b join raw.issue j on b.\"issue_id\" = j.id where coalesce(try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"update_author_id\" as timestamp)) is not null and b.\"body\" is not null and j.\"assignee\" is not null group by metric_period, body",
       "cluster_id": "schemaopt_hard_jira_cluster_02",
       "business_tag": "jira comment analytics",
       "frequency_weight": 1.4,
@@ -2515,12 +2515,12 @@
         "body"
       ],
       "filter_tokens": [
-        "try_cast(b.\"update_author_id\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"update_author_id\"_as_timestamp))_is_not_null",
         "b.\"body\"_is_not_null",
         "j.\"assignee\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"update_author_id\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"body\" IS NOT NULL",
         "j.\"assignee\" IS NOT NULL"
       ],
@@ -2541,8 +2541,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_hq_c02_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"update_author_id\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count FROM raw.comment b JOIN raw.issue j ON b.\"issue_id\" = j.id WHERE try_cast(b.\"update_author_id\" AS TIMESTAMP) IS NOT NULL AND b.\"body\" IS NOT NULL AND j.\"assignee\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"update_author_id\" as timestamp)) as metric_period, count(*) as row_count from raw.comment b join raw.issue j on b.\"issue_id\" = j.id where try_cast(b.\"update_author_id\" as timestamp) is not null and b.\"body\" is not null and j.\"assignee\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count FROM raw.comment b JOIN raw.issue j ON b.\"issue_id\" = j.id WHERE coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP)) IS NOT NULL AND b.\"body\" IS NOT NULL AND j.\"assignee\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"update_author_id\" as timestamp))) as metric_period, count(*) as row_count from raw.comment b join raw.issue j on b.\"issue_id\" = j.id where coalesce(try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"update_author_id\" as timestamp)) is not null and b.\"body\" is not null and j.\"assignee\" is not null group by metric_period",
       "cluster_id": "schemaopt_hard_jira_cluster_02",
       "business_tag": "jira comment analytics",
       "frequency_weight": 1.5,
@@ -2559,12 +2559,12 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"update_author_id\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"update_author_id\"_as_timestamp))_is_not_null",
         "b.\"body\"_is_not_null",
         "j.\"assignee\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"update_author_id\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"body\" IS NOT NULL",
         "j.\"assignee\" IS NOT NULL"
       ],
@@ -2584,8 +2584,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_hq_c02_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"update_author_id\" AS TIMESTAMP)) AS metric_period, b.\"body\" AS body, j.\"assignee\" AS issue_assignee, COUNT(*) AS row_count FROM raw.comment b JOIN raw.issue j ON b.\"issue_id\" = j.id WHERE try_cast(b.\"update_author_id\" AS TIMESTAMP) IS NOT NULL AND b.\"body\" IS NOT NULL AND j.\"assignee\" IS NOT NULL GROUP BY metric_period, body, issue_assignee",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"update_author_id\" as timestamp)) as metric_period, b.\"body\" as body, j.\"assignee\" as issue_assignee, count(*) as row_count from raw.comment b join raw.issue j on b.\"issue_id\" = j.id where try_cast(b.\"update_author_id\" as timestamp) is not null and b.\"body\" is not null and j.\"assignee\" is not null group by metric_period, body, issue_assignee",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP))) AS metric_period, b.\"body\" AS body, j.\"assignee\" AS issue_assignee, COUNT(*) AS row_count FROM raw.comment b JOIN raw.issue j ON b.\"issue_id\" = j.id WHERE coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP)) IS NOT NULL AND b.\"body\" IS NOT NULL AND j.\"assignee\" IS NOT NULL GROUP BY metric_period, body, issue_assignee",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"update_author_id\" as timestamp))) as metric_period, b.\"body\" as body, j.\"assignee\" as issue_assignee, count(*) as row_count from raw.comment b join raw.issue j on b.\"issue_id\" = j.id where coalesce(try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"update_author_id\" as timestamp)) is not null and b.\"body\" is not null and j.\"assignee\" is not null group by metric_period, body, issue_assignee",
       "cluster_id": "schemaopt_hard_jira_cluster_02",
       "business_tag": "jira comment analytics",
       "frequency_weight": 1.4,
@@ -2606,12 +2606,12 @@
         "issue_assignee"
       ],
       "filter_tokens": [
-        "try_cast(b.\"update_author_id\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"update_author_id\"_as_timestamp))_is_not_null",
         "b.\"body\"_is_not_null",
         "j.\"assignee\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"update_author_id\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"body\" IS NOT NULL",
         "j.\"assignee\" IS NOT NULL"
       ],
@@ -2632,8 +2632,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_hq_c02_04",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"update_author_id\" AS TIMESTAMP)) AS metric_period, b.\"body\" AS body, COUNT(*) AS row_count FROM raw.comment b JOIN raw.issue j ON b.\"issue_id\" = j.id WHERE try_cast(b.\"update_author_id\" AS TIMESTAMP) IS NOT NULL AND b.\"body\" IS NOT NULL AND j.\"assignee\" IS NOT NULL GROUP BY metric_period, body",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"update_author_id\" as timestamp)) as metric_period, b.\"body\" as body, count(*) as row_count from raw.comment b join raw.issue j on b.\"issue_id\" = j.id where try_cast(b.\"update_author_id\" as timestamp) is not null and b.\"body\" is not null and j.\"assignee\" is not null group by metric_period, body",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP))) AS metric_period, b.\"body\" AS body, COUNT(*) AS row_count FROM raw.comment b JOIN raw.issue j ON b.\"issue_id\" = j.id WHERE coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP)) IS NOT NULL AND b.\"body\" IS NOT NULL AND j.\"assignee\" IS NOT NULL GROUP BY metric_period, body",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"update_author_id\" as timestamp))) as metric_period, b.\"body\" as body, count(*) as row_count from raw.comment b join raw.issue j on b.\"issue_id\" = j.id where coalesce(try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"update_author_id\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"update_author_id\" as timestamp)) is not null and b.\"body\" is not null and j.\"assignee\" is not null group by metric_period, body",
       "cluster_id": "schemaopt_hard_jira_cluster_02",
       "business_tag": "jira comment analytics",
       "frequency_weight": 1.5,
@@ -2652,12 +2652,12 @@
         "body"
       ],
       "filter_tokens": [
-        "try_cast(b.\"update_author_id\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"update_author_id\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"update_author_id\"_as_timestamp))_is_not_null",
         "b.\"body\"_is_not_null",
         "j.\"assignee\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"update_author_id\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"update_author_id\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"update_author_id\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"body\" IS NOT NULL",
         "j.\"assignee\" IS NOT NULL"
       ],
@@ -2678,8 +2678,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_hq_c03_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"release_date\" AS TIMESTAMP)) AS metric_period, b.\"archived\" AS archived, COUNT(*) AS row_count FROM raw.version b JOIN raw.project j ON b.\"project_id\" = j.id WHERE try_cast(b.\"release_date\" AS TIMESTAMP) IS NOT NULL AND b.\"archived\" IS NOT NULL AND j.\"description\" IS NOT NULL GROUP BY metric_period, archived",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"release_date\" as timestamp)) as metric_period, b.\"archived\" as archived, count(*) as row_count from raw.version b join raw.project j on b.\"project_id\" = j.id where try_cast(b.\"release_date\" as timestamp) is not null and b.\"archived\" is not null and j.\"description\" is not null group by metric_period, archived",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP))) AS metric_period, b.\"archived\" AS archived, COUNT(*) AS row_count FROM raw.version b JOIN raw.project j ON b.\"project_id\" = j.id WHERE coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"archived\" IS NOT NULL AND j.\"description\" IS NOT NULL GROUP BY metric_period, archived",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"release_date\" as timestamp))) as metric_period, b.\"archived\" as archived, count(*) as row_count from raw.version b join raw.project j on b.\"project_id\" = j.id where coalesce(try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"release_date\" as timestamp)) is not null and b.\"archived\" is not null and j.\"description\" is not null group by metric_period, archived",
       "cluster_id": "schemaopt_hard_jira_cluster_03",
       "business_tag": "jira version analytics",
       "frequency_weight": 1.7,
@@ -2698,12 +2698,12 @@
         "archived"
       ],
       "filter_tokens": [
-        "try_cast(b.\"release_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"release_date\"_as_timestamp))_is_not_null",
         "b.\"archived\"_is_not_null",
         "j.\"description\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"release_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"archived\" IS NOT NULL",
         "j.\"description\" IS NOT NULL"
       ],
@@ -2724,8 +2724,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_hq_c03_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"release_date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count FROM raw.version b JOIN raw.project j ON b.\"project_id\" = j.id WHERE try_cast(b.\"release_date\" AS TIMESTAMP) IS NOT NULL AND b.\"archived\" IS NOT NULL AND j.\"description\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"release_date\" as timestamp)) as metric_period, count(*) as row_count from raw.version b join raw.project j on b.\"project_id\" = j.id where try_cast(b.\"release_date\" as timestamp) is not null and b.\"archived\" is not null and j.\"description\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count FROM raw.version b JOIN raw.project j ON b.\"project_id\" = j.id WHERE coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"archived\" IS NOT NULL AND j.\"description\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"release_date\" as timestamp))) as metric_period, count(*) as row_count from raw.version b join raw.project j on b.\"project_id\" = j.id where coalesce(try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"release_date\" as timestamp)) is not null and b.\"archived\" is not null and j.\"description\" is not null group by metric_period",
       "cluster_id": "schemaopt_hard_jira_cluster_03",
       "business_tag": "jira version analytics",
       "frequency_weight": 1.8,
@@ -2742,12 +2742,12 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"release_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"release_date\"_as_timestamp))_is_not_null",
         "b.\"archived\"_is_not_null",
         "j.\"description\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"release_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"archived\" IS NOT NULL",
         "j.\"description\" IS NOT NULL"
       ],
@@ -2767,8 +2767,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_hq_c03_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"release_date\" AS TIMESTAMP)) AS metric_period, b.\"archived\" AS archived, j.\"description\" AS project_description, COUNT(*) AS row_count FROM raw.version b JOIN raw.project j ON b.\"project_id\" = j.id WHERE try_cast(b.\"release_date\" AS TIMESTAMP) IS NOT NULL AND b.\"archived\" IS NOT NULL AND j.\"description\" IS NOT NULL GROUP BY metric_period, archived, project_description",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"release_date\" as timestamp)) as metric_period, b.\"archived\" as archived, j.\"description\" as project_description, count(*) as row_count from raw.version b join raw.project j on b.\"project_id\" = j.id where try_cast(b.\"release_date\" as timestamp) is not null and b.\"archived\" is not null and j.\"description\" is not null group by metric_period, archived, project_description",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP))) AS metric_period, b.\"archived\" AS archived, j.\"description\" AS project_description, COUNT(*) AS row_count FROM raw.version b JOIN raw.project j ON b.\"project_id\" = j.id WHERE coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"archived\" IS NOT NULL AND j.\"description\" IS NOT NULL GROUP BY metric_period, archived, project_description",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"release_date\" as timestamp))) as metric_period, b.\"archived\" as archived, j.\"description\" as project_description, count(*) as row_count from raw.version b join raw.project j on b.\"project_id\" = j.id where coalesce(try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"release_date\" as timestamp)) is not null and b.\"archived\" is not null and j.\"description\" is not null group by metric_period, archived, project_description",
       "cluster_id": "schemaopt_hard_jira_cluster_03",
       "business_tag": "jira version analytics",
       "frequency_weight": 1.7,
@@ -2789,12 +2789,12 @@
         "project_description"
       ],
       "filter_tokens": [
-        "try_cast(b.\"release_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"release_date\"_as_timestamp))_is_not_null",
         "b.\"archived\"_is_not_null",
         "j.\"description\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"release_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"archived\" IS NOT NULL",
         "j.\"description\" IS NOT NULL"
       ],
@@ -2815,8 +2815,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_hq_c03_04",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"release_date\" AS TIMESTAMP)) AS metric_period, b.\"archived\" AS archived, COUNT(*) AS row_count FROM raw.version b JOIN raw.project j ON b.\"project_id\" = j.id WHERE try_cast(b.\"release_date\" AS TIMESTAMP) IS NOT NULL AND b.\"archived\" IS NOT NULL AND j.\"description\" IS NOT NULL GROUP BY metric_period, archived",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"release_date\" as timestamp)) as metric_period, b.\"archived\" as archived, count(*) as row_count from raw.version b join raw.project j on b.\"project_id\" = j.id where try_cast(b.\"release_date\" as timestamp) is not null and b.\"archived\" is not null and j.\"description\" is not null group by metric_period, archived",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP))) AS metric_period, b.\"archived\" AS archived, COUNT(*) AS row_count FROM raw.version b JOIN raw.project j ON b.\"project_id\" = j.id WHERE coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"archived\" IS NOT NULL AND j.\"description\" IS NOT NULL GROUP BY metric_period, archived",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"release_date\" as timestamp))) as metric_period, b.\"archived\" as archived, count(*) as row_count from raw.version b join raw.project j on b.\"project_id\" = j.id where coalesce(try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"release_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"release_date\" as timestamp)) is not null and b.\"archived\" is not null and j.\"description\" is not null group by metric_period, archived",
       "cluster_id": "schemaopt_hard_jira_cluster_03",
       "business_tag": "jira version analytics",
       "frequency_weight": 1.8,
@@ -2835,12 +2835,12 @@
         "archived"
       ],
       "filter_tokens": [
-        "try_cast(b.\"release_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"release_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"release_date\"_as_timestamp))_is_not_null",
         "b.\"archived\"_is_not_null",
         "j.\"description\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"release_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"release_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"release_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"archived\" IS NOT NULL",
         "j.\"description\" IS NOT NULL"
       ],
@@ -2861,8 +2861,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_hq_c04_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"time_zone\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count FROM raw.user b WHERE try_cast(b.\"time_zone\" AS TIMESTAMP) IS NOT NULL AND b.\"email\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"time_zone\" as timestamp)) as metric_period, count(*) as row_count from raw.user b where try_cast(b.\"time_zone\" as timestamp) is not null and b.\"email\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count FROM raw.user b WHERE coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP)) IS NOT NULL AND b.\"email\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"time_zone\" as timestamp))) as metric_period, count(*) as row_count from raw.user b where coalesce(try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"time_zone\" as timestamp)) is not null and b.\"email\" is not null group by metric_period",
       "cluster_id": "schemaopt_hard_jira_cluster_04",
       "business_tag": "jira user analytics",
       "frequency_weight": 2.0,
@@ -2878,11 +2878,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"time_zone\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"time_zone\"_as_timestamp))_is_not_null",
         "b.\"email\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"time_zone\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"email\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2900,8 +2900,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_hq_c04_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"time_zone\" AS TIMESTAMP)) AS metric_period, b.\"email\" AS email, COUNT(*) AS row_count FROM raw.user b WHERE try_cast(b.\"time_zone\" AS TIMESTAMP) IS NOT NULL AND b.\"email\" IS NOT NULL GROUP BY metric_period, email",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"time_zone\" as timestamp)) as metric_period, b.\"email\" as email, count(*) as row_count from raw.user b where try_cast(b.\"time_zone\" as timestamp) is not null and b.\"email\" is not null group by metric_period, email",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP))) AS metric_period, b.\"email\" AS email, COUNT(*) AS row_count FROM raw.user b WHERE coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP)) IS NOT NULL AND b.\"email\" IS NOT NULL GROUP BY metric_period, email",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"time_zone\" as timestamp))) as metric_period, b.\"email\" as email, count(*) as row_count from raw.user b where coalesce(try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"time_zone\" as timestamp)) is not null and b.\"email\" is not null group by metric_period, email",
       "cluster_id": "schemaopt_hard_jira_cluster_04",
       "business_tag": "jira user analytics",
       "frequency_weight": 2.1,
@@ -2919,11 +2919,11 @@
         "email"
       ],
       "filter_tokens": [
-        "try_cast(b.\"time_zone\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"time_zone\"_as_timestamp))_is_not_null",
         "b.\"email\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"time_zone\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"email\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2942,8 +2942,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_hq_c04_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"time_zone\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count FROM raw.user b WHERE try_cast(b.\"time_zone\" AS TIMESTAMP) IS NOT NULL AND b.\"email\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"time_zone\" as timestamp)) as metric_period, count(*) as row_count from raw.user b where try_cast(b.\"time_zone\" as timestamp) is not null and b.\"email\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count FROM raw.user b WHERE coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP)) IS NOT NULL AND b.\"email\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"time_zone\" as timestamp))) as metric_period, count(*) as row_count from raw.user b where coalesce(try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"time_zone\" as timestamp)) is not null and b.\"email\" is not null group by metric_period",
       "cluster_id": "schemaopt_hard_jira_cluster_04",
       "business_tag": "jira user analytics",
       "frequency_weight": 2.0,
@@ -2959,11 +2959,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"time_zone\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"time_zone\"_as_timestamp))_is_not_null",
         "b.\"email\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"time_zone\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"email\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -2981,8 +2981,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_hq_c04_04",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"time_zone\" AS TIMESTAMP)) AS metric_period, b.\"email\" AS email, COUNT(*) AS row_count FROM raw.user b WHERE try_cast(b.\"time_zone\" AS TIMESTAMP) IS NOT NULL AND b.\"email\" IS NOT NULL GROUP BY metric_period, email",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"time_zone\" as timestamp)) as metric_period, b.\"email\" as email, count(*) as row_count from raw.user b where try_cast(b.\"time_zone\" as timestamp) is not null and b.\"email\" is not null group by metric_period, email",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP))) AS metric_period, b.\"email\" AS email, COUNT(*) AS row_count FROM raw.user b WHERE coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP)) IS NOT NULL AND b.\"email\" IS NOT NULL GROUP BY metric_period, email",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"time_zone\" as timestamp))) as metric_period, b.\"email\" as email, count(*) as row_count from raw.user b where coalesce(try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"time_zone\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"time_zone\" as timestamp)) is not null and b.\"email\" is not null group by metric_period, email",
       "cluster_id": "schemaopt_hard_jira_cluster_04",
       "business_tag": "jira user analytics",
       "frequency_weight": 2.1,
@@ -3000,11 +3000,11 @@
         "email"
       ],
       "filter_tokens": [
-        "try_cast(b.\"time_zone\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"time_zone\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"time_zone\"_as_timestamp))_is_not_null",
         "b.\"email\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"time_zone\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"time_zone\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"time_zone\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"email\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -3023,8 +3023,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_hq_c05_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"complete_date\" AS TIMESTAMP)) AS metric_period, b.\"end_date\" AS end_date, COUNT(*) AS row_count FROM raw.sprint b JOIN raw.board j ON b.\"board_id\" = j.id WHERE try_cast(b.\"complete_date\" AS TIMESTAMP) IS NOT NULL AND b.\"end_date\" IS NOT NULL AND j.\"name\" IS NOT NULL GROUP BY metric_period, end_date",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"complete_date\" as timestamp)) as metric_period, b.\"end_date\" as end_date, count(*) as row_count from raw.sprint b join raw.board j on b.\"board_id\" = j.id where try_cast(b.\"complete_date\" as timestamp) is not null and b.\"end_date\" is not null and j.\"name\" is not null group by metric_period, end_date",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP))) AS metric_period, b.\"end_date\" AS end_date, COUNT(*) AS row_count FROM raw.sprint b JOIN raw.board j ON b.\"board_id\" = j.id WHERE coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"end_date\" IS NOT NULL AND j.\"name\" IS NOT NULL GROUP BY metric_period, end_date",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"complete_date\" as timestamp))) as metric_period, b.\"end_date\" as end_date, count(*) as row_count from raw.sprint b join raw.board j on b.\"board_id\" = j.id where coalesce(try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"complete_date\" as timestamp)) is not null and b.\"end_date\" is not null and j.\"name\" is not null group by metric_period, end_date",
       "cluster_id": "schemaopt_hard_jira_cluster_05",
       "business_tag": "jira sprint analytics",
       "frequency_weight": 2.3,
@@ -3043,12 +3043,12 @@
         "end_date"
       ],
       "filter_tokens": [
-        "try_cast(b.\"complete_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"complete_date\"_as_timestamp))_is_not_null",
         "b.\"end_date\"_is_not_null",
         "j.\"name\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"complete_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"end_date\" IS NOT NULL",
         "j.\"name\" IS NOT NULL"
       ],
@@ -3069,8 +3069,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_hq_c05_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"complete_date\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count FROM raw.sprint b JOIN raw.board j ON b.\"board_id\" = j.id WHERE try_cast(b.\"complete_date\" AS TIMESTAMP) IS NOT NULL AND b.\"end_date\" IS NOT NULL AND j.\"name\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"complete_date\" as timestamp)) as metric_period, count(*) as row_count from raw.sprint b join raw.board j on b.\"board_id\" = j.id where try_cast(b.\"complete_date\" as timestamp) is not null and b.\"end_date\" is not null and j.\"name\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count FROM raw.sprint b JOIN raw.board j ON b.\"board_id\" = j.id WHERE coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"end_date\" IS NOT NULL AND j.\"name\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"complete_date\" as timestamp))) as metric_period, count(*) as row_count from raw.sprint b join raw.board j on b.\"board_id\" = j.id where coalesce(try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"complete_date\" as timestamp)) is not null and b.\"end_date\" is not null and j.\"name\" is not null group by metric_period",
       "cluster_id": "schemaopt_hard_jira_cluster_05",
       "business_tag": "jira sprint analytics",
       "frequency_weight": 2.4,
@@ -3087,12 +3087,12 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"complete_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"complete_date\"_as_timestamp))_is_not_null",
         "b.\"end_date\"_is_not_null",
         "j.\"name\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"complete_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"end_date\" IS NOT NULL",
         "j.\"name\" IS NOT NULL"
       ],
@@ -3112,8 +3112,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_hq_c05_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"complete_date\" AS TIMESTAMP)) AS metric_period, b.\"end_date\" AS end_date, j.\"name\" AS board_name, COUNT(*) AS row_count FROM raw.sprint b JOIN raw.board j ON b.\"board_id\" = j.id WHERE try_cast(b.\"complete_date\" AS TIMESTAMP) IS NOT NULL AND b.\"end_date\" IS NOT NULL AND j.\"name\" IS NOT NULL GROUP BY metric_period, end_date, board_name",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"complete_date\" as timestamp)) as metric_period, b.\"end_date\" as end_date, j.\"name\" as board_name, count(*) as row_count from raw.sprint b join raw.board j on b.\"board_id\" = j.id where try_cast(b.\"complete_date\" as timestamp) is not null and b.\"end_date\" is not null and j.\"name\" is not null group by metric_period, end_date, board_name",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP))) AS metric_period, b.\"end_date\" AS end_date, j.\"name\" AS board_name, COUNT(*) AS row_count FROM raw.sprint b JOIN raw.board j ON b.\"board_id\" = j.id WHERE coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"end_date\" IS NOT NULL AND j.\"name\" IS NOT NULL GROUP BY metric_period, end_date, board_name",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"complete_date\" as timestamp))) as metric_period, b.\"end_date\" as end_date, j.\"name\" as board_name, count(*) as row_count from raw.sprint b join raw.board j on b.\"board_id\" = j.id where coalesce(try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"complete_date\" as timestamp)) is not null and b.\"end_date\" is not null and j.\"name\" is not null group by metric_period, end_date, board_name",
       "cluster_id": "schemaopt_hard_jira_cluster_05",
       "business_tag": "jira sprint analytics",
       "frequency_weight": 2.3,
@@ -3134,12 +3134,12 @@
         "board_name"
       ],
       "filter_tokens": [
-        "try_cast(b.\"complete_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"complete_date\"_as_timestamp))_is_not_null",
         "b.\"end_date\"_is_not_null",
         "j.\"name\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"complete_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"end_date\" IS NOT NULL",
         "j.\"name\" IS NOT NULL"
       ],
@@ -3160,8 +3160,8 @@
     },
     {
       "query_id": "schemaopt_hard_jira_hq_c05_04",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"complete_date\" AS TIMESTAMP)) AS metric_period, b.\"end_date\" AS end_date, COUNT(*) AS row_count FROM raw.sprint b JOIN raw.board j ON b.\"board_id\" = j.id WHERE try_cast(b.\"complete_date\" AS TIMESTAMP) IS NOT NULL AND b.\"end_date\" IS NOT NULL AND j.\"name\" IS NOT NULL GROUP BY metric_period, end_date",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"complete_date\" as timestamp)) as metric_period, b.\"end_date\" as end_date, count(*) as row_count from raw.sprint b join raw.board j on b.\"board_id\" = j.id where try_cast(b.\"complete_date\" as timestamp) is not null and b.\"end_date\" is not null and j.\"name\" is not null group by metric_period, end_date",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP))) AS metric_period, b.\"end_date\" AS end_date, COUNT(*) AS row_count FROM raw.sprint b JOIN raw.board j ON b.\"board_id\" = j.id WHERE coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP)) IS NOT NULL AND b.\"end_date\" IS NOT NULL AND j.\"name\" IS NOT NULL GROUP BY metric_period, end_date",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"complete_date\" as timestamp))) as metric_period, b.\"end_date\" as end_date, count(*) as row_count from raw.sprint b join raw.board j on b.\"board_id\" = j.id where coalesce(try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"complete_date\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"complete_date\" as timestamp)) is not null and b.\"end_date\" is not null and j.\"name\" is not null group by metric_period, end_date",
       "cluster_id": "schemaopt_hard_jira_cluster_05",
       "business_tag": "jira sprint analytics",
       "frequency_weight": 2.4,
@@ -3180,12 +3180,12 @@
         "end_date"
       ],
       "filter_tokens": [
-        "try_cast(b.\"complete_date\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"complete_date\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"complete_date\"_as_timestamp))_is_not_null",
         "b.\"end_date\"_is_not_null",
         "j.\"name\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"complete_date\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"complete_date\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"complete_date\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"end_date\" IS NOT NULL",
         "j.\"name\" IS NOT NULL"
       ],

@@ -1101,8 +1101,8 @@
   "visible_queries": [
     {
       "query_id": "schemaopt_easy_pendo_vq_c01_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"last_updated_at\" AS TIMESTAMP)) AS metric_period, b.\"agent_policy_prod\" AS agent_policy_prod, COUNT(*) AS row_count, SUM(b.\"description\") AS sum_description FROM raw.application_history b WHERE try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"agent_policy_prod\" IS NOT NULL GROUP BY metric_period, agent_policy_prod",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"last_updated_at\" as timestamp)) as metric_period, b.\"agent_policy_prod\" as agent_policy_prod, count(*) as row_count, sum(b.\"description\") as sum_description from raw.application_history b where try_cast(b.\"last_updated_at\" as timestamp) is not null and b.\"agent_policy_prod\" is not null group by metric_period, agent_policy_prod",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP))) AS metric_period, b.\"agent_policy_prod\" AS agent_policy_prod, COUNT(*) AS row_count, SUM(b.\"description\") AS sum_description FROM raw.application_history b WHERE coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"agent_policy_prod\" IS NOT NULL GROUP BY metric_period, agent_policy_prod",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp))) as metric_period, b.\"agent_policy_prod\" as agent_policy_prod, count(*) as row_count, sum(b.\"description\") as sum_description from raw.application_history b where coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp)) is not null and b.\"agent_policy_prod\" is not null group by metric_period, agent_policy_prod",
       "cluster_id": "schemaopt_easy_pendo_cluster_01",
       "business_tag": "pendo application_history analytics",
       "frequency_weight": 1.45,
@@ -1121,11 +1121,11 @@
         "agent_policy_prod"
       ],
       "filter_tokens": [
-        "try_cast(b.\"last_updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"last_updated_at\"_as_timestamp))_is_not_null",
         "b.\"agent_policy_prod\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"agent_policy_prod\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1147,8 +1147,8 @@
     },
     {
       "query_id": "schemaopt_easy_pendo_vq_c01_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"last_updated_at\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"description\") AS sum_description FROM raw.application_history b WHERE try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"agent_policy_prod\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"last_updated_at\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"description\") as sum_description from raw.application_history b where try_cast(b.\"last_updated_at\" as timestamp) is not null and b.\"agent_policy_prod\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"description\") AS sum_description FROM raw.application_history b WHERE coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"agent_policy_prod\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"description\") as sum_description from raw.application_history b where coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp)) is not null and b.\"agent_policy_prod\" is not null group by metric_period",
       "cluster_id": "schemaopt_easy_pendo_cluster_01",
       "business_tag": "pendo application_history analytics",
       "frequency_weight": 1.6,
@@ -1165,11 +1165,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"last_updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"last_updated_at\"_as_timestamp))_is_not_null",
         "b.\"agent_policy_prod\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"agent_policy_prod\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1190,8 +1190,8 @@
     },
     {
       "query_id": "schemaopt_easy_pendo_vq_c01_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"last_updated_at\" AS TIMESTAMP)) AS metric_period, b.\"agent_policy_prod\" AS agent_policy_prod, COUNT(*) AS row_count, SUM(b.\"description\") AS sum_description FROM raw.application_history b WHERE try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"agent_policy_prod\" IS NOT NULL GROUP BY metric_period, agent_policy_prod",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"last_updated_at\" as timestamp)) as metric_period, b.\"agent_policy_prod\" as agent_policy_prod, count(*) as row_count, sum(b.\"description\") as sum_description from raw.application_history b where try_cast(b.\"last_updated_at\" as timestamp) is not null and b.\"agent_policy_prod\" is not null group by metric_period, agent_policy_prod",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP))) AS metric_period, b.\"agent_policy_prod\" AS agent_policy_prod, COUNT(*) AS row_count, SUM(b.\"description\") AS sum_description FROM raw.application_history b WHERE coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"agent_policy_prod\" IS NOT NULL GROUP BY metric_period, agent_policy_prod",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp))) as metric_period, b.\"agent_policy_prod\" as agent_policy_prod, count(*) as row_count, sum(b.\"description\") as sum_description from raw.application_history b where coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp)) is not null and b.\"agent_policy_prod\" is not null group by metric_period, agent_policy_prod",
       "cluster_id": "schemaopt_easy_pendo_cluster_01",
       "business_tag": "pendo application_history analytics",
       "frequency_weight": 1.75,
@@ -1210,11 +1210,11 @@
         "agent_policy_prod"
       ],
       "filter_tokens": [
-        "try_cast(b.\"last_updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"last_updated_at\"_as_timestamp))_is_not_null",
         "b.\"agent_policy_prod\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"agent_policy_prod\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1236,8 +1236,8 @@
     },
     {
       "query_id": "schemaopt_easy_pendo_vq_c01_04",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"last_updated_at\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"description\") AS sum_description FROM raw.application_history b WHERE try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"agent_policy_prod\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"last_updated_at\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"description\") as sum_description from raw.application_history b where try_cast(b.\"last_updated_at\" as timestamp) is not null and b.\"agent_policy_prod\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"description\") AS sum_description FROM raw.application_history b WHERE coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"agent_policy_prod\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"description\") as sum_description from raw.application_history b where coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp)) is not null and b.\"agent_policy_prod\" is not null group by metric_period",
       "cluster_id": "schemaopt_easy_pendo_cluster_01",
       "business_tag": "pendo application_history analytics",
       "frequency_weight": 1.45,
@@ -1254,11 +1254,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"last_updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"last_updated_at\"_as_timestamp))_is_not_null",
         "b.\"agent_policy_prod\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"agent_policy_prod\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1279,8 +1279,8 @@
     },
     {
       "query_id": "schemaopt_easy_pendo_vq_c02_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"last_updated_at\" AS TIMESTAMP)) AS metric_period, b.\"attribute_badge_image_url\" AS attribute_badge_image_url, COUNT(*) AS row_count, SUM(b.\"attribute_badge_can_change_badge_color\") AS sum_attribute_badge_can_change_badge_color FROM raw.guide_history b WHERE try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"attribute_badge_image_url\" IS NOT NULL GROUP BY metric_period, attribute_badge_image_url",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"last_updated_at\" as timestamp)) as metric_period, b.\"attribute_badge_image_url\" as attribute_badge_image_url, count(*) as row_count, sum(b.\"attribute_badge_can_change_badge_color\") as sum_attribute_badge_can_change_badge_color from raw.guide_history b where try_cast(b.\"last_updated_at\" as timestamp) is not null and b.\"attribute_badge_image_url\" is not null group by metric_period, attribute_badge_image_url",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP))) AS metric_period, b.\"attribute_badge_image_url\" AS attribute_badge_image_url, COUNT(*) AS row_count, SUM(b.\"attribute_badge_can_change_badge_color\") AS sum_attribute_badge_can_change_badge_color FROM raw.guide_history b WHERE coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"attribute_badge_image_url\" IS NOT NULL GROUP BY metric_period, attribute_badge_image_url",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp))) as metric_period, b.\"attribute_badge_image_url\" as attribute_badge_image_url, count(*) as row_count, sum(b.\"attribute_badge_can_change_badge_color\") as sum_attribute_badge_can_change_badge_color from raw.guide_history b where coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp)) is not null and b.\"attribute_badge_image_url\" is not null group by metric_period, attribute_badge_image_url",
       "cluster_id": "schemaopt_easy_pendo_cluster_02",
       "business_tag": "pendo guide_history analytics",
       "frequency_weight": 1.9,
@@ -1299,11 +1299,11 @@
         "attribute_badge_image_url"
       ],
       "filter_tokens": [
-        "try_cast(b.\"last_updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"last_updated_at\"_as_timestamp))_is_not_null",
         "b.\"attribute_badge_image_url\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"attribute_badge_image_url\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1325,8 +1325,8 @@
     },
     {
       "query_id": "schemaopt_easy_pendo_vq_c02_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"last_updated_at\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"attribute_badge_can_change_badge_color\") AS sum_attribute_badge_can_change_badge_color FROM raw.guide_history b WHERE try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"attribute_badge_image_url\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"last_updated_at\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"attribute_badge_can_change_badge_color\") as sum_attribute_badge_can_change_badge_color from raw.guide_history b where try_cast(b.\"last_updated_at\" as timestamp) is not null and b.\"attribute_badge_image_url\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"attribute_badge_can_change_badge_color\") AS sum_attribute_badge_can_change_badge_color FROM raw.guide_history b WHERE coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"attribute_badge_image_url\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"attribute_badge_can_change_badge_color\") as sum_attribute_badge_can_change_badge_color from raw.guide_history b where coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp)) is not null and b.\"attribute_badge_image_url\" is not null group by metric_period",
       "cluster_id": "schemaopt_easy_pendo_cluster_02",
       "business_tag": "pendo guide_history analytics",
       "frequency_weight": 2.05,
@@ -1343,11 +1343,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"last_updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"last_updated_at\"_as_timestamp))_is_not_null",
         "b.\"attribute_badge_image_url\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"attribute_badge_image_url\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1368,8 +1368,8 @@
     },
     {
       "query_id": "schemaopt_easy_pendo_vq_c02_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"last_updated_at\" AS TIMESTAMP)) AS metric_period, b.\"attribute_badge_image_url\" AS attribute_badge_image_url, COUNT(*) AS row_count, SUM(b.\"attribute_badge_can_change_badge_color\") AS sum_attribute_badge_can_change_badge_color FROM raw.guide_history b WHERE try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"attribute_badge_image_url\" IS NOT NULL GROUP BY metric_period, attribute_badge_image_url",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"last_updated_at\" as timestamp)) as metric_period, b.\"attribute_badge_image_url\" as attribute_badge_image_url, count(*) as row_count, sum(b.\"attribute_badge_can_change_badge_color\") as sum_attribute_badge_can_change_badge_color from raw.guide_history b where try_cast(b.\"last_updated_at\" as timestamp) is not null and b.\"attribute_badge_image_url\" is not null group by metric_period, attribute_badge_image_url",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP))) AS metric_period, b.\"attribute_badge_image_url\" AS attribute_badge_image_url, COUNT(*) AS row_count, SUM(b.\"attribute_badge_can_change_badge_color\") AS sum_attribute_badge_can_change_badge_color FROM raw.guide_history b WHERE coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"attribute_badge_image_url\" IS NOT NULL GROUP BY metric_period, attribute_badge_image_url",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp))) as metric_period, b.\"attribute_badge_image_url\" as attribute_badge_image_url, count(*) as row_count, sum(b.\"attribute_badge_can_change_badge_color\") as sum_attribute_badge_can_change_badge_color from raw.guide_history b where coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp)) is not null and b.\"attribute_badge_image_url\" is not null group by metric_period, attribute_badge_image_url",
       "cluster_id": "schemaopt_easy_pendo_cluster_02",
       "business_tag": "pendo guide_history analytics",
       "frequency_weight": 2.2,
@@ -1388,11 +1388,11 @@
         "attribute_badge_image_url"
       ],
       "filter_tokens": [
-        "try_cast(b.\"last_updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"last_updated_at\"_as_timestamp))_is_not_null",
         "b.\"attribute_badge_image_url\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"attribute_badge_image_url\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1414,8 +1414,8 @@
     },
     {
       "query_id": "schemaopt_easy_pendo_vq_c02_04",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"last_updated_at\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"attribute_badge_can_change_badge_color\") AS sum_attribute_badge_can_change_badge_color FROM raw.guide_history b WHERE try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"attribute_badge_image_url\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"last_updated_at\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"attribute_badge_can_change_badge_color\") as sum_attribute_badge_can_change_badge_color from raw.guide_history b where try_cast(b.\"last_updated_at\" as timestamp) is not null and b.\"attribute_badge_image_url\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"attribute_badge_can_change_badge_color\") AS sum_attribute_badge_can_change_badge_color FROM raw.guide_history b WHERE coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"attribute_badge_image_url\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"attribute_badge_can_change_badge_color\") as sum_attribute_badge_can_change_badge_color from raw.guide_history b where coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp)) is not null and b.\"attribute_badge_image_url\" is not null group by metric_period",
       "cluster_id": "schemaopt_easy_pendo_cluster_02",
       "business_tag": "pendo guide_history analytics",
       "frequency_weight": 1.9,
@@ -1432,11 +1432,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"last_updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"last_updated_at\"_as_timestamp))_is_not_null",
         "b.\"attribute_badge_image_url\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"attribute_badge_image_url\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1457,8 +1457,8 @@
     },
     {
       "query_id": "schemaopt_easy_pendo_vq_c03_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"last_updated_at\" AS TIMESTAMP)) AS metric_period, b.\"agent_email\" AS agent_email, COUNT(*) AS row_count, SUM(b.\"agent_group_role\") AS sum_agent_group_role FROM raw.visitor_history b WHERE try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"agent_email\" IS NOT NULL GROUP BY metric_period, agent_email",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"last_updated_at\" as timestamp)) as metric_period, b.\"agent_email\" as agent_email, count(*) as row_count, sum(b.\"agent_group_role\") as sum_agent_group_role from raw.visitor_history b where try_cast(b.\"last_updated_at\" as timestamp) is not null and b.\"agent_email\" is not null group by metric_period, agent_email",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP))) AS metric_period, b.\"agent_email\" AS agent_email, COUNT(*) AS row_count, SUM(b.\"agent_group_role\") AS sum_agent_group_role FROM raw.visitor_history b WHERE coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"agent_email\" IS NOT NULL GROUP BY metric_period, agent_email",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp))) as metric_period, b.\"agent_email\" as agent_email, count(*) as row_count, sum(b.\"agent_group_role\") as sum_agent_group_role from raw.visitor_history b where coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp)) is not null and b.\"agent_email\" is not null group by metric_period, agent_email",
       "cluster_id": "schemaopt_easy_pendo_cluster_03",
       "business_tag": "pendo visitor_history analytics",
       "frequency_weight": 2.35,
@@ -1477,11 +1477,11 @@
         "agent_email"
       ],
       "filter_tokens": [
-        "try_cast(b.\"last_updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"last_updated_at\"_as_timestamp))_is_not_null",
         "b.\"agent_email\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"agent_email\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1503,8 +1503,8 @@
     },
     {
       "query_id": "schemaopt_easy_pendo_vq_c03_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"last_updated_at\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"agent_group_role\") AS sum_agent_group_role FROM raw.visitor_history b WHERE try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"agent_email\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"last_updated_at\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"agent_group_role\") as sum_agent_group_role from raw.visitor_history b where try_cast(b.\"last_updated_at\" as timestamp) is not null and b.\"agent_email\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"agent_group_role\") AS sum_agent_group_role FROM raw.visitor_history b WHERE coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"agent_email\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"agent_group_role\") as sum_agent_group_role from raw.visitor_history b where coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp)) is not null and b.\"agent_email\" is not null group by metric_period",
       "cluster_id": "schemaopt_easy_pendo_cluster_03",
       "business_tag": "pendo visitor_history analytics",
       "frequency_weight": 2.5,
@@ -1521,11 +1521,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"last_updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"last_updated_at\"_as_timestamp))_is_not_null",
         "b.\"agent_email\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"agent_email\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1546,8 +1546,8 @@
     },
     {
       "query_id": "schemaopt_easy_pendo_vq_c03_03",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"last_updated_at\" AS TIMESTAMP)) AS metric_period, b.\"agent_email\" AS agent_email, COUNT(*) AS row_count, SUM(b.\"agent_group_role\") AS sum_agent_group_role FROM raw.visitor_history b WHERE try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"agent_email\" IS NOT NULL GROUP BY metric_period, agent_email",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"last_updated_at\" as timestamp)) as metric_period, b.\"agent_email\" as agent_email, count(*) as row_count, sum(b.\"agent_group_role\") as sum_agent_group_role from raw.visitor_history b where try_cast(b.\"last_updated_at\" as timestamp) is not null and b.\"agent_email\" is not null group by metric_period, agent_email",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP))) AS metric_period, b.\"agent_email\" AS agent_email, COUNT(*) AS row_count, SUM(b.\"agent_group_role\") AS sum_agent_group_role FROM raw.visitor_history b WHERE coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"agent_email\" IS NOT NULL GROUP BY metric_period, agent_email",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp))) as metric_period, b.\"agent_email\" as agent_email, count(*) as row_count, sum(b.\"agent_group_role\") as sum_agent_group_role from raw.visitor_history b where coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp)) is not null and b.\"agent_email\" is not null group by metric_period, agent_email",
       "cluster_id": "schemaopt_easy_pendo_cluster_03",
       "business_tag": "pendo visitor_history analytics",
       "frequency_weight": 2.65,
@@ -1566,11 +1566,11 @@
         "agent_email"
       ],
       "filter_tokens": [
-        "try_cast(b.\"last_updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"last_updated_at\"_as_timestamp))_is_not_null",
         "b.\"agent_email\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"agent_email\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1592,8 +1592,8 @@
     },
     {
       "query_id": "schemaopt_easy_pendo_vq_c03_04",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"last_updated_at\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"agent_group_role\") AS sum_agent_group_role FROM raw.visitor_history b WHERE try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"agent_email\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"last_updated_at\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"agent_group_role\") as sum_agent_group_role from raw.visitor_history b where try_cast(b.\"last_updated_at\" as timestamp) is not null and b.\"agent_email\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"agent_group_role\") AS sum_agent_group_role FROM raw.visitor_history b WHERE coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"agent_email\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"agent_group_role\") as sum_agent_group_role from raw.visitor_history b where coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp)) is not null and b.\"agent_email\" is not null group by metric_period",
       "cluster_id": "schemaopt_easy_pendo_cluster_03",
       "business_tag": "pendo visitor_history analytics",
       "frequency_weight": 2.35,
@@ -1610,11 +1610,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"last_updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"last_updated_at\"_as_timestamp))_is_not_null",
         "b.\"agent_email\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"agent_email\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1637,8 +1637,8 @@
   "holdout_queries": [
     {
       "query_id": "schemaopt_easy_pendo_hq_c01_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"last_updated_at\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"description\") AS sum_description FROM raw.application_history b WHERE try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"agent_policy_prod\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"last_updated_at\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"description\") as sum_description from raw.application_history b where try_cast(b.\"last_updated_at\" as timestamp) is not null and b.\"agent_policy_prod\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"description\") AS sum_description FROM raw.application_history b WHERE coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"agent_policy_prod\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"description\") as sum_description from raw.application_history b where coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp)) is not null and b.\"agent_policy_prod\" is not null group by metric_period",
       "cluster_id": "schemaopt_easy_pendo_cluster_01",
       "business_tag": "pendo application_history analytics",
       "frequency_weight": 1.1,
@@ -1655,11 +1655,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"last_updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"last_updated_at\"_as_timestamp))_is_not_null",
         "b.\"agent_policy_prod\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"agent_policy_prod\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1680,8 +1680,8 @@
     },
     {
       "query_id": "schemaopt_easy_pendo_hq_c01_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"last_updated_at\" AS TIMESTAMP)) AS metric_period, b.\"agent_policy_prod\" AS agent_policy_prod, COUNT(*) AS row_count, SUM(b.\"description\") AS sum_description FROM raw.application_history b WHERE try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"agent_policy_prod\" IS NOT NULL GROUP BY metric_period, agent_policy_prod",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"last_updated_at\" as timestamp)) as metric_period, b.\"agent_policy_prod\" as agent_policy_prod, count(*) as row_count, sum(b.\"description\") as sum_description from raw.application_history b where try_cast(b.\"last_updated_at\" as timestamp) is not null and b.\"agent_policy_prod\" is not null group by metric_period, agent_policy_prod",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP))) AS metric_period, b.\"agent_policy_prod\" AS agent_policy_prod, COUNT(*) AS row_count, SUM(b.\"description\") AS sum_description FROM raw.application_history b WHERE coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"agent_policy_prod\" IS NOT NULL GROUP BY metric_period, agent_policy_prod",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp))) as metric_period, b.\"agent_policy_prod\" as agent_policy_prod, count(*) as row_count, sum(b.\"description\") as sum_description from raw.application_history b where coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp)) is not null and b.\"agent_policy_prod\" is not null group by metric_period, agent_policy_prod",
       "cluster_id": "schemaopt_easy_pendo_cluster_01",
       "business_tag": "pendo application_history analytics",
       "frequency_weight": 1.2,
@@ -1700,11 +1700,11 @@
         "agent_policy_prod"
       ],
       "filter_tokens": [
-        "try_cast(b.\"last_updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"last_updated_at\"_as_timestamp))_is_not_null",
         "b.\"agent_policy_prod\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"agent_policy_prod\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1726,8 +1726,8 @@
     },
     {
       "query_id": "schemaopt_easy_pendo_hq_c02_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"last_updated_at\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"attribute_badge_can_change_badge_color\") AS sum_attribute_badge_can_change_badge_color FROM raw.guide_history b WHERE try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"attribute_badge_image_url\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"last_updated_at\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"attribute_badge_can_change_badge_color\") as sum_attribute_badge_can_change_badge_color from raw.guide_history b where try_cast(b.\"last_updated_at\" as timestamp) is not null and b.\"attribute_badge_image_url\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"attribute_badge_can_change_badge_color\") AS sum_attribute_badge_can_change_badge_color FROM raw.guide_history b WHERE coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"attribute_badge_image_url\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"attribute_badge_can_change_badge_color\") as sum_attribute_badge_can_change_badge_color from raw.guide_history b where coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp)) is not null and b.\"attribute_badge_image_url\" is not null group by metric_period",
       "cluster_id": "schemaopt_easy_pendo_cluster_02",
       "business_tag": "pendo guide_history analytics",
       "frequency_weight": 1.4,
@@ -1744,11 +1744,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"last_updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"last_updated_at\"_as_timestamp))_is_not_null",
         "b.\"attribute_badge_image_url\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"attribute_badge_image_url\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1769,8 +1769,8 @@
     },
     {
       "query_id": "schemaopt_easy_pendo_hq_c02_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"last_updated_at\" AS TIMESTAMP)) AS metric_period, b.\"attribute_badge_image_url\" AS attribute_badge_image_url, COUNT(*) AS row_count, SUM(b.\"attribute_badge_can_change_badge_color\") AS sum_attribute_badge_can_change_badge_color FROM raw.guide_history b WHERE try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"attribute_badge_image_url\" IS NOT NULL GROUP BY metric_period, attribute_badge_image_url",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"last_updated_at\" as timestamp)) as metric_period, b.\"attribute_badge_image_url\" as attribute_badge_image_url, count(*) as row_count, sum(b.\"attribute_badge_can_change_badge_color\") as sum_attribute_badge_can_change_badge_color from raw.guide_history b where try_cast(b.\"last_updated_at\" as timestamp) is not null and b.\"attribute_badge_image_url\" is not null group by metric_period, attribute_badge_image_url",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP))) AS metric_period, b.\"attribute_badge_image_url\" AS attribute_badge_image_url, COUNT(*) AS row_count, SUM(b.\"attribute_badge_can_change_badge_color\") AS sum_attribute_badge_can_change_badge_color FROM raw.guide_history b WHERE coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"attribute_badge_image_url\" IS NOT NULL GROUP BY metric_period, attribute_badge_image_url",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp))) as metric_period, b.\"attribute_badge_image_url\" as attribute_badge_image_url, count(*) as row_count, sum(b.\"attribute_badge_can_change_badge_color\") as sum_attribute_badge_can_change_badge_color from raw.guide_history b where coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp)) is not null and b.\"attribute_badge_image_url\" is not null group by metric_period, attribute_badge_image_url",
       "cluster_id": "schemaopt_easy_pendo_cluster_02",
       "business_tag": "pendo guide_history analytics",
       "frequency_weight": 1.5,
@@ -1789,11 +1789,11 @@
         "attribute_badge_image_url"
       ],
       "filter_tokens": [
-        "try_cast(b.\"last_updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"last_updated_at\"_as_timestamp))_is_not_null",
         "b.\"attribute_badge_image_url\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"attribute_badge_image_url\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1815,8 +1815,8 @@
     },
     {
       "query_id": "schemaopt_easy_pendo_hq_c03_01",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"last_updated_at\" AS TIMESTAMP)) AS metric_period, COUNT(*) AS row_count, SUM(b.\"agent_group_role\") AS sum_agent_group_role FROM raw.visitor_history b WHERE try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"agent_email\" IS NOT NULL GROUP BY metric_period",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"last_updated_at\" as timestamp)) as metric_period, count(*) as row_count, sum(b.\"agent_group_role\") as sum_agent_group_role from raw.visitor_history b where try_cast(b.\"last_updated_at\" as timestamp) is not null and b.\"agent_email\" is not null group by metric_period",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP))) AS metric_period, COUNT(*) AS row_count, SUM(b.\"agent_group_role\") AS sum_agent_group_role FROM raw.visitor_history b WHERE coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"agent_email\" IS NOT NULL GROUP BY metric_period",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp))) as metric_period, count(*) as row_count, sum(b.\"agent_group_role\") as sum_agent_group_role from raw.visitor_history b where coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp)) is not null and b.\"agent_email\" is not null group by metric_period",
       "cluster_id": "schemaopt_easy_pendo_cluster_03",
       "business_tag": "pendo visitor_history analytics",
       "frequency_weight": 1.7,
@@ -1833,11 +1833,11 @@
         "metric_period"
       ],
       "filter_tokens": [
-        "try_cast(b.\"last_updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"last_updated_at\"_as_timestamp))_is_not_null",
         "b.\"agent_email\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"agent_email\" IS NOT NULL"
       ],
       "measure_columns": [
@@ -1858,8 +1858,8 @@
     },
     {
       "query_id": "schemaopt_easy_pendo_hq_c03_02",
-      "sql": "SELECT date_trunc('month', try_cast(b.\"last_updated_at\" AS TIMESTAMP)) AS metric_period, b.\"agent_email\" AS agent_email, COUNT(*) AS row_count, SUM(b.\"agent_group_role\") AS sum_agent_group_role FROM raw.visitor_history b WHERE try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL AND b.\"agent_email\" IS NOT NULL GROUP BY metric_period, agent_email",
-      "normalized_sql": "select date_trunc('month', try_cast(b.\"last_updated_at\" as timestamp)) as metric_period, b.\"agent_email\" as agent_email, count(*) as row_count, sum(b.\"agent_group_role\") as sum_agent_group_role from raw.visitor_history b where try_cast(b.\"last_updated_at\" as timestamp) is not null and b.\"agent_email\" is not null group by metric_period, agent_email",
+      "sql": "SELECT date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP))) AS metric_period, b.\"agent_email\" AS agent_email, COUNT(*) AS row_count, SUM(b.\"agent_group_role\") AS sum_agent_group_role FROM raw.visitor_history b WHERE coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL AND b.\"agent_email\" IS NOT NULL GROUP BY metric_period, agent_email",
+      "normalized_sql": "select date_trunc('month', coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp))) as metric_period, b.\"agent_email\" as agent_email, count(*) as row_count, sum(b.\"agent_group_role\") as sum_agent_group_role from raw.visitor_history b where coalesce(try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s %z'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s.%f'), try_strptime(b.\"last_updated_at\", '%y-%m-%d %h:%m:%s'), try_cast(b.\"last_updated_at\" as timestamp)) is not null and b.\"agent_email\" is not null group by metric_period, agent_email",
       "cluster_id": "schemaopt_easy_pendo_cluster_03",
       "business_tag": "pendo visitor_history analytics",
       "frequency_weight": 1.8,
@@ -1878,11 +1878,11 @@
         "agent_email"
       ],
       "filter_tokens": [
-        "try_cast(b.\"last_updated_at\"_as_timestamp)_is_not_null",
+        "coalesce(try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s_%z'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s.%f'),_try_strptime(b.\"last_updated_at\",_'%y-%m-%d_%h:%m:%s'),_try_cast(b.\"last_updated_at\"_as_timestamp))_is_not_null",
         "b.\"agent_email\"_is_not_null"
       ],
       "filter_predicates": [
-        "try_cast(b.\"last_updated_at\" AS TIMESTAMP) IS NOT NULL",
+        "coalesce(try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S %z'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S.%f'), try_strptime(b.\"last_updated_at\", '%Y-%m-%d %H:%M:%S'), try_cast(b.\"last_updated_at\" AS TIMESTAMP)) IS NOT NULL",
         "b.\"agent_email\" IS NOT NULL"
       ],
       "measure_columns": [
