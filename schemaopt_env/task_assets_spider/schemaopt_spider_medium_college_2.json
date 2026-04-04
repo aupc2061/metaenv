@@ -1,0 +1,2122 @@
+{
+  "task_id": "schemaopt_spider_medium_college_2",
+  "difficulty": "medium",
+  "domain": "spider_college_2",
+  "objective": "Optimize the Spider college_2 workload over a DuckDB-converted database by materializing derived objects that reduce measured execution cost while preserving exact query results.",
+  "seed_source": "spider_data/spider_data/database/college_2/college_2.sqlite",
+  "dataset_dir": "spider_data/spider_data/database/college_2",
+  "database_path": "schemaopt_env/task_assets_spider/databases/schemaopt_spider_medium_college_2.duckdb",
+  "tables": [
+    {
+      "name": "raw.advisor",
+      "columns": [
+        {
+          "name": "s_ID",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "i_ID",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 2000
+    },
+    {
+      "name": "raw.classroom",
+      "columns": [
+        {
+          "name": "building",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "room_number",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "capacity",
+          "type": "DOUBLE"
+        }
+      ],
+      "row_count": 30
+    },
+    {
+      "name": "raw.course",
+      "columns": [
+        {
+          "name": "course_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "title",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "dept_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "credits",
+          "type": "DOUBLE"
+        }
+      ],
+      "row_count": 200
+    },
+    {
+      "name": "raw.department",
+      "columns": [
+        {
+          "name": "dept_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "building",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "budget",
+          "type": "DOUBLE"
+        }
+      ],
+      "row_count": 20
+    },
+    {
+      "name": "raw.instructor",
+      "columns": [
+        {
+          "name": "ID",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "dept_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "salary",
+          "type": "DOUBLE"
+        }
+      ],
+      "row_count": 50
+    },
+    {
+      "name": "raw.prereq",
+      "columns": [
+        {
+          "name": "course_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "prereq_id",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 100
+    },
+    {
+      "name": "raw.section",
+      "columns": [
+        {
+          "name": "course_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "sec_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "semester",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "year",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "building",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "room_number",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "time_slot_id",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 100
+    },
+    {
+      "name": "raw.student",
+      "columns": [
+        {
+          "name": "ID",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "dept_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "tot_cred",
+          "type": "DOUBLE"
+        }
+      ],
+      "row_count": 2000
+    },
+    {
+      "name": "raw.takes",
+      "columns": [
+        {
+          "name": "ID",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "course_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "sec_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "semester",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "year",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "grade",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 30000
+    },
+    {
+      "name": "raw.teaches",
+      "columns": [
+        {
+          "name": "ID",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "course_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "sec_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "semester",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "year",
+          "type": "DOUBLE"
+        }
+      ],
+      "row_count": 100
+    },
+    {
+      "name": "raw.time_slot",
+      "columns": [
+        {
+          "name": "time_slot_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "day",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "start_hr",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "start_min",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "end_hr",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "end_min",
+          "type": "DOUBLE"
+        }
+      ],
+      "row_count": 20
+    }
+  ],
+  "visible_queries": [
+    {
+      "query_id": "schemaopt_spider_medium_college_2_vq_c01_01",
+      "sql": "SELECT count(DISTINCT s_id) FROM raw.advisor",
+      "original_sql": "SELECT count(DISTINCT s_id) FROM advisor",
+      "normalized_sql": "select count(distinct s_id) from raw.advisor",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_01",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.advisor"
+      ],
+      "canonical_tables": [
+        "raw.advisor"
+      ],
+      "columns": [
+        "count_distinct_s_id"
+      ],
+      "result_columns": [
+        "count(distinct s_id)"
+      ],
+      "canonical_output_columns": [
+        "count_distinct_s_id"
+      ],
+      "group_by": [],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_distinct_s_id"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "college_2 visible cluster 1 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_vq_c01_02",
+      "sql": "SELECT count(DISTINCT s_id) FROM raw.advisor",
+      "original_sql": "SELECT count(DISTINCT s_id) FROM advisor",
+      "normalized_sql": "select count(distinct s_id) from raw.advisor",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_01",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.advisor"
+      ],
+      "canonical_tables": [
+        "raw.advisor"
+      ],
+      "columns": [
+        "count_distinct_s_id"
+      ],
+      "result_columns": [
+        "count(distinct s_id)"
+      ],
+      "canonical_output_columns": [
+        "count_distinct_s_id"
+      ],
+      "group_by": [],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_distinct_s_id"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "college_2 visible cluster 1 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_vq_c01_03",
+      "sql": "SELECT count(DISTINCT s_id) FROM raw.advisor",
+      "original_sql": "SELECT count(DISTINCT s_id) FROM advisor",
+      "normalized_sql": "select count(distinct s_id) from raw.advisor",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_01",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.advisor"
+      ],
+      "canonical_tables": [
+        "raw.advisor"
+      ],
+      "columns": [
+        "count_distinct_s_id"
+      ],
+      "result_columns": [
+        "count(distinct s_id)"
+      ],
+      "canonical_output_columns": [
+        "count_distinct_s_id"
+      ],
+      "group_by": [],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_distinct_s_id"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "college_2 visible cluster 1 query 3 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_vq_c01_04",
+      "sql": "SELECT count(DISTINCT s_id) FROM raw.advisor",
+      "original_sql": "SELECT count(DISTINCT s_id) FROM advisor",
+      "normalized_sql": "select count(distinct s_id) from raw.advisor",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_01",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.advisor"
+      ],
+      "canonical_tables": [
+        "raw.advisor"
+      ],
+      "columns": [
+        "count_distinct_s_id"
+      ],
+      "result_columns": [
+        "count(distinct s_id)"
+      ],
+      "canonical_output_columns": [
+        "count_distinct_s_id"
+      ],
+      "group_by": [],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_distinct_s_id"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "college_2 visible cluster 1 query 4 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_vq_c01_05",
+      "sql": "SELECT count(DISTINCT s_id) FROM raw.advisor",
+      "original_sql": "SELECT count(DISTINCT s_id) FROM advisor",
+      "normalized_sql": "select count(distinct s_id) from raw.advisor",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_01",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.advisor"
+      ],
+      "canonical_tables": [
+        "raw.advisor"
+      ],
+      "columns": [
+        "count_distinct_s_id"
+      ],
+      "result_columns": [
+        "count(distinct s_id)"
+      ],
+      "canonical_output_columns": [
+        "count_distinct_s_id"
+      ],
+      "group_by": [],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_distinct_s_id"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "college_2 visible cluster 1 query 5 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_vq_c01_06",
+      "sql": "SELECT count(DISTINCT s_id) FROM raw.advisor",
+      "original_sql": "SELECT count(DISTINCT s_id) FROM advisor",
+      "normalized_sql": "select count(distinct s_id) from raw.advisor",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_01",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.advisor"
+      ],
+      "canonical_tables": [
+        "raw.advisor"
+      ],
+      "columns": [
+        "count_distinct_s_id"
+      ],
+      "result_columns": [
+        "count(distinct s_id)"
+      ],
+      "canonical_output_columns": [
+        "count_distinct_s_id"
+      ],
+      "group_by": [],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_distinct_s_id"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "college_2 visible cluster 1 query 6 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_vq_c02_01",
+      "sql": "SELECT max(capacity) , avg(capacity) , building FROM raw.classroom GROUP BY building",
+      "original_sql": "SELECT max(capacity) ,  avg(capacity) ,  building FROM classroom GROUP BY building",
+      "normalized_sql": "select max(capacity) , avg(capacity) , building from raw.classroom group by building",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_02",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "building",
+        "max_capacity",
+        "avg_capacity"
+      ],
+      "result_columns": [
+        "max(capacity)",
+        "avg(capacity)",
+        "building"
+      ],
+      "canonical_output_columns": [
+        "max(capacity)",
+        "avg_capacity",
+        "building"
+      ],
+      "group_by": [
+        "building"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "max_capacity",
+        "avg_capacity"
+      ],
+      "aggregate_functions": [
+        "max",
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "numeric_aggregation"
+      ],
+      "description": "college_2 visible cluster 2 query 1 rows=20"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_vq_c02_02",
+      "sql": "SELECT max(capacity) , avg(capacity) , building FROM raw.classroom GROUP BY building",
+      "original_sql": "SELECT max(capacity) ,  avg(capacity) ,  building FROM classroom GROUP BY building",
+      "normalized_sql": "select max(capacity) , avg(capacity) , building from raw.classroom group by building",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_02",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "building",
+        "max_capacity",
+        "avg_capacity"
+      ],
+      "result_columns": [
+        "max(capacity)",
+        "avg(capacity)",
+        "building"
+      ],
+      "canonical_output_columns": [
+        "max(capacity)",
+        "avg_capacity",
+        "building"
+      ],
+      "group_by": [
+        "building"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "max_capacity",
+        "avg_capacity"
+      ],
+      "aggregate_functions": [
+        "max",
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "numeric_aggregation"
+      ],
+      "description": "college_2 visible cluster 2 query 2 rows=20"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_vq_c02_03",
+      "sql": "SELECT max(capacity) , avg(capacity) , building FROM raw.classroom GROUP BY building",
+      "original_sql": "SELECT max(capacity) ,  avg(capacity) ,  building FROM classroom GROUP BY building",
+      "normalized_sql": "select max(capacity) , avg(capacity) , building from raw.classroom group by building",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_02",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "building",
+        "max_capacity",
+        "avg_capacity"
+      ],
+      "result_columns": [
+        "max(capacity)",
+        "avg(capacity)",
+        "building"
+      ],
+      "canonical_output_columns": [
+        "max(capacity)",
+        "avg_capacity",
+        "building"
+      ],
+      "group_by": [
+        "building"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "max_capacity",
+        "avg_capacity"
+      ],
+      "aggregate_functions": [
+        "max",
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "numeric_aggregation"
+      ],
+      "description": "college_2 visible cluster 2 query 3 rows=20"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_vq_c02_04",
+      "sql": "SELECT max(capacity) , avg(capacity) , building FROM raw.classroom GROUP BY building",
+      "original_sql": "SELECT max(capacity) ,  avg(capacity) ,  building FROM classroom GROUP BY building",
+      "normalized_sql": "select max(capacity) , avg(capacity) , building from raw.classroom group by building",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_02",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "building",
+        "max_capacity",
+        "avg_capacity"
+      ],
+      "result_columns": [
+        "max(capacity)",
+        "avg(capacity)",
+        "building"
+      ],
+      "canonical_output_columns": [
+        "max(capacity)",
+        "avg_capacity",
+        "building"
+      ],
+      "group_by": [
+        "building"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "max_capacity",
+        "avg_capacity"
+      ],
+      "aggregate_functions": [
+        "max",
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "numeric_aggregation"
+      ],
+      "description": "college_2 visible cluster 2 query 4 rows=20"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_vq_c02_05",
+      "sql": "SELECT max(capacity) , avg(capacity) , building FROM raw.classroom GROUP BY building",
+      "original_sql": "SELECT max(capacity) ,  avg(capacity) ,  building FROM classroom GROUP BY building",
+      "normalized_sql": "select max(capacity) , avg(capacity) , building from raw.classroom group by building",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_02",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "building",
+        "max_capacity",
+        "avg_capacity"
+      ],
+      "result_columns": [
+        "max(capacity)",
+        "avg(capacity)",
+        "building"
+      ],
+      "canonical_output_columns": [
+        "max(capacity)",
+        "avg_capacity",
+        "building"
+      ],
+      "group_by": [
+        "building"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "max_capacity",
+        "avg_capacity"
+      ],
+      "aggregate_functions": [
+        "max",
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "numeric_aggregation"
+      ],
+      "description": "college_2 visible cluster 2 query 5 rows=20"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_vq_c02_06",
+      "sql": "SELECT max(capacity) , avg(capacity) , building FROM raw.classroom GROUP BY building",
+      "original_sql": "SELECT max(capacity) ,  avg(capacity) ,  building FROM classroom GROUP BY building",
+      "normalized_sql": "select max(capacity) , avg(capacity) , building from raw.classroom group by building",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_02",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "building",
+        "max_capacity",
+        "avg_capacity"
+      ],
+      "result_columns": [
+        "max(capacity)",
+        "avg(capacity)",
+        "building"
+      ],
+      "canonical_output_columns": [
+        "max(capacity)",
+        "avg_capacity",
+        "building"
+      ],
+      "group_by": [
+        "building"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "max_capacity",
+        "avg_capacity"
+      ],
+      "aggregate_functions": [
+        "max",
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "numeric_aggregation"
+      ],
+      "description": "college_2 visible cluster 2 query 6 rows=20"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_vq_c03_01",
+      "sql": "SELECT count(*) FROM raw.classroom WHERE building != 'Lamberton'",
+      "original_sql": "SELECT count(*) FROM classroom WHERE building != 'Lamberton'",
+      "normalized_sql": "select count(*) from raw.classroom where building != 'lamberton'",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_03",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "building_!=_'lamberton'"
+      ],
+      "filter_predicates": [
+        "building != 'Lamberton'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "college_2 visible cluster 3 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_vq_c03_02",
+      "sql": "SELECT count(*) FROM raw.classroom WHERE building != 'Lamberton'",
+      "original_sql": "SELECT count(*) FROM classroom WHERE building != 'Lamberton'",
+      "normalized_sql": "select count(*) from raw.classroom where building != 'lamberton'",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_03",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "building_!=_'lamberton'"
+      ],
+      "filter_predicates": [
+        "building != 'Lamberton'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "college_2 visible cluster 3 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_vq_c03_03",
+      "sql": "SELECT count(*) FROM raw.classroom WHERE building != 'Lamberton'",
+      "original_sql": "SELECT count(*) FROM classroom WHERE building != 'Lamberton'",
+      "normalized_sql": "select count(*) from raw.classroom where building != 'lamberton'",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_03",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "building_!=_'lamberton'"
+      ],
+      "filter_predicates": [
+        "building != 'Lamberton'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "college_2 visible cluster 3 query 3 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_vq_c03_04",
+      "sql": "SELECT count(*) FROM raw.classroom WHERE building != 'Lamberton'",
+      "original_sql": "SELECT count(*) FROM classroom WHERE building != 'Lamberton'",
+      "normalized_sql": "select count(*) from raw.classroom where building != 'lamberton'",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_03",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "building_!=_'lamberton'"
+      ],
+      "filter_predicates": [
+        "building != 'Lamberton'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "college_2 visible cluster 3 query 4 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_vq_c03_05",
+      "sql": "SELECT count(*) FROM raw.classroom WHERE building != 'Lamberton'",
+      "original_sql": "SELECT count(*) FROM classroom WHERE building != 'Lamberton'",
+      "normalized_sql": "select count(*) from raw.classroom where building != 'lamberton'",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_03",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "building_!=_'lamberton'"
+      ],
+      "filter_predicates": [
+        "building != 'Lamberton'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "college_2 visible cluster 3 query 5 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_vq_c03_06",
+      "sql": "SELECT count(*) FROM raw.classroom WHERE building != 'Lamberton'",
+      "original_sql": "SELECT count(*) FROM classroom WHERE building != 'Lamberton'",
+      "normalized_sql": "select count(*) from raw.classroom where building != 'lamberton'",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_03",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "building_!=_'lamberton'"
+      ],
+      "filter_predicates": [
+        "building != 'Lamberton'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "college_2 visible cluster 3 query 6 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_vq_c04_01",
+      "sql": "SELECT count(*) FROM raw.classroom WHERE building = 'Lamberton'",
+      "original_sql": "SELECT count(*) FROM classroom WHERE building  =  'Lamberton'",
+      "normalized_sql": "select count(*) from raw.classroom where building = 'lamberton'",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_04",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "building_=_'lamberton'"
+      ],
+      "filter_predicates": [
+        "building = 'Lamberton'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "college_2 visible cluster 4 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_vq_c04_02",
+      "sql": "SELECT count(*) FROM raw.classroom WHERE building = 'Lamberton'",
+      "original_sql": "SELECT count(*) FROM classroom WHERE building  =  'Lamberton'",
+      "normalized_sql": "select count(*) from raw.classroom where building = 'lamberton'",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_04",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "building_=_'lamberton'"
+      ],
+      "filter_predicates": [
+        "building = 'Lamberton'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "college_2 visible cluster 4 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_vq_c04_03",
+      "sql": "SELECT count(*) FROM raw.classroom WHERE building = 'Lamberton'",
+      "original_sql": "SELECT count(*) FROM classroom WHERE building  =  'Lamberton'",
+      "normalized_sql": "select count(*) from raw.classroom where building = 'lamberton'",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_04",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "building_=_'lamberton'"
+      ],
+      "filter_predicates": [
+        "building = 'Lamberton'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "college_2 visible cluster 4 query 3 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_vq_c04_04",
+      "sql": "SELECT count(*) FROM raw.classroom WHERE building = 'Lamberton'",
+      "original_sql": "SELECT count(*) FROM classroom WHERE building  =  'Lamberton'",
+      "normalized_sql": "select count(*) from raw.classroom where building = 'lamberton'",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_04",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "building_=_'lamberton'"
+      ],
+      "filter_predicates": [
+        "building = 'Lamberton'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "college_2 visible cluster 4 query 4 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_vq_c04_05",
+      "sql": "SELECT count(*) FROM raw.classroom WHERE building = 'Lamberton'",
+      "original_sql": "SELECT count(*) FROM classroom WHERE building  =  'Lamberton'",
+      "normalized_sql": "select count(*) from raw.classroom where building = 'lamberton'",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_04",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "building_=_'lamberton'"
+      ],
+      "filter_predicates": [
+        "building = 'Lamberton'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "college_2 visible cluster 4 query 5 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_vq_c04_06",
+      "sql": "SELECT count(*) FROM raw.classroom WHERE building = 'Lamberton'",
+      "original_sql": "SELECT count(*) FROM classroom WHERE building  =  'Lamberton'",
+      "normalized_sql": "select count(*) from raw.classroom where building = 'lamberton'",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_04",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "building_=_'lamberton'"
+      ],
+      "filter_predicates": [
+        "building = 'Lamberton'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "college_2 visible cluster 4 query 6 rows=1"
+    }
+  ],
+  "holdout_queries": [
+    {
+      "query_id": "schemaopt_spider_medium_college_2_hq_c01_01",
+      "sql": "SELECT count(DISTINCT s_id) FROM raw.advisor",
+      "original_sql": "SELECT count(DISTINCT s_id) FROM advisor",
+      "normalized_sql": "select count(distinct s_id) from raw.advisor",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_01",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.advisor"
+      ],
+      "canonical_tables": [
+        "raw.advisor"
+      ],
+      "columns": [
+        "count_distinct_s_id"
+      ],
+      "result_columns": [
+        "count(distinct s_id)"
+      ],
+      "canonical_output_columns": [
+        "count_distinct_s_id"
+      ],
+      "group_by": [],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_distinct_s_id"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "college_2 holdout cluster 1 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_hq_c01_02",
+      "sql": "SELECT count(DISTINCT s_id) FROM raw.advisor",
+      "original_sql": "SELECT count(DISTINCT s_id) FROM advisor",
+      "normalized_sql": "select count(distinct s_id) from raw.advisor",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_01",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.advisor"
+      ],
+      "canonical_tables": [
+        "raw.advisor"
+      ],
+      "columns": [
+        "count_distinct_s_id"
+      ],
+      "result_columns": [
+        "count(distinct s_id)"
+      ],
+      "canonical_output_columns": [
+        "count_distinct_s_id"
+      ],
+      "group_by": [],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_distinct_s_id"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "college_2 holdout cluster 1 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_hq_c01_03",
+      "sql": "SELECT count(DISTINCT s_id) FROM raw.advisor",
+      "original_sql": "SELECT count(DISTINCT s_id) FROM advisor",
+      "normalized_sql": "select count(distinct s_id) from raw.advisor",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_01",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.advisor"
+      ],
+      "canonical_tables": [
+        "raw.advisor"
+      ],
+      "columns": [
+        "count_distinct_s_id"
+      ],
+      "result_columns": [
+        "count(distinct s_id)"
+      ],
+      "canonical_output_columns": [
+        "count_distinct_s_id"
+      ],
+      "group_by": [],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_distinct_s_id"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "college_2 holdout cluster 1 query 3 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_hq_c02_01",
+      "sql": "SELECT max(capacity) , avg(capacity) , building FROM raw.classroom GROUP BY building",
+      "original_sql": "SELECT max(capacity) ,  avg(capacity) ,  building FROM classroom GROUP BY building",
+      "normalized_sql": "select max(capacity) , avg(capacity) , building from raw.classroom group by building",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_02",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "building",
+        "max_capacity",
+        "avg_capacity"
+      ],
+      "result_columns": [
+        "max(capacity)",
+        "avg(capacity)",
+        "building"
+      ],
+      "canonical_output_columns": [
+        "max(capacity)",
+        "avg_capacity",
+        "building"
+      ],
+      "group_by": [
+        "building"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "max_capacity",
+        "avg_capacity"
+      ],
+      "aggregate_functions": [
+        "max",
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "numeric_aggregation"
+      ],
+      "description": "college_2 holdout cluster 2 query 1 rows=20"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_hq_c02_02",
+      "sql": "SELECT max(capacity) , avg(capacity) , building FROM raw.classroom GROUP BY building",
+      "original_sql": "SELECT max(capacity) ,  avg(capacity) ,  building FROM classroom GROUP BY building",
+      "normalized_sql": "select max(capacity) , avg(capacity) , building from raw.classroom group by building",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_02",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "building",
+        "max_capacity",
+        "avg_capacity"
+      ],
+      "result_columns": [
+        "max(capacity)",
+        "avg(capacity)",
+        "building"
+      ],
+      "canonical_output_columns": [
+        "max(capacity)",
+        "avg_capacity",
+        "building"
+      ],
+      "group_by": [
+        "building"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "max_capacity",
+        "avg_capacity"
+      ],
+      "aggregate_functions": [
+        "max",
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "numeric_aggregation"
+      ],
+      "description": "college_2 holdout cluster 2 query 2 rows=20"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_hq_c02_03",
+      "sql": "SELECT max(capacity) , avg(capacity) , building FROM raw.classroom GROUP BY building",
+      "original_sql": "SELECT max(capacity) ,  avg(capacity) ,  building FROM classroom GROUP BY building",
+      "normalized_sql": "select max(capacity) , avg(capacity) , building from raw.classroom group by building",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_02",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "building",
+        "max_capacity",
+        "avg_capacity"
+      ],
+      "result_columns": [
+        "max(capacity)",
+        "avg(capacity)",
+        "building"
+      ],
+      "canonical_output_columns": [
+        "max(capacity)",
+        "avg_capacity",
+        "building"
+      ],
+      "group_by": [
+        "building"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "max_capacity",
+        "avg_capacity"
+      ],
+      "aggregate_functions": [
+        "max",
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "numeric_aggregation"
+      ],
+      "description": "college_2 holdout cluster 2 query 3 rows=20"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_hq_c03_01",
+      "sql": "SELECT count(*) FROM raw.classroom WHERE building != 'Lamberton'",
+      "original_sql": "SELECT count(*) FROM classroom WHERE building != 'Lamberton'",
+      "normalized_sql": "select count(*) from raw.classroom where building != 'lamberton'",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_03",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "building_!=_'lamberton'"
+      ],
+      "filter_predicates": [
+        "building != 'Lamberton'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "college_2 holdout cluster 3 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_hq_c03_02",
+      "sql": "SELECT count(*) FROM raw.classroom WHERE building != 'Lamberton'",
+      "original_sql": "SELECT count(*) FROM classroom WHERE building != 'Lamberton'",
+      "normalized_sql": "select count(*) from raw.classroom where building != 'lamberton'",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_03",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "building_!=_'lamberton'"
+      ],
+      "filter_predicates": [
+        "building != 'Lamberton'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "college_2 holdout cluster 3 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_hq_c03_03",
+      "sql": "SELECT count(*) FROM raw.classroom WHERE building != 'Lamberton'",
+      "original_sql": "SELECT count(*) FROM classroom WHERE building != 'Lamberton'",
+      "normalized_sql": "select count(*) from raw.classroom where building != 'lamberton'",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_03",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "building_!=_'lamberton'"
+      ],
+      "filter_predicates": [
+        "building != 'Lamberton'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "college_2 holdout cluster 3 query 3 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_hq_c04_01",
+      "sql": "SELECT count(*) FROM raw.classroom WHERE building = 'Lamberton'",
+      "original_sql": "SELECT count(*) FROM classroom WHERE building  =  'Lamberton'",
+      "normalized_sql": "select count(*) from raw.classroom where building = 'lamberton'",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_04",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "building_=_'lamberton'"
+      ],
+      "filter_predicates": [
+        "building = 'Lamberton'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "college_2 holdout cluster 4 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_hq_c04_02",
+      "sql": "SELECT count(*) FROM raw.classroom WHERE building = 'Lamberton'",
+      "original_sql": "SELECT count(*) FROM classroom WHERE building  =  'Lamberton'",
+      "normalized_sql": "select count(*) from raw.classroom where building = 'lamberton'",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_04",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "building_=_'lamberton'"
+      ],
+      "filter_predicates": [
+        "building = 'Lamberton'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "college_2 holdout cluster 4 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_college_2_hq_c04_03",
+      "sql": "SELECT count(*) FROM raw.classroom WHERE building = 'Lamberton'",
+      "original_sql": "SELECT count(*) FROM classroom WHERE building  =  'Lamberton'",
+      "normalized_sql": "select count(*) from raw.classroom where building = 'lamberton'",
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_04",
+      "business_tag": "Spider college_2 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.classroom"
+      ],
+      "canonical_tables": [
+        "raw.classroom"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "building_=_'lamberton'"
+      ],
+      "filter_predicates": [
+        "building = 'Lamberton'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "college_2 holdout cluster 4 query 3 rows=1"
+    }
+  ],
+  "clusters": [
+    {
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_01",
+      "label": "college_2 workload cluster 1",
+      "business_label": "Spider college_2 analytics cluster 1",
+      "query_ids": [
+        "schemaopt_spider_medium_college_2_vq_c01_01",
+        "schemaopt_spider_medium_college_2_vq_c01_02",
+        "schemaopt_spider_medium_college_2_vq_c01_03",
+        "schemaopt_spider_medium_college_2_vq_c01_04",
+        "schemaopt_spider_medium_college_2_vq_c01_05",
+        "schemaopt_spider_medium_college_2_vq_c01_06"
+      ],
+      "query_count": 6,
+      "total_frequency_weight": 12.0,
+      "total_weighted_baseline_cost": 12.0,
+      "top_tables": [
+        "raw.advisor"
+      ],
+      "common_operator_patterns": [
+        "aggregate"
+      ],
+      "representative_dimensions": [],
+      "representative_measures": [
+        "count_distinct_s_id"
+      ],
+      "hotspot_rank": 1,
+      "preferred_object_kind": "agg_matview",
+      "representative_query_id": "schemaopt_spider_medium_college_2_vq_c01_01",
+      "cluster_grain_emphasis": [],
+      "suggested_exact_derived_shape": {
+        "object_kind": "agg_matview",
+        "source_objects": [
+          "raw.advisor"
+        ],
+        "group_by": [],
+        "canonical_predicates": [],
+        "measure_columns": [
+          "count_distinct_s_id"
+        ],
+        "aggregate_functions": [
+          "count"
+        ]
+      },
+      "reference_rewrite_feasible": true
+    },
+    {
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_02",
+      "label": "college_2 workload cluster 2",
+      "business_label": "Spider college_2 analytics cluster 2",
+      "query_ids": [
+        "schemaopt_spider_medium_college_2_vq_c02_01",
+        "schemaopt_spider_medium_college_2_vq_c02_02",
+        "schemaopt_spider_medium_college_2_vq_c02_03",
+        "schemaopt_spider_medium_college_2_vq_c02_04",
+        "schemaopt_spider_medium_college_2_vq_c02_05",
+        "schemaopt_spider_medium_college_2_vq_c02_06"
+      ],
+      "query_count": 6,
+      "total_frequency_weight": 12.0,
+      "total_weighted_baseline_cost": 12.0,
+      "top_tables": [
+        "raw.classroom"
+      ],
+      "common_operator_patterns": [
+        "aggregate",
+        "numeric_aggregation"
+      ],
+      "representative_dimensions": [
+        "building"
+      ],
+      "representative_measures": [
+        "max_capacity",
+        "avg_capacity"
+      ],
+      "hotspot_rank": 2,
+      "preferred_object_kind": "agg_matview",
+      "representative_query_id": "schemaopt_spider_medium_college_2_vq_c02_01",
+      "cluster_grain_emphasis": [
+        "building"
+      ],
+      "suggested_exact_derived_shape": {
+        "object_kind": "agg_matview",
+        "source_objects": [
+          "raw.classroom"
+        ],
+        "group_by": [
+          "building"
+        ],
+        "canonical_predicates": [],
+        "measure_columns": [
+          "max_capacity",
+          "avg_capacity"
+        ],
+        "aggregate_functions": [
+          "max",
+          "avg"
+        ]
+      },
+      "reference_rewrite_feasible": true
+    },
+    {
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_03",
+      "label": "college_2 workload cluster 3",
+      "business_label": "Spider college_2 analytics cluster 3",
+      "query_ids": [
+        "schemaopt_spider_medium_college_2_vq_c03_01",
+        "schemaopt_spider_medium_college_2_vq_c03_02",
+        "schemaopt_spider_medium_college_2_vq_c03_03",
+        "schemaopt_spider_medium_college_2_vq_c03_04",
+        "schemaopt_spider_medium_college_2_vq_c03_05",
+        "schemaopt_spider_medium_college_2_vq_c03_06"
+      ],
+      "query_count": 6,
+      "total_frequency_weight": 12.0,
+      "total_weighted_baseline_cost": 12.0,
+      "top_tables": [
+        "raw.classroom"
+      ],
+      "common_operator_patterns": [
+        "aggregate",
+        "filter"
+      ],
+      "representative_dimensions": [],
+      "representative_measures": [
+        "count_star"
+      ],
+      "hotspot_rank": 3,
+      "preferred_object_kind": "agg_matview",
+      "representative_query_id": "schemaopt_spider_medium_college_2_vq_c03_01",
+      "cluster_grain_emphasis": [],
+      "suggested_exact_derived_shape": {
+        "object_kind": "agg_matview",
+        "source_objects": [
+          "raw.classroom"
+        ],
+        "group_by": [],
+        "canonical_predicates": [
+          "building != 'lamberton'"
+        ],
+        "measure_columns": [
+          "count_star"
+        ],
+        "aggregate_functions": [
+          "count"
+        ]
+      },
+      "reference_rewrite_feasible": true
+    },
+    {
+      "cluster_id": "schemaopt_spider_medium_college_2_cluster_04",
+      "label": "college_2 workload cluster 4",
+      "business_label": "Spider college_2 analytics cluster 4",
+      "query_ids": [
+        "schemaopt_spider_medium_college_2_vq_c04_01",
+        "schemaopt_spider_medium_college_2_vq_c04_02",
+        "schemaopt_spider_medium_college_2_vq_c04_03",
+        "schemaopt_spider_medium_college_2_vq_c04_04",
+        "schemaopt_spider_medium_college_2_vq_c04_05",
+        "schemaopt_spider_medium_college_2_vq_c04_06"
+      ],
+      "query_count": 6,
+      "total_frequency_weight": 12.0,
+      "total_weighted_baseline_cost": 12.0,
+      "top_tables": [
+        "raw.classroom"
+      ],
+      "common_operator_patterns": [
+        "aggregate",
+        "filter"
+      ],
+      "representative_dimensions": [],
+      "representative_measures": [
+        "count_star"
+      ],
+      "hotspot_rank": 4,
+      "preferred_object_kind": "agg_matview",
+      "representative_query_id": "schemaopt_spider_medium_college_2_vq_c04_01",
+      "cluster_grain_emphasis": [],
+      "suggested_exact_derived_shape": {
+        "object_kind": "agg_matview",
+        "source_objects": [
+          "raw.classroom"
+        ],
+        "group_by": [],
+        "canonical_predicates": [
+          "building = 'lamberton'"
+        ],
+        "measure_columns": [
+          "count_star"
+        ],
+        "aggregate_functions": [
+          "count"
+        ]
+      },
+      "reference_rewrite_feasible": true
+    }
+  ],
+  "budgets": {
+    "max_new_derived_objects": 4,
+    "max_storage_bytes": 24000000,
+    "max_refresh_runtime_ms": 15000.0,
+    "max_steps": 24
+  },
+  "allowed_object_kinds": [
+    "join_matview",
+    "agg_matview",
+    "filtered_projection",
+    "denorm_table"
+  ],
+  "engine_capabilities": {
+    "engine": "duckdb",
+    "uses_real_duckdb_database": true,
+    "uses_real_query_execution": true,
+    "uses_explain_plan_metrics": true,
+    "rewrite_model": "explicit_rewritten_sql",
+    "source_dataset": "spider",
+    "source_database_engine": "sqlite",
+    "source_db_id": "college_2",
+    "sql_normalized_for_duckdb": true
+  },
+  "validation_metadata": {
+    "source_db_id": "college_2",
+    "validated_under_duckdb": true,
+    "raw_candidate_query_count": 16,
+    "validated_query_count": 15,
+    "selected_cluster_count": 4
+  }
+}

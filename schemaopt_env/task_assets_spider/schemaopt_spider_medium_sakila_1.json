@@ -1,0 +1,2293 @@
+{
+  "task_id": "schemaopt_spider_medium_sakila_1",
+  "difficulty": "medium",
+  "domain": "spider_sakila_1",
+  "objective": "Optimize the Spider sakila_1 workload over a DuckDB-converted database by materializing derived objects that reduce measured execution cost while preserving exact query results.",
+  "seed_source": "spider_data/spider_data/database/sakila_1/sakila_1.sqlite",
+  "dataset_dir": "spider_data/spider_data/database/sakila_1",
+  "database_path": "schemaopt_env/task_assets_spider/databases/schemaopt_spider_medium_sakila_1.duckdb",
+  "tables": [
+    {
+      "name": "raw.actor",
+      "columns": [
+        {
+          "name": "actor_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "first_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "last_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "last_update",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 200
+    },
+    {
+      "name": "raw.address",
+      "columns": [
+        {
+          "name": "address_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "address",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "address2",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "district",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "city_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "postal_code",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "phone",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "last_update",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 603
+    },
+    {
+      "name": "raw.category",
+      "columns": [
+        {
+          "name": "category_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "last_update",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 16
+    },
+    {
+      "name": "raw.city",
+      "columns": [
+        {
+          "name": "city_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "city",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "country_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "last_update",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 600
+    },
+    {
+      "name": "raw.country",
+      "columns": [
+        {
+          "name": "country_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "country",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "last_update",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 109
+    },
+    {
+      "name": "raw.customer",
+      "columns": [
+        {
+          "name": "customer_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "store_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "first_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "last_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "address_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "active",
+          "type": "BOOLEAN"
+        },
+        {
+          "name": "create_date",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "last_update",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 599
+    },
+    {
+      "name": "raw.film",
+      "columns": [
+        {
+          "name": "film_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "title",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "description",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "release_year",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "language_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "original_language_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "rental_duration",
+          "type": "BIGINT"
+        },
+        {
+          "name": "rental_rate",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "length",
+          "type": "BIGINT"
+        },
+        {
+          "name": "replacement_cost",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "rating",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "special_features",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "last_update",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 1000
+    },
+    {
+      "name": "raw.film_actor",
+      "columns": [
+        {
+          "name": "actor_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "film_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "last_update",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 5462
+    },
+    {
+      "name": "raw.film_category",
+      "columns": [
+        {
+          "name": "film_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "category_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "last_update",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 1000
+    },
+    {
+      "name": "raw.film_text",
+      "columns": [
+        {
+          "name": "film_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "title",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "description",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 0
+    },
+    {
+      "name": "raw.inventory",
+      "columns": [
+        {
+          "name": "inventory_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "film_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "store_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "last_update",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 4581
+    },
+    {
+      "name": "raw.language",
+      "columns": [
+        {
+          "name": "language_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "last_update",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 0
+    },
+    {
+      "name": "raw.payment",
+      "columns": [
+        {
+          "name": "payment_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "customer_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "staff_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "rental_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "amount",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "payment_date",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "last_update",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 16049
+    },
+    {
+      "name": "raw.rental",
+      "columns": [
+        {
+          "name": "rental_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "rental_date",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "inventory_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "customer_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "return_date",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "staff_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "last_update",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 16044
+    },
+    {
+      "name": "raw.staff",
+      "columns": [
+        {
+          "name": "staff_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "first_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "last_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "address_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "picture",
+          "type": "BLOB"
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "store_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "active",
+          "type": "BOOLEAN"
+        },
+        {
+          "name": "username",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "password",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "last_update",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 0
+    },
+    {
+      "name": "raw.store",
+      "columns": [
+        {
+          "name": "store_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "manager_staff_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "address_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "last_update",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 0
+    }
+  ],
+  "visible_queries": [
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_vq_c01_01",
+      "sql": "SELECT count(DISTINCT last_name) FROM raw.actor",
+      "original_sql": "SELECT count(DISTINCT last_name) FROM actor",
+      "normalized_sql": "select count(distinct last_name) from raw.actor",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_01",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.actor"
+      ],
+      "canonical_tables": [
+        "raw.actor"
+      ],
+      "columns": [
+        "count_distinct_last_name"
+      ],
+      "result_columns": [
+        "count(distinct last_name)"
+      ],
+      "canonical_output_columns": [
+        "count_distinct_last_name"
+      ],
+      "group_by": [],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_distinct_last_name"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "sakila_1 visible cluster 1 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_vq_c01_02",
+      "sql": "SELECT count(DISTINCT last_name) FROM raw.actor",
+      "original_sql": "SELECT count(DISTINCT last_name) FROM actor",
+      "normalized_sql": "select count(distinct last_name) from raw.actor",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_01",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.actor"
+      ],
+      "canonical_tables": [
+        "raw.actor"
+      ],
+      "columns": [
+        "count_distinct_last_name"
+      ],
+      "result_columns": [
+        "count(distinct last_name)"
+      ],
+      "canonical_output_columns": [
+        "count_distinct_last_name"
+      ],
+      "group_by": [],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_distinct_last_name"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "sakila_1 visible cluster 1 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_vq_c01_03",
+      "sql": "SELECT count(DISTINCT last_name) FROM raw.actor",
+      "original_sql": "SELECT count(DISTINCT last_name) FROM actor",
+      "normalized_sql": "select count(distinct last_name) from raw.actor",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_01",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.actor"
+      ],
+      "canonical_tables": [
+        "raw.actor"
+      ],
+      "columns": [
+        "count_distinct_last_name"
+      ],
+      "result_columns": [
+        "count(distinct last_name)"
+      ],
+      "canonical_output_columns": [
+        "count_distinct_last_name"
+      ],
+      "group_by": [],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_distinct_last_name"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "sakila_1 visible cluster 1 query 3 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_vq_c01_04",
+      "sql": "SELECT count(DISTINCT last_name) FROM raw.actor",
+      "original_sql": "SELECT count(DISTINCT last_name) FROM actor",
+      "normalized_sql": "select count(distinct last_name) from raw.actor",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_01",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.actor"
+      ],
+      "canonical_tables": [
+        "raw.actor"
+      ],
+      "columns": [
+        "count_distinct_last_name"
+      ],
+      "result_columns": [
+        "count(distinct last_name)"
+      ],
+      "canonical_output_columns": [
+        "count_distinct_last_name"
+      ],
+      "group_by": [],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_distinct_last_name"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "sakila_1 visible cluster 1 query 4 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_vq_c01_05",
+      "sql": "SELECT count(DISTINCT last_name) FROM raw.actor",
+      "original_sql": "SELECT count(DISTINCT last_name) FROM actor",
+      "normalized_sql": "select count(distinct last_name) from raw.actor",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_01",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.actor"
+      ],
+      "canonical_tables": [
+        "raw.actor"
+      ],
+      "columns": [
+        "count_distinct_last_name"
+      ],
+      "result_columns": [
+        "count(distinct last_name)"
+      ],
+      "canonical_output_columns": [
+        "count_distinct_last_name"
+      ],
+      "group_by": [],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_distinct_last_name"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "sakila_1 visible cluster 1 query 5 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_vq_c01_06",
+      "sql": "SELECT count(DISTINCT last_name) FROM raw.actor",
+      "original_sql": "SELECT count(DISTINCT last_name) FROM actor",
+      "normalized_sql": "select count(distinct last_name) from raw.actor",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_01",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.actor"
+      ],
+      "canonical_tables": [
+        "raw.actor"
+      ],
+      "columns": [
+        "count_distinct_last_name"
+      ],
+      "result_columns": [
+        "count(distinct last_name)"
+      ],
+      "canonical_output_columns": [
+        "count_distinct_last_name"
+      ],
+      "group_by": [],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_distinct_last_name"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "sakila_1 visible cluster 1 query 6 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_vq_c02_01",
+      "sql": "SELECT count(*) FROM raw.address WHERE district = 'California'",
+      "original_sql": "SELECT count(*) FROM address WHERE district  =  'California'",
+      "normalized_sql": "select count(*) from raw.address where district = 'california'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_02",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.address"
+      ],
+      "canonical_tables": [
+        "raw.address"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "district_=_'california'"
+      ],
+      "filter_predicates": [
+        "district = 'California'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "sakila_1 visible cluster 2 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_vq_c02_02",
+      "sql": "SELECT count(*) FROM raw.address WHERE district = 'California'",
+      "original_sql": "SELECT count(*) FROM address WHERE district  =  'California'",
+      "normalized_sql": "select count(*) from raw.address where district = 'california'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_02",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.address"
+      ],
+      "canonical_tables": [
+        "raw.address"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "district_=_'california'"
+      ],
+      "filter_predicates": [
+        "district = 'California'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "sakila_1 visible cluster 2 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_vq_c02_03",
+      "sql": "SELECT count(*) FROM raw.address WHERE district = 'California'",
+      "original_sql": "SELECT count(*) FROM address WHERE district  =  'California'",
+      "normalized_sql": "select count(*) from raw.address where district = 'california'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_02",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.address"
+      ],
+      "canonical_tables": [
+        "raw.address"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "district_=_'california'"
+      ],
+      "filter_predicates": [
+        "district = 'California'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "sakila_1 visible cluster 2 query 3 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_vq_c02_04",
+      "sql": "SELECT count(*) FROM raw.address WHERE district = 'California'",
+      "original_sql": "SELECT count(*) FROM address WHERE district  =  'California'",
+      "normalized_sql": "select count(*) from raw.address where district = 'california'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_02",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.address"
+      ],
+      "canonical_tables": [
+        "raw.address"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "district_=_'california'"
+      ],
+      "filter_predicates": [
+        "district = 'California'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "sakila_1 visible cluster 2 query 4 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_vq_c02_05",
+      "sql": "SELECT count(*) FROM raw.address WHERE district = 'California'",
+      "original_sql": "SELECT count(*) FROM address WHERE district  =  'California'",
+      "normalized_sql": "select count(*) from raw.address where district = 'california'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_02",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.address"
+      ],
+      "canonical_tables": [
+        "raw.address"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "district_=_'california'"
+      ],
+      "filter_predicates": [
+        "district = 'California'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "sakila_1 visible cluster 2 query 5 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_vq_c02_06",
+      "sql": "SELECT count(*) FROM raw.address WHERE district = 'California'",
+      "original_sql": "SELECT count(*) FROM address WHERE district  =  'California'",
+      "normalized_sql": "select count(*) from raw.address where district = 'california'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_02",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.address"
+      ],
+      "canonical_tables": [
+        "raw.address"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "district_=_'california'"
+      ],
+      "filter_predicates": [
+        "district = 'California'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "sakila_1 visible cluster 2 query 6 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_vq_c03_01",
+      "sql": "SELECT count(*) FROM raw.city AS T1 JOIN raw.country AS T2 ON T1.country_id = T2.country_id WHERE T2.country = 'Australia'",
+      "original_sql": "SELECT count(*) FROM city AS T1 JOIN country AS T2 ON T1.country_id  =  T2.country_id WHERE T2.country  =  'Australia'",
+      "normalized_sql": "select count(*) from raw.city as t1 join raw.country as t2 on t1.country_id = t2.country_id where t2.country = 'australia'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_03",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.city",
+        "raw.country"
+      ],
+      "canonical_tables": [
+        "raw.city",
+        "raw.country"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "country_=_'australia'"
+      ],
+      "filter_predicates": [
+        "T2.country = 'Australia'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "sakila_1 visible cluster 3 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_vq_c03_02",
+      "sql": "SELECT count(*) FROM raw.city AS T1 JOIN raw.country AS T2 ON T1.country_id = T2.country_id WHERE T2.country = 'Australia'",
+      "original_sql": "SELECT count(*) FROM city AS T1 JOIN country AS T2 ON T1.country_id  =  T2.country_id WHERE T2.country  =  'Australia'",
+      "normalized_sql": "select count(*) from raw.city as t1 join raw.country as t2 on t1.country_id = t2.country_id where t2.country = 'australia'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_03",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.city",
+        "raw.country"
+      ],
+      "canonical_tables": [
+        "raw.city",
+        "raw.country"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "country_=_'australia'"
+      ],
+      "filter_predicates": [
+        "T2.country = 'Australia'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "sakila_1 visible cluster 3 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_vq_c03_03",
+      "sql": "SELECT count(*) FROM raw.city AS T1 JOIN raw.country AS T2 ON T1.country_id = T2.country_id WHERE T2.country = 'Australia'",
+      "original_sql": "SELECT count(*) FROM city AS T1 JOIN country AS T2 ON T1.country_id  =  T2.country_id WHERE T2.country  =  'Australia'",
+      "normalized_sql": "select count(*) from raw.city as t1 join raw.country as t2 on t1.country_id = t2.country_id where t2.country = 'australia'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_03",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.city",
+        "raw.country"
+      ],
+      "canonical_tables": [
+        "raw.city",
+        "raw.country"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "country_=_'australia'"
+      ],
+      "filter_predicates": [
+        "T2.country = 'Australia'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "sakila_1 visible cluster 3 query 3 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_vq_c03_04",
+      "sql": "SELECT count(*) FROM raw.city AS T1 JOIN raw.country AS T2 ON T1.country_id = T2.country_id WHERE T2.country = 'Australia'",
+      "original_sql": "SELECT count(*) FROM city AS T1 JOIN country AS T2 ON T1.country_id  =  T2.country_id WHERE T2.country  =  'Australia'",
+      "normalized_sql": "select count(*) from raw.city as t1 join raw.country as t2 on t1.country_id = t2.country_id where t2.country = 'australia'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_03",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.city",
+        "raw.country"
+      ],
+      "canonical_tables": [
+        "raw.city",
+        "raw.country"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "country_=_'australia'"
+      ],
+      "filter_predicates": [
+        "T2.country = 'Australia'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "sakila_1 visible cluster 3 query 4 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_vq_c03_05",
+      "sql": "SELECT count(*) FROM raw.city AS T1 JOIN raw.country AS T2 ON T1.country_id = T2.country_id WHERE T2.country = 'Australia'",
+      "original_sql": "SELECT count(*) FROM city AS T1 JOIN country AS T2 ON T1.country_id  =  T2.country_id WHERE T2.country  =  'Australia'",
+      "normalized_sql": "select count(*) from raw.city as t1 join raw.country as t2 on t1.country_id = t2.country_id where t2.country = 'australia'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_03",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.city",
+        "raw.country"
+      ],
+      "canonical_tables": [
+        "raw.city",
+        "raw.country"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "country_=_'australia'"
+      ],
+      "filter_predicates": [
+        "T2.country = 'Australia'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "sakila_1 visible cluster 3 query 5 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_vq_c03_06",
+      "sql": "SELECT count(*) FROM raw.city AS T1 JOIN raw.country AS T2 ON T1.country_id = T2.country_id WHERE T2.country = 'Australia'",
+      "original_sql": "SELECT count(*) FROM city AS T1 JOIN country AS T2 ON T1.country_id  =  T2.country_id WHERE T2.country  =  'Australia'",
+      "normalized_sql": "select count(*) from raw.city as t1 join raw.country as t2 on t1.country_id = t2.country_id where t2.country = 'australia'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_03",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.city",
+        "raw.country"
+      ],
+      "canonical_tables": [
+        "raw.city",
+        "raw.country"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "country_=_'australia'"
+      ],
+      "filter_predicates": [
+        "T2.country = 'Australia'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "sakila_1 visible cluster 3 query 6 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_vq_c04_01",
+      "sql": "SELECT count(*) FROM raw.customer WHERE active = '1'",
+      "original_sql": "SELECT count(*) FROM customer WHERE active = '1'",
+      "normalized_sql": "select count(*) from raw.customer where active = '1'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_04",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.customer"
+      ],
+      "canonical_tables": [
+        "raw.customer"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "active_=_'1'"
+      ],
+      "filter_predicates": [
+        "active = '1'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "sakila_1 visible cluster 4 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_vq_c04_02",
+      "sql": "SELECT count(*) FROM raw.customer WHERE active = '1'",
+      "original_sql": "SELECT count(*) FROM customer WHERE active = '1'",
+      "normalized_sql": "select count(*) from raw.customer where active = '1'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_04",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.customer"
+      ],
+      "canonical_tables": [
+        "raw.customer"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "active_=_'1'"
+      ],
+      "filter_predicates": [
+        "active = '1'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "sakila_1 visible cluster 4 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_vq_c04_03",
+      "sql": "SELECT count(*) FROM raw.customer WHERE active = '1'",
+      "original_sql": "SELECT count(*) FROM customer WHERE active = '1'",
+      "normalized_sql": "select count(*) from raw.customer where active = '1'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_04",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.customer"
+      ],
+      "canonical_tables": [
+        "raw.customer"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "active_=_'1'"
+      ],
+      "filter_predicates": [
+        "active = '1'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "sakila_1 visible cluster 4 query 3 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_vq_c04_04",
+      "sql": "SELECT count(*) FROM raw.customer WHERE active = '1'",
+      "original_sql": "SELECT count(*) FROM customer WHERE active = '1'",
+      "normalized_sql": "select count(*) from raw.customer where active = '1'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_04",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.customer"
+      ],
+      "canonical_tables": [
+        "raw.customer"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "active_=_'1'"
+      ],
+      "filter_predicates": [
+        "active = '1'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "sakila_1 visible cluster 4 query 4 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_vq_c04_05",
+      "sql": "SELECT count(*) FROM raw.customer WHERE active = '1'",
+      "original_sql": "SELECT count(*) FROM customer WHERE active = '1'",
+      "normalized_sql": "select count(*) from raw.customer where active = '1'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_04",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.customer"
+      ],
+      "canonical_tables": [
+        "raw.customer"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "active_=_'1'"
+      ],
+      "filter_predicates": [
+        "active = '1'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "sakila_1 visible cluster 4 query 5 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_vq_c04_06",
+      "sql": "SELECT count(*) FROM raw.customer WHERE active = '1'",
+      "original_sql": "SELECT count(*) FROM customer WHERE active = '1'",
+      "normalized_sql": "select count(*) from raw.customer where active = '1'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_04",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.customer"
+      ],
+      "canonical_tables": [
+        "raw.customer"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "active_=_'1'"
+      ],
+      "filter_predicates": [
+        "active = '1'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "sakila_1 visible cluster 4 query 6 rows=1"
+    }
+  ],
+  "holdout_queries": [
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_hq_c01_01",
+      "sql": "SELECT count(DISTINCT last_name) FROM raw.actor",
+      "original_sql": "SELECT count(DISTINCT last_name) FROM actor",
+      "normalized_sql": "select count(distinct last_name) from raw.actor",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_01",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.actor"
+      ],
+      "canonical_tables": [
+        "raw.actor"
+      ],
+      "columns": [
+        "count_distinct_last_name"
+      ],
+      "result_columns": [
+        "count(distinct last_name)"
+      ],
+      "canonical_output_columns": [
+        "count_distinct_last_name"
+      ],
+      "group_by": [],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_distinct_last_name"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "sakila_1 holdout cluster 1 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_hq_c01_02",
+      "sql": "SELECT count(DISTINCT last_name) FROM raw.actor",
+      "original_sql": "SELECT count(DISTINCT last_name) FROM actor",
+      "normalized_sql": "select count(distinct last_name) from raw.actor",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_01",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.actor"
+      ],
+      "canonical_tables": [
+        "raw.actor"
+      ],
+      "columns": [
+        "count_distinct_last_name"
+      ],
+      "result_columns": [
+        "count(distinct last_name)"
+      ],
+      "canonical_output_columns": [
+        "count_distinct_last_name"
+      ],
+      "group_by": [],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_distinct_last_name"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "sakila_1 holdout cluster 1 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_hq_c01_03",
+      "sql": "SELECT count(DISTINCT last_name) FROM raw.actor",
+      "original_sql": "SELECT count(DISTINCT last_name) FROM actor",
+      "normalized_sql": "select count(distinct last_name) from raw.actor",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_01",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.actor"
+      ],
+      "canonical_tables": [
+        "raw.actor"
+      ],
+      "columns": [
+        "count_distinct_last_name"
+      ],
+      "result_columns": [
+        "count(distinct last_name)"
+      ],
+      "canonical_output_columns": [
+        "count_distinct_last_name"
+      ],
+      "group_by": [],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_distinct_last_name"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "sakila_1 holdout cluster 1 query 3 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_hq_c02_01",
+      "sql": "SELECT count(*) FROM raw.address WHERE district = 'California'",
+      "original_sql": "SELECT count(*) FROM address WHERE district  =  'California'",
+      "normalized_sql": "select count(*) from raw.address where district = 'california'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_02",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.address"
+      ],
+      "canonical_tables": [
+        "raw.address"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "district_=_'california'"
+      ],
+      "filter_predicates": [
+        "district = 'California'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "sakila_1 holdout cluster 2 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_hq_c02_02",
+      "sql": "SELECT count(*) FROM raw.address WHERE district = 'California'",
+      "original_sql": "SELECT count(*) FROM address WHERE district  =  'California'",
+      "normalized_sql": "select count(*) from raw.address where district = 'california'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_02",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.address"
+      ],
+      "canonical_tables": [
+        "raw.address"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "district_=_'california'"
+      ],
+      "filter_predicates": [
+        "district = 'California'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "sakila_1 holdout cluster 2 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_hq_c02_03",
+      "sql": "SELECT count(*) FROM raw.address WHERE district = 'California'",
+      "original_sql": "SELECT count(*) FROM address WHERE district  =  'California'",
+      "normalized_sql": "select count(*) from raw.address where district = 'california'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_02",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.address"
+      ],
+      "canonical_tables": [
+        "raw.address"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "district_=_'california'"
+      ],
+      "filter_predicates": [
+        "district = 'California'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "sakila_1 holdout cluster 2 query 3 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_hq_c03_01",
+      "sql": "SELECT count(*) FROM raw.city AS T1 JOIN raw.country AS T2 ON T1.country_id = T2.country_id WHERE T2.country = 'Australia'",
+      "original_sql": "SELECT count(*) FROM city AS T1 JOIN country AS T2 ON T1.country_id  =  T2.country_id WHERE T2.country  =  'Australia'",
+      "normalized_sql": "select count(*) from raw.city as t1 join raw.country as t2 on t1.country_id = t2.country_id where t2.country = 'australia'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_03",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.city",
+        "raw.country"
+      ],
+      "canonical_tables": [
+        "raw.city",
+        "raw.country"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "country_=_'australia'"
+      ],
+      "filter_predicates": [
+        "T2.country = 'Australia'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "sakila_1 holdout cluster 3 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_hq_c03_02",
+      "sql": "SELECT count(*) FROM raw.city AS T1 JOIN raw.country AS T2 ON T1.country_id = T2.country_id WHERE T2.country = 'Australia'",
+      "original_sql": "SELECT count(*) FROM city AS T1 JOIN country AS T2 ON T1.country_id  =  T2.country_id WHERE T2.country  =  'Australia'",
+      "normalized_sql": "select count(*) from raw.city as t1 join raw.country as t2 on t1.country_id = t2.country_id where t2.country = 'australia'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_03",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.city",
+        "raw.country"
+      ],
+      "canonical_tables": [
+        "raw.city",
+        "raw.country"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "country_=_'australia'"
+      ],
+      "filter_predicates": [
+        "T2.country = 'Australia'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "sakila_1 holdout cluster 3 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_hq_c03_03",
+      "sql": "SELECT count(*) FROM raw.city AS T1 JOIN raw.country AS T2 ON T1.country_id = T2.country_id WHERE T2.country = 'Australia'",
+      "original_sql": "SELECT count(*) FROM city AS T1 JOIN country AS T2 ON T1.country_id  =  T2.country_id WHERE T2.country  =  'Australia'",
+      "normalized_sql": "select count(*) from raw.city as t1 join raw.country as t2 on t1.country_id = t2.country_id where t2.country = 'australia'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_03",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.city",
+        "raw.country"
+      ],
+      "canonical_tables": [
+        "raw.city",
+        "raw.country"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "country_=_'australia'"
+      ],
+      "filter_predicates": [
+        "T2.country = 'Australia'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "sakila_1 holdout cluster 3 query 3 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_hq_c04_01",
+      "sql": "SELECT count(*) FROM raw.customer WHERE active = '1'",
+      "original_sql": "SELECT count(*) FROM customer WHERE active = '1'",
+      "normalized_sql": "select count(*) from raw.customer where active = '1'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_04",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.customer"
+      ],
+      "canonical_tables": [
+        "raw.customer"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "active_=_'1'"
+      ],
+      "filter_predicates": [
+        "active = '1'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "sakila_1 holdout cluster 4 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_hq_c04_02",
+      "sql": "SELECT count(*) FROM raw.customer WHERE active = '1'",
+      "original_sql": "SELECT count(*) FROM customer WHERE active = '1'",
+      "normalized_sql": "select count(*) from raw.customer where active = '1'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_04",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.customer"
+      ],
+      "canonical_tables": [
+        "raw.customer"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "active_=_'1'"
+      ],
+      "filter_predicates": [
+        "active = '1'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "sakila_1 holdout cluster 4 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_sakila_1_hq_c04_03",
+      "sql": "SELECT count(*) FROM raw.customer WHERE active = '1'",
+      "original_sql": "SELECT count(*) FROM customer WHERE active = '1'",
+      "normalized_sql": "select count(*) from raw.customer where active = '1'",
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_04",
+      "business_tag": "Spider sakila_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.customer"
+      ],
+      "canonical_tables": [
+        "raw.customer"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "active_=_'1'"
+      ],
+      "filter_predicates": [
+        "active = '1'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "sakila_1 holdout cluster 4 query 3 rows=1"
+    }
+  ],
+  "clusters": [
+    {
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_01",
+      "label": "sakila_1 workload cluster 1",
+      "business_label": "Spider sakila_1 analytics cluster 1",
+      "query_ids": [
+        "schemaopt_spider_medium_sakila_1_vq_c01_01",
+        "schemaopt_spider_medium_sakila_1_vq_c01_02",
+        "schemaopt_spider_medium_sakila_1_vq_c01_03",
+        "schemaopt_spider_medium_sakila_1_vq_c01_04",
+        "schemaopt_spider_medium_sakila_1_vq_c01_05",
+        "schemaopt_spider_medium_sakila_1_vq_c01_06"
+      ],
+      "query_count": 6,
+      "total_frequency_weight": 12.0,
+      "total_weighted_baseline_cost": 12.0,
+      "top_tables": [
+        "raw.actor"
+      ],
+      "common_operator_patterns": [
+        "aggregate"
+      ],
+      "representative_dimensions": [],
+      "representative_measures": [
+        "count_distinct_last_name"
+      ],
+      "hotspot_rank": 1,
+      "preferred_object_kind": "agg_matview",
+      "representative_query_id": "schemaopt_spider_medium_sakila_1_vq_c01_01",
+      "cluster_grain_emphasis": [],
+      "suggested_exact_derived_shape": {
+        "object_kind": "agg_matview",
+        "source_objects": [
+          "raw.actor"
+        ],
+        "group_by": [],
+        "canonical_predicates": [],
+        "measure_columns": [
+          "count_distinct_last_name"
+        ],
+        "aggregate_functions": [
+          "count"
+        ]
+      },
+      "reference_rewrite_feasible": true
+    },
+    {
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_02",
+      "label": "sakila_1 workload cluster 2",
+      "business_label": "Spider sakila_1 analytics cluster 2",
+      "query_ids": [
+        "schemaopt_spider_medium_sakila_1_vq_c02_01",
+        "schemaopt_spider_medium_sakila_1_vq_c02_02",
+        "schemaopt_spider_medium_sakila_1_vq_c02_03",
+        "schemaopt_spider_medium_sakila_1_vq_c02_04",
+        "schemaopt_spider_medium_sakila_1_vq_c02_05",
+        "schemaopt_spider_medium_sakila_1_vq_c02_06"
+      ],
+      "query_count": 6,
+      "total_frequency_weight": 12.0,
+      "total_weighted_baseline_cost": 12.0,
+      "top_tables": [
+        "raw.address"
+      ],
+      "common_operator_patterns": [
+        "aggregate",
+        "filter"
+      ],
+      "representative_dimensions": [],
+      "representative_measures": [
+        "count_star"
+      ],
+      "hotspot_rank": 2,
+      "preferred_object_kind": "agg_matview",
+      "representative_query_id": "schemaopt_spider_medium_sakila_1_vq_c02_01",
+      "cluster_grain_emphasis": [],
+      "suggested_exact_derived_shape": {
+        "object_kind": "agg_matview",
+        "source_objects": [
+          "raw.address"
+        ],
+        "group_by": [],
+        "canonical_predicates": [
+          "district = 'california'"
+        ],
+        "measure_columns": [
+          "count_star"
+        ],
+        "aggregate_functions": [
+          "count"
+        ]
+      },
+      "reference_rewrite_feasible": true
+    },
+    {
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_03",
+      "label": "sakila_1 workload cluster 3",
+      "business_label": "Spider sakila_1 analytics cluster 3",
+      "query_ids": [
+        "schemaopt_spider_medium_sakila_1_vq_c03_01",
+        "schemaopt_spider_medium_sakila_1_vq_c03_02",
+        "schemaopt_spider_medium_sakila_1_vq_c03_03",
+        "schemaopt_spider_medium_sakila_1_vq_c03_04",
+        "schemaopt_spider_medium_sakila_1_vq_c03_05",
+        "schemaopt_spider_medium_sakila_1_vq_c03_06"
+      ],
+      "query_count": 6,
+      "total_frequency_weight": 12.0,
+      "total_weighted_baseline_cost": 12.0,
+      "top_tables": [
+        "raw.city",
+        "raw.country"
+      ],
+      "common_operator_patterns": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "representative_dimensions": [],
+      "representative_measures": [
+        "count_star"
+      ],
+      "hotspot_rank": 3,
+      "preferred_object_kind": "agg_matview",
+      "representative_query_id": "schemaopt_spider_medium_sakila_1_vq_c03_01",
+      "cluster_grain_emphasis": [],
+      "suggested_exact_derived_shape": {
+        "object_kind": "agg_matview",
+        "source_objects": [
+          "raw.city",
+          "raw.country"
+        ],
+        "group_by": [],
+        "canonical_predicates": [
+          "country = 'australia'"
+        ],
+        "measure_columns": [
+          "count_star"
+        ],
+        "aggregate_functions": [
+          "count"
+        ]
+      },
+      "reference_rewrite_feasible": true
+    },
+    {
+      "cluster_id": "schemaopt_spider_medium_sakila_1_cluster_04",
+      "label": "sakila_1 workload cluster 4",
+      "business_label": "Spider sakila_1 analytics cluster 4",
+      "query_ids": [
+        "schemaopt_spider_medium_sakila_1_vq_c04_01",
+        "schemaopt_spider_medium_sakila_1_vq_c04_02",
+        "schemaopt_spider_medium_sakila_1_vq_c04_03",
+        "schemaopt_spider_medium_sakila_1_vq_c04_04",
+        "schemaopt_spider_medium_sakila_1_vq_c04_05",
+        "schemaopt_spider_medium_sakila_1_vq_c04_06"
+      ],
+      "query_count": 6,
+      "total_frequency_weight": 12.0,
+      "total_weighted_baseline_cost": 12.0,
+      "top_tables": [
+        "raw.customer"
+      ],
+      "common_operator_patterns": [
+        "aggregate",
+        "filter"
+      ],
+      "representative_dimensions": [],
+      "representative_measures": [
+        "count_star"
+      ],
+      "hotspot_rank": 4,
+      "preferred_object_kind": "agg_matview",
+      "representative_query_id": "schemaopt_spider_medium_sakila_1_vq_c04_01",
+      "cluster_grain_emphasis": [],
+      "suggested_exact_derived_shape": {
+        "object_kind": "agg_matview",
+        "source_objects": [
+          "raw.customer"
+        ],
+        "group_by": [],
+        "canonical_predicates": [
+          "active = '1'"
+        ],
+        "measure_columns": [
+          "count_star"
+        ],
+        "aggregate_functions": [
+          "count"
+        ]
+      },
+      "reference_rewrite_feasible": true
+    }
+  ],
+  "budgets": {
+    "max_new_derived_objects": 4,
+    "max_storage_bytes": 24000000,
+    "max_refresh_runtime_ms": 15000.0,
+    "max_steps": 24
+  },
+  "allowed_object_kinds": [
+    "join_matview",
+    "agg_matview",
+    "filtered_projection",
+    "denorm_table"
+  ],
+  "engine_capabilities": {
+    "engine": "duckdb",
+    "uses_real_duckdb_database": true,
+    "uses_real_query_execution": true,
+    "uses_explain_plan_metrics": true,
+    "rewrite_model": "explicit_rewritten_sql",
+    "source_dataset": "spider",
+    "source_database_engine": "sqlite",
+    "source_db_id": "sakila_1",
+    "sql_normalized_for_duckdb": true
+  },
+  "validation_metadata": {
+    "source_db_id": "sakila_1",
+    "validated_under_duckdb": true,
+    "raw_candidate_query_count": 11,
+    "validated_query_count": 9,
+    "selected_cluster_count": 4
+  }
+}

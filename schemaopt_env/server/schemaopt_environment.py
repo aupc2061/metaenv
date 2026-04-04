@@ -79,6 +79,8 @@ class DerivedObject:
     source_objects: List[str]
     grain_dims: List[str]
     available_columns: List[str]
+    canonical_columns: List[str]
+    canonical_to_physical: Dict[str, str]
     column_types: Dict[str, str]
     parsed_sql: ParsedSQL
     row_count: int
@@ -88,7 +90,7 @@ class DerivedObject:
     used_by_visible_queries: set[str] = field(default_factory=set)
     used_by_clusters: set[str] = field(default_factory=set)
     def summary(self) -> Dict[str, Any]:
-        return {"name": self.name, "object_kind": self.object_kind, "source_objects": list(self.source_objects), "grain_dims": list(self.grain_dims), "available_columns": list(self.available_columns), "row_count": self.row_count, "storage_bytes_estimate": self.storage_bytes_estimate, "build_runtime_ms": round(self.build_runtime_ms, 4), "signature": self.signature, "used_by_visible_queries": sorted(self.used_by_visible_queries), "used_by_clusters": sorted(self.used_by_clusters)}
+        return {"name": self.name, "object_kind": self.object_kind, "source_objects": list(self.source_objects), "grain_dims": list(self.grain_dims), "available_columns": list(self.available_columns), "canonical_columns": list(self.canonical_columns), "row_count": self.row_count, "storage_bytes_estimate": self.storage_bytes_estimate, "build_runtime_ms": round(self.build_runtime_ms, 4), "signature": self.signature, "used_by_visible_queries": sorted(self.used_by_visible_queries), "used_by_clusters": sorted(self.used_by_clusters)}
 
 class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, SchemaOptState]):
     SUPPORTS_CONCURRENT_SESSIONS: bool = True
@@ -370,9 +372,11 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
         build_runtime_ms = (time.perf_counter() - start) * 1000.0
         describe_rows = self._con.execute(f"DESCRIBE derived.{name}").fetchall()
         column_types = {str(row[0]).lower(): str(row[1]) for row in describe_rows}
-        available_columns = list(column_types.keys())
+        physical_columns = list(column_types.keys())
+        canonical_columns = [self._canonicalize_measure_name(column) for column in physical_columns]
+        canonical_to_physical = {canonical: physical for physical, canonical in zip(physical_columns, canonical_columns)}
         row_count = int(self._con.execute(f"SELECT COUNT(*) FROM derived.{name}").fetchone()[0])
-        obj = DerivedObject(name=name, object_kind=action.object_kind or "agg_matview", sql_definition=action.sql_definition or "", source_objects=source_objects, grain_dims=grain_dims, available_columns=available_columns, column_types=column_types, parsed_sql=parsed, row_count=row_count, storage_bytes_estimate=self._estimate_storage_bytes(row_count, column_types), build_runtime_ms=build_runtime_ms, signature=signature)
+        obj = DerivedObject(name=name, object_kind=action.object_kind or "agg_matview", sql_definition=action.sql_definition or "", source_objects=source_objects, grain_dims=grain_dims, available_columns=physical_columns, canonical_columns=canonical_columns, canonical_to_physical=canonical_to_physical, column_types=column_types, parsed_sql=parsed, row_count=row_count, storage_bytes_estimate=self._estimate_storage_bytes(row_count, column_types), build_runtime_ms=build_runtime_ms, signature=signature)
         self._derived_objects[name] = obj
         self._evaluation_cache = {}
         diagnostics = self._derived_object_diagnostics(obj, action.intended_clusters)
@@ -557,15 +561,25 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
         query_dims = [item.lower() for item in query.group_by]
         if not set(query_dims).issubset(set(obj.parsed_sql.group_by)):
             return None, "group_by_not_subset"
-        if not set(query.measure_columns).issubset(set(obj.available_columns)):
+        if not set(query.measure_columns).issubset(set(obj.canonical_columns)):
             return None, "measure_columns_missing"
-        if query_dims == obj.parsed_sql.group_by and set(query.columns).issubset(set(obj.available_columns)):
-            return {"sql": f"SELECT {', '.join(query.columns)} FROM derived.{obj.name}", "reason": "exact derived object match"}, None
+        exact_route, exact_rejection = self._build_exact_rewrite(query, obj)
+        if exact_route is not None:
+            return exact_route, None
         if obj.object_kind not in {"agg_matview", "denorm_table", "join_matview"}:
             return None, "object_kind_not_rollup_compatible"
+        if query_dims == obj.parsed_sql.group_by:
+            return None, exact_rejection or "rollup_not_applicable_exact_grain"
         if not all(func in {"count", "sum"} for func in query.aggregate_functions):
             return None, "aggregate_functions_not_supported"
-        select_cols = list(query_dims) + [f"SUM({measure}) AS {measure}" for measure in query.measure_columns]
+        if query.order_by or query.limit is not None:
+            return None, exact_rejection or "order_by_not_reconstructible"
+        select_cols = list(query_dims)
+        for canonical_name, result_label in zip(query.measure_columns, query.result_columns[len(query_dims):]):
+            physical = obj.canonical_to_physical.get(canonical_name)
+            if not physical:
+                return None, "measure_columns_missing"
+            select_cols.append(f"SUM({self._quote_identifier(physical)}) AS {self._quote_identifier(result_label)}")
         sql = f"SELECT {', '.join(select_cols)} FROM derived.{obj.name}"
         if query_dims:
             sql += " GROUP BY " + ", ".join(query_dims)
@@ -780,21 +794,31 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
         }
 
     def _parse_sql_metadata(self, sql: str) -> ParsedSQL:
-        normalized = sql.strip().rstrip(";")
+        normalized = re.sub(r'\s+', ' ', sql.strip().rstrip(';')).strip()
         lowered = normalized.lower()
-        select_start = lowered.find("select ")
-        from_start = lowered.find(" from ")
-        if select_start == -1 or from_start == -1:
+        select_match = re.search(r'\bselect\b', lowered)
+        from_match = re.search(r'\bfrom\b', lowered)
+        if not select_match or not from_match or from_match.start() <= select_match.end():
             raise ValueError("Only SELECT-derived objects are supported")
-        select_clause = normalized[select_start + 7:from_start]
-        after_from = normalized[from_start + 6:]
+        select_clause = normalized[select_match.end():from_match.start()].strip()
+        after_from = normalized[from_match.end():].strip()
         where_match = re.search(r"\bwhere\b", after_from, re.IGNORECASE)
         group_match = re.search(r"\bgroup\s+by\b", after_from, re.IGNORECASE)
-        where_clause = after_from[where_match.end():group_match.start() if group_match else len(after_from)] if where_match else ""
-        group_clause = after_from[group_match.end():] if group_match else ""
+        order_match = re.search(r"\border\s+by\b", after_from, re.IGNORECASE)
+        limit_match = re.search(r"\blimit\b", after_from, re.IGNORECASE)
+        where_end = len(after_from)
+        for match in [group_match, order_match, limit_match]:
+            if match and match.start() < where_end:
+                where_end = match.start()
+        where_clause = after_from[where_match.end():where_end].strip() if where_match else ""
+        group_end = len(after_from)
+        for match in [order_match, limit_match]:
+            if match and match.start() < group_end:
+                group_end = match.start()
+        group_clause = after_from[group_match.end():group_end].strip() if group_match else ""
         parts = self._split_sql_list(select_clause)
-        aliases = [self._extract_alias(part).lower() for part in parts]
-        measures = [alias for alias, part in zip(aliases, parts) if self._aggregate_function(part)]
+        aliases = [((self._extract_alias(part) or self._default_result_label(part)).lower()) for part in parts]
+        measures = [self._canonicalize_measure_name(self._extract_alias(part) or self._default_result_label(part)) for part in parts if self._aggregate_function(part)]
         funcs = [self._aggregate_function(part) for part in parts if self._aggregate_function(part)]
         raw_filter_predicates = self._split_predicates(where_clause)
         tables = [item.strip('"').lower() for item in re.findall(r'(?:from|join)\s+([A-Za-z0-9_\."]+)', normalized, flags=re.IGNORECASE)]
@@ -827,12 +851,14 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
             parts.append("".join(current).strip())
         return parts
 
-    def _extract_alias(self, expression: str) -> str:
-        match = re.search(r'\bas\s+([A-Za-z_][A-Za-z0-9_]*)\s*$', expression, re.IGNORECASE)
-        return match.group(1) if match else expression.split('.')[-1].strip().strip('"')
+    def _extract_alias(self, expression: str) -> Optional[str]:
+        match = re.search(r'\bas\s+(?:"([^"]+)"|([A-Za-z_][A-Za-z0-9_]*))\s*$', expression, re.IGNORECASE)
+        if not match:
+            return None
+        return (match.group(1) or match.group(2) or '').lower()
 
     def _aggregate_function(self, expression: str) -> Optional[str]:
-        match = re.search(r'\b(count|sum)\s*\(', expression, re.IGNORECASE)
+        match = re.search(r'\b(count|sum|avg|min|max)\s*\(', expression, re.IGNORECASE)
         return match.group(1).lower() if match else None
 
     def _split_predicates(self, clause: str) -> List[str]:
@@ -845,6 +871,74 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
         normalized = normalized.replace("\"", "")
         normalized = normalized.replace("( ", "(").replace(" )", ")")
         return normalized
+
+    def _canonicalize_measure_name(self, value: str) -> str:
+        normalized = value.strip().lower().replace('\"', '')
+        normalized = re.sub(r'\s+', ' ', normalized)
+        if normalized in {'count(*)', 'count_star()', 'count_star'}:
+            return 'count_star'
+        match = re.fullmatch(r'(count|sum|avg|min|max)\((.+)\)', normalized)
+        if match:
+            func = match.group(1)
+            target = match.group(2).strip()
+            if target == '*':
+                return 'count_star'
+            target = target.replace('.', '_')
+            target = re.sub(r'[^a-z0-9_]+', '_', target).strip('_')
+            return f'{func}_{target}' if target else func
+        normalized = normalized.replace('.', '_')
+        normalized = re.sub(r'[^a-z0-9_]+', '_', normalized).strip('_')
+        return normalized
+
+
+    def _default_result_label(self, value: str) -> str:
+        normalized = value.strip().lower().replace('"', '')
+        normalized = re.sub(r'\s+', ' ', normalized)
+        if normalized == 'count(*)':
+            return 'count_star()'
+        return normalized
+
+    def _quote_identifier(self, value: str) -> str:
+        return '"' + value.replace('"', '""') + '"'
+
+    def _build_exact_rewrite(self, query: QuerySpec, obj: DerivedObject) -> Tuple[Optional[Dict[str, str]], Optional[str]]:
+        if tuple(query.group_by) != tuple(obj.parsed_sql.group_by):
+            return None, 'exact_group_by_mismatch'
+        if tuple(query.canonical_output_columns) != tuple(obj.canonical_columns):
+            return None, 'exact_output_columns_mismatch'
+        projections: List[str] = []
+        for canonical_name, result_label in zip(query.canonical_output_columns, query.result_columns):
+            physical = obj.canonical_to_physical.get(canonical_name)
+            if not physical:
+                return None, 'exact_output_columns_mismatch'
+            quoted_physical = self._quote_identifier(physical)
+            if physical.lower() == result_label.lower():
+                projections.append(quoted_physical)
+            else:
+                projections.append(f"{quoted_physical} AS {self._quote_identifier(result_label)}")
+        sql = f"SELECT {', '.join(projections)} FROM derived.{obj.name}"
+        order_sql = self._build_order_by_sql(query)
+        if query.order_by and order_sql is None:
+            return None, 'order_by_not_reconstructible'
+        if order_sql:
+            sql += f" ORDER BY {order_sql}"
+        if query.limit is not None:
+            sql += f" LIMIT {query.limit}"
+        return {"sql": sql, "reason": "exact derived object match"}, None
+
+    def _build_order_by_sql(self, query: QuerySpec) -> Optional[str]:
+        if not query.order_by:
+            return ''
+        parts: List[str] = []
+        for item in query.order_by:
+            canonical = str(item.get('canonical_output') or '').lower()
+            result_label = str(item.get('result_label') or '').lower()
+            direction = str(item.get('direction') or 'asc').upper()
+            if canonical and canonical in query.canonical_output_columns:
+                parts.append(f"{self._quote_identifier(result_label)} {direction}")
+            else:
+                return None
+        return ', '.join(parts)
 
     def _parse_group_by(self, clause: str, aliases: Sequence[str]) -> List[str]:
         clause = clause.strip()

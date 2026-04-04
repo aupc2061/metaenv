@@ -9,7 +9,10 @@ import re
 from typing import Any, Dict, Iterable, List, Optional, Sequence
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
-_TASK_ASSET_ROOT = Path(__file__).resolve().parent / "task_assets"
+_TASK_ASSET_ROOTS = (
+    Path(__file__).resolve().parent / "task_assets",
+    Path(__file__).resolve().parent / "task_assets_spider",
+)
 _ALIAS_TOKEN_RE = re.compile(r'\b[a-zA-Z_][a-zA-Z0-9_]*\.((?:"[^"]+")|(?:[a-zA-Z_][a-zA-Z0-9_]*))')
 
 
@@ -27,6 +30,113 @@ def _canonicalize_predicate(predicate: str) -> str:
     normalized = normalized.replace('"', '')
     normalized = normalized.replace('( ', '(').replace(' )', ')')
     return normalized
+
+
+def _canonicalize_measure_name(value: str) -> str:
+    normalized = value.strip().lower().replace('"', '')
+    normalized = re.sub(r'\s+', ' ', normalized)
+    if normalized in {"count(*)", "count_star()", "count_star"}:
+        return "count_star"
+    match = re.fullmatch(r'(count|sum|avg|min|max)\((.+)\)', normalized)
+    if match:
+        func = match.group(1)
+        target = match.group(2).strip()
+        if target == "*":
+            return "count_star"
+        target = target.replace('.', '_')
+        target = re.sub(r'[^a-z0-9_]+', '_', target).strip('_')
+        return f"{func}_{target}" if target else func
+    normalized = normalized.replace('.', '_')
+    normalized = re.sub(r'[^a-z0-9_]+', '_', normalized).strip('_')
+    return normalized
+
+
+def _default_result_label(value: str) -> str:
+    normalized = value.strip().lower().replace('"', '')
+    normalized = re.sub(r'\s+', ' ', normalized)
+    if normalized == 'count(*)':
+        return 'count_star()'
+    return normalized
+
+
+def _split_sql_list(clause: str) -> List[str]:
+    parts: List[str] = []
+    current: List[str] = []
+    depth = 0
+    for char in clause:
+        if char == '(':
+            depth += 1
+        elif char == ')':
+            depth = max(0, depth - 1)
+        if char == ',' and depth == 0:
+            parts.append(''.join(current).strip())
+            current = []
+        else:
+            current.append(char)
+    if current:
+        parts.append(''.join(current).strip())
+    return parts
+
+
+def _extract_alias(expression: str) -> str | None:
+    match = re.search(r'as\s+(?:"([^"]+)"|([A-Za-z_][A-Za-z0-9_]*))\s*$', expression, re.IGNORECASE)
+    if not match:
+        return None
+    return (match.group(1) or match.group(2) or '').lower()
+
+
+def _result_columns_from_sql(sql: str) -> tuple[str, ...]:
+    normalized = sql.strip().rstrip(';')
+    lowered = normalized.lower()
+    select_start = lowered.find('select ')
+    from_start = lowered.find(' from ')
+    if select_start == -1 or from_start == -1:
+        return ()
+    select_clause = normalized[select_start + 7:from_start]
+    result: List[str] = []
+    for part in _split_sql_list(select_clause):
+        alias = _extract_alias(part)
+        result.append(alias or _default_result_label(part))
+    return tuple(item.lower() for item in result)
+
+
+def _parse_query_tail(sql: str, canonical_outputs: Sequence[str], result_columns: Sequence[str]) -> tuple[tuple[Dict[str, Any], ...], int | None]:
+    lowered = sql.lower()
+    order_idx = lowered.find(' order by ')
+    limit_idx = lowered.find(' limit ')
+    order_by: List[Dict[str, Any]] = []
+    limit: int | None = None
+    if limit_idx != -1:
+        limit_text = sql[limit_idx + 7:].strip().rstrip(';')
+        match = re.match(r'(\d+)', limit_text)
+        if match:
+            limit = int(match.group(1))
+    if order_idx != -1:
+        end = limit_idx if limit_idx != -1 and limit_idx > order_idx else len(sql)
+        clause = sql[order_idx + 10:end].strip()
+        canonical_lookup = {item: result_columns[idx] for idx, item in enumerate(canonical_outputs)}
+        for item in _split_sql_list(clause):
+            match = re.match(r'(.+?)\s+(asc|desc)\s*$', item, re.IGNORECASE)
+            expr = match.group(1).strip() if match else item.strip()
+            direction = (match.group(2).lower() if match else 'asc')
+            if expr.isdigit():
+                idx = int(expr) - 1
+                canonical = canonical_outputs[idx] if 0 <= idx < len(canonical_outputs) else expr
+                result_label = result_columns[idx] if 0 <= idx < len(result_columns) else expr
+            else:
+                normalized_expr = _default_result_label(expr)
+                canonical = _canonicalize_measure_name(expr)
+                if normalized_expr not in result_columns and canonical in canonical_lookup:
+                    result_label = canonical_lookup[canonical]
+                else:
+                    result_label = normalized_expr
+            order_by.append({
+                'expression': expr.lower(),
+                'result_label': result_label,
+                'canonical_output': canonical,
+                'direction': direction,
+            })
+    return tuple(order_by), limit
 
 
 @dataclass(frozen=True)
@@ -59,12 +169,16 @@ class QuerySpec:
     tables: tuple[str, ...]
     canonical_tables: tuple[str, ...]
     columns: tuple[str, ...]
+    result_columns: tuple[str, ...]
+    canonical_output_columns: tuple[str, ...]
     group_by: tuple[str, ...]
     filter_tokens: tuple[str, ...]
     filter_predicates: tuple[str, ...]
     canonical_filter_predicates: tuple[str, ...]
     measure_columns: tuple[str, ...]
     aggregate_functions: tuple[str, ...]
+    order_by: tuple[Dict[str, Any], ...]
+    limit: int | None
     plan_features: tuple[str, ...]
     description: str
 
@@ -93,10 +207,14 @@ class QuerySpec:
             "tables": list(self.tables),
             "canonical_tables": list(self.canonical_tables),
             "columns": list(self.columns),
+            "result_columns": list(self.result_columns),
+            "canonical_output_columns": list(self.canonical_output_columns),
             "group_by": list(self.group_by),
             "filter_tokens": list(self.filter_tokens),
             "measure_columns": list(self.measure_columns),
             "aggregate_functions": list(self.aggregate_functions),
+            "order_by": [dict(item) for item in self.order_by],
+            "limit": self.limit,
             "plan_features": list(self.plan_features),
             "description": self.description,
             "rewrite_template_hint": self.rewrite_template_hint,
@@ -261,6 +379,20 @@ def _load_query(payload: Dict[str, Any]) -> QuerySpec:
     tables = tuple(payload.get("tables", []))
     filter_predicates = tuple(payload.get("filter_predicates", []))
     canonical_filter_predicates = tuple(_canonicalize_predicate(item) for item in filter_predicates)
+    group_by = tuple(column.lower() for column in payload.get("group_by", []))
+    columns = tuple(column.lower() for column in payload.get("columns", []))
+    sql_result_columns = _result_columns_from_sql(sql)
+    raw_result_columns = payload.get("result_columns") or [_default_result_label(column) for column in payload.get("columns", [])]
+    result_columns = sql_result_columns if len(sql_result_columns) == len(columns) else tuple(str(column).lower() for column in raw_result_columns)
+    raw_canonical_outputs = payload.get("canonical_output_columns") or list(result_columns)
+    canonical_output_columns = tuple(
+        str(column).lower() if idx < len(group_by) else _canonicalize_measure_name(column)
+        for idx, column in enumerate(raw_canonical_outputs)
+    )
+    order_by = tuple(dict(item) for item in payload.get("order_by", []))
+    limit = int(payload["limit"]) if payload.get("limit") is not None else None
+    if not order_by and limit is None:
+        order_by, limit = _parse_query_tail(sql, canonical_output_columns, result_columns)
     return QuerySpec(
         query_id=payload["query_id"],
         sql=sql,
@@ -271,13 +403,17 @@ def _load_query(payload: Dict[str, Any]) -> QuerySpec:
         priority_weight=float(payload.get("priority_weight", 1.0)),
         tables=tables,
         canonical_tables=tuple(payload.get("canonical_tables") or [_canonicalize_table_name(item) for item in tables]),
-        columns=tuple(column.lower() for column in payload.get("columns", [])),
-        group_by=tuple(column.lower() for column in payload.get("group_by", [])),
+        columns=columns,
+        result_columns=result_columns,
+        canonical_output_columns=canonical_output_columns,
+        group_by=group_by,
         filter_tokens=tuple(token.lower() for token in payload.get("filter_tokens", [])),
         filter_predicates=filter_predicates,
         canonical_filter_predicates=canonical_filter_predicates,
-        measure_columns=tuple(column.lower() for column in payload.get("measure_columns", [])),
+        measure_columns=tuple(canonical_output_columns[len(group_by):]),
         aggregate_functions=tuple(function.lower() for function in payload.get("aggregate_functions", [])),
+        order_by=order_by,
+        limit=limit,
         plan_features=tuple(feature.lower() for feature in payload.get("plan_features", [])),
         description=payload.get("description", payload["query_id"]),
     )
@@ -364,15 +500,19 @@ def load_task_manifest(task_manifest_path: str | Path) -> TaskSpec:
     )
 
 
-def discover_task_manifests(task_asset_root: str | Path = _TASK_ASSET_ROOT) -> Dict[str, TaskSpec]:
-    root = Path(task_asset_root)
-    if not root.exists():
-        return {}
+def discover_task_manifests(task_asset_roots: str | Path | Sequence[str | Path] = _TASK_ASSET_ROOTS) -> Dict[str, TaskSpec]:
+    if isinstance(task_asset_roots, (str, Path)):
+        roots = [Path(task_asset_roots)]
+    else:
+        roots = [Path(root) for root in task_asset_roots]
 
     tasks: Dict[str, TaskSpec] = {}
-    for manifest_path in sorted(root.glob("*.json")):
-        task = load_task_manifest(manifest_path)
-        tasks[task.task_id] = task
+    for root in roots:
+        if not root.exists():
+            continue
+        for manifest_path in sorted(root.glob("*.json")):
+            task = load_task_manifest(manifest_path)
+            tasks[task.task_id] = task
     return tasks
 
 

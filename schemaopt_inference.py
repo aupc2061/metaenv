@@ -12,6 +12,7 @@ Environment variables:
 
 from __future__ import annotations
 
+import argparse
 from collections import Counter
 import json
 import os
@@ -40,12 +41,12 @@ if str(PROJECT_ROOT) not in sys.path:
 from schemaopt_env.models import SchemaOptAction
 from schemaopt_env.server.schemaopt_environment import SchemaOptEnvironment
 
-MODEL_NAME = os.getenv("MODEL_NAME", "gpt-5.4")
-API_BASE_URL = os.getenv("API_BASE_URL")
+DEFAULT_MODEL_NAME = os.getenv("MODEL_NAME", "gpt-5.4")
+DEFAULT_API_BASE_URL = os.getenv("API_BASE_URL")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY") or os.getenv("HF_TOKEN")
-MAX_STEPS = int(os.getenv("MAX_STEPS", "25"))
-TASK_ID = os.getenv("TASK_ID", "schemaopt_hard_google_play")
-MAX_ACTION_RETRIES = int(os.getenv("MAX_ACTION_RETRIES", "4"))
+DEFAULT_MAX_STEPS = int(os.getenv("MAX_STEPS", "25"))
+DEFAULT_TASK_ID = os.getenv("TASK_ID", "schemaopt_hard_google_play")
+DEFAULT_MAX_ACTION_RETRIES = int(os.getenv("MAX_ACTION_RETRIES", "4"))
 
 SYSTEM_PROMPT = """You are operating a workload-adaptive schema optimization environment.
 
@@ -191,13 +192,14 @@ def build_user_prompt(
     benchmark_history: List[Dict[str, Any]],
     cluster_attempts: Dict[str, int],
     query_context_requests: Dict[str, int],
+    max_steps: int,
     parse_errors: Optional[List[str]] = None,
 ) -> str:
     metadata = observation.metadata or {}
     task = metadata.get("task", {})
     history_text = "\n".join(history[-6:]) if history else "(none)"
     budgets = task.get("budgets", {})
-    max_steps = int(budgets.get("max_steps") or MAX_STEPS)
+    task_max_steps = int(budgets.get("max_steps") or max_steps)
     derived_objects = (observation.catalog_summary or {}).get("derived_objects", [])
     repeated_context_requests = {key: value for key, value in query_context_requests.items() if value > 1}
     prompt_payload = {
@@ -214,8 +216,8 @@ def build_user_prompt(
         "derived_object_summaries": derived_objects,
         "repeated_query_context_requests": repeated_context_requests,
         "remaining_budget_summary": {
-            "steps_remaining": max(0, min(MAX_STEPS, max_steps) - step + 1),
-            "max_steps": max_steps,
+            "steps_remaining": max(0, min(max_steps, task_max_steps) - step + 1),
+            "max_steps": task_max_steps,
             "max_new_derived_objects": budgets.get("max_new_derived_objects"),
             "max_storage_bytes": budgets.get("max_storage_bytes"),
             "max_refresh_runtime_ms": budgets.get("max_refresh_runtime_ms"),
@@ -235,7 +237,7 @@ def build_user_prompt(
     return prompt
 
 
-def request_model_action(user_content: str) -> str:
+def request_model_action(user_content: str, model_name: str, api_base_url: Optional[str]) -> str:
     if OpenAI is None:
         raise RuntimeError("openai package is not installed. Install it to run model-driven inference.")
     if not OPENAI_API_KEY:
@@ -243,11 +245,11 @@ def request_model_action(user_content: str) -> str:
 
     try:
         client_kwargs: Dict[str, Any] = {"api_key": OPENAI_API_KEY}
-        if API_BASE_URL:
-            client_kwargs["base_url"] = API_BASE_URL
+        if api_base_url:
+            client_kwargs["base_url"] = api_base_url
         client = OpenAI(**client_kwargs)
         response = client.responses.create(
-            model=MODEL_NAME,
+            model=model_name,
             input=[
                 {"role": "developer", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": user_content},
@@ -265,9 +267,13 @@ def choose_action(
     benchmark_history: List[Dict[str, Any]],
     cluster_attempts: Dict[str, int],
     query_context_requests: Dict[str, int],
+    model_name: str,
+    api_base_url: Optional[str],
+    max_steps: int,
+    max_action_retries: int,
 ) -> SchemaOptAction:
     errors: List[str] = []
-    for attempt in range(1, MAX_ACTION_RETRIES + 1):
+    for attempt in range(1, max_action_retries + 1):
         user_content = build_user_prompt(
             observation,
             history,
@@ -275,9 +281,10 @@ def choose_action(
             benchmark_history,
             cluster_attempts,
             query_context_requests,
+            max_steps,
             parse_errors=errors,
         )
-        response_text = request_model_action(user_content)
+        response_text = request_model_action(user_content, model_name, api_base_url)
         if not response_text.strip():
             errors.append("empty model response")
             continue
@@ -289,11 +296,18 @@ def choose_action(
         errors.append(f"unparseable action payload: {truncated[:300]}")
 
     raise RuntimeError(
-        f"Model failed to produce a valid SchemaOptAction after {MAX_ACTION_RETRIES} attempts."
+        f"Model failed to produce a valid SchemaOptAction after {max_action_retries} attempts."
     )
 
 
-def run_episode(task_id: str = TASK_ID) -> Dict[str, Any]:
+def run_episode(
+    task_id: str,
+    model_name: str,
+    api_base_url: Optional[str],
+    max_steps: int,
+    max_action_retries: int,
+    output_path: Optional[Path] = None,
+) -> Dict[str, Any]:
     env = SchemaOptEnvironment()
     observation = env.reset(task_id=task_id)
     history: List[str] = []
@@ -306,8 +320,19 @@ def run_episode(task_id: str = TASK_ID) -> Dict[str, Any]:
 
     terminated_due_to_max_steps = False
 
-    for step in range(1, MAX_STEPS + 1):
-        action = choose_action(observation, history, step, benchmark_history, dict(cluster_attempts), dict(query_context_requests))
+    for step in range(1, max_steps + 1):
+        action = choose_action(
+            observation,
+            history,
+            step,
+            benchmark_history,
+            dict(cluster_attempts),
+            dict(query_context_requests),
+            model_name,
+            api_base_url,
+            max_steps,
+            max_action_retries,
+        )
         print(f"Step {step}: {json.dumps(action.model_dump(exclude_none=True), ensure_ascii=True)}")
 
         observation = env.step(action)
@@ -344,7 +369,7 @@ def run_episode(task_id: str = TASK_ID) -> Dict[str, Any]:
             break
     else:
         terminated_due_to_max_steps = True
-        print(f"Reached max steps ({MAX_STEPS}) without a model-issued submit action.")
+        print(f"Reached max steps ({max_steps}) without a model-issued submit action.")
 
     final_feedback = observation.action_feedback or {}
     result = {
@@ -363,13 +388,33 @@ def run_episode(task_id: str = TASK_ID) -> Dict[str, Any]:
     }
 
     print("\nFinal result:")
-    with open(f"inference_result_{task_id}_{MODEL_NAME}.json", "w") as f:
+    result_path = output_path or Path(f"inference_result_{task_id}_{model_name}.json")
+    with result_path.open("w", encoding="utf-8") as f:
         json.dump(result, f, indent=2)
     return result
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Run model-driven inference against schemaopt_env.")
+    parser.add_argument("--task-id", default=DEFAULT_TASK_ID, help="Task id to run.")
+    parser.add_argument("--model-name", default=DEFAULT_MODEL_NAME, help="Model id for the OpenAI-compatible API.")
+    parser.add_argument("--api-base-url", default=DEFAULT_API_BASE_URL, help="Optional OpenAI-compatible API base URL.")
+    parser.add_argument("--max-steps", type=int, default=DEFAULT_MAX_STEPS, help="Maximum number of environment steps.")
+    parser.add_argument("--max-action-retries", type=int, default=DEFAULT_MAX_ACTION_RETRIES, help="Maximum model retries per step.")
+    parser.add_argument("--output", type=Path, default=None, help="Optional path for the result JSON.")
+    return parser.parse_args()
+
+
 def main() -> None:
-    run_episode()
+    args = parse_args()
+    run_episode(
+        task_id=args.task_id,
+        model_name=args.model_name,
+        api_base_url=args.api_base_url,
+        max_steps=args.max_steps,
+        max_action_retries=args.max_action_retries,
+        output_path=args.output,
+    )
 
 
 if __name__ == "__main__":

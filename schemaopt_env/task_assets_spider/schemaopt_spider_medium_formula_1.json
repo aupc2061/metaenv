@@ -1,0 +1,2427 @@
+{
+  "task_id": "schemaopt_spider_medium_formula_1",
+  "difficulty": "medium",
+  "domain": "spider_formula_1",
+  "objective": "Optimize the Spider formula_1 workload over a DuckDB-converted database by materializing derived objects that reduce measured execution cost while preserving exact query results.",
+  "seed_source": "spider_data/spider_data/database/formula_1/formula_1.sqlite",
+  "dataset_dir": "spider_data/spider_data/database/formula_1",
+  "database_path": "schemaopt_env/task_assets_spider/databases/schemaopt_spider_medium_formula_1.duckdb",
+  "tables": [
+    {
+      "name": "raw.circuits",
+      "columns": [
+        {
+          "name": "circuitId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "circuitRef",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "location",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "country",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "lat",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "lng",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "alt",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "url",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 73
+    },
+    {
+      "name": "raw.constructorResults",
+      "columns": [
+        {
+          "name": "constructorResultsId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "raceId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "constructorId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "points",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 11142
+    },
+    {
+      "name": "raw.constructorStandings",
+      "columns": [
+        {
+          "name": "constructorStandingsId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "raceId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "constructorId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "points",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "position",
+          "type": "BIGINT"
+        },
+        {
+          "name": "positionText",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "wins",
+          "type": "BIGINT"
+        }
+      ],
+      "row_count": 11896
+    },
+    {
+      "name": "raw.constructors",
+      "columns": [
+        {
+          "name": "constructorId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "constructorRef",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "nationality",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "url",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 208
+    },
+    {
+      "name": "raw.driverStandings",
+      "columns": [
+        {
+          "name": "driverStandingsId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "raceId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "driverId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "points",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "position",
+          "type": "BIGINT"
+        },
+        {
+          "name": "positionText",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "wins",
+          "type": "BIGINT"
+        }
+      ],
+      "row_count": 31726
+    },
+    {
+      "name": "raw.drivers",
+      "columns": [
+        {
+          "name": "driverId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "driverRef",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "number",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "code",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "forename",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "surname",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "dob",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "nationality",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "url",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 842
+    },
+    {
+      "name": "raw.lapTimes",
+      "columns": [
+        {
+          "name": "raceId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "driverId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "lap",
+          "type": "BIGINT"
+        },
+        {
+          "name": "position",
+          "type": "BIGINT"
+        },
+        {
+          "name": "time",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "milliseconds",
+          "type": "BIGINT"
+        }
+      ],
+      "row_count": 0
+    },
+    {
+      "name": "raw.pitStops",
+      "columns": [
+        {
+          "name": "raceId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "driverId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "stop",
+          "type": "BIGINT"
+        },
+        {
+          "name": "lap",
+          "type": "BIGINT"
+        },
+        {
+          "name": "time",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "duration",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "milliseconds",
+          "type": "BIGINT"
+        }
+      ],
+      "row_count": 0
+    },
+    {
+      "name": "raw.qualifying",
+      "columns": [
+        {
+          "name": "qualifyId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "raceId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "driverId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "constructorId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "number",
+          "type": "BIGINT"
+        },
+        {
+          "name": "position",
+          "type": "BIGINT"
+        },
+        {
+          "name": "q1",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "q2",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "q3",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 7516
+    },
+    {
+      "name": "raw.races",
+      "columns": [
+        {
+          "name": "raceId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "year",
+          "type": "BIGINT"
+        },
+        {
+          "name": "round",
+          "type": "BIGINT"
+        },
+        {
+          "name": "circuitId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "date",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "time",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "url",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 997
+    },
+    {
+      "name": "raw.results",
+      "columns": [
+        {
+          "name": "resultId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "raceId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "driverId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "constructorId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "number",
+          "type": "BIGINT"
+        },
+        {
+          "name": "grid",
+          "type": "BIGINT"
+        },
+        {
+          "name": "position",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "positionText",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "positionOrder",
+          "type": "BIGINT"
+        },
+        {
+          "name": "points",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "laps",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "time",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "milliseconds",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "fastestLap",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "rank",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "fastestLapTime",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "fastestLapSpeed",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "statusId",
+          "type": "BIGINT"
+        }
+      ],
+      "row_count": 23777
+    },
+    {
+      "name": "raw.seasons",
+      "columns": [
+        {
+          "name": "year",
+          "type": "BIGINT"
+        },
+        {
+          "name": "url",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 69
+    },
+    {
+      "name": "raw.status",
+      "columns": [
+        {
+          "name": "statusId",
+          "type": "BIGINT"
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 134
+    }
+  ],
+  "visible_queries": [
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_vq_c01_01",
+      "sql": "SELECT count(*) , nationality FROM raw.constructors GROUP BY nationality",
+      "original_sql": "SELECT count(*) ,  nationality FROM constructors GROUP BY nationality",
+      "normalized_sql": "select count(*) , nationality from raw.constructors group by nationality",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_01",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.constructors"
+      ],
+      "canonical_tables": [
+        "raw.constructors"
+      ],
+      "columns": [
+        "nationality",
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()",
+        "nationality"
+      ],
+      "canonical_output_columns": [
+        "count_star()",
+        "nationality"
+      ],
+      "group_by": [
+        "nationality"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "formula_1 visible cluster 1 query 1 rows=24"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_vq_c01_02",
+      "sql": "SELECT count(*) , nationality FROM raw.constructors GROUP BY nationality",
+      "original_sql": "SELECT count(*) ,  nationality FROM constructors GROUP BY nationality",
+      "normalized_sql": "select count(*) , nationality from raw.constructors group by nationality",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_01",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.constructors"
+      ],
+      "canonical_tables": [
+        "raw.constructors"
+      ],
+      "columns": [
+        "nationality",
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()",
+        "nationality"
+      ],
+      "canonical_output_columns": [
+        "count_star()",
+        "nationality"
+      ],
+      "group_by": [
+        "nationality"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "formula_1 visible cluster 1 query 2 rows=24"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_vq_c01_03",
+      "sql": "SELECT count(*) , nationality FROM raw.constructors GROUP BY nationality",
+      "original_sql": "SELECT count(*) ,  nationality FROM constructors GROUP BY nationality",
+      "normalized_sql": "select count(*) , nationality from raw.constructors group by nationality",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_01",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.constructors"
+      ],
+      "canonical_tables": [
+        "raw.constructors"
+      ],
+      "columns": [
+        "nationality",
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()",
+        "nationality"
+      ],
+      "canonical_output_columns": [
+        "count_star()",
+        "nationality"
+      ],
+      "group_by": [
+        "nationality"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "formula_1 visible cluster 1 query 3 rows=24"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_vq_c01_04",
+      "sql": "SELECT count(*) , nationality FROM raw.constructors GROUP BY nationality",
+      "original_sql": "SELECT count(*) ,  nationality FROM constructors GROUP BY nationality",
+      "normalized_sql": "select count(*) , nationality from raw.constructors group by nationality",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_01",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.constructors"
+      ],
+      "canonical_tables": [
+        "raw.constructors"
+      ],
+      "columns": [
+        "nationality",
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()",
+        "nationality"
+      ],
+      "canonical_output_columns": [
+        "count_star()",
+        "nationality"
+      ],
+      "group_by": [
+        "nationality"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "formula_1 visible cluster 1 query 4 rows=24"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_vq_c01_05",
+      "sql": "SELECT count(*) , nationality FROM raw.constructors GROUP BY nationality",
+      "original_sql": "SELECT count(*) ,  nationality FROM constructors GROUP BY nationality",
+      "normalized_sql": "select count(*) , nationality from raw.constructors group by nationality",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_01",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.constructors"
+      ],
+      "canonical_tables": [
+        "raw.constructors"
+      ],
+      "columns": [
+        "nationality",
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()",
+        "nationality"
+      ],
+      "canonical_output_columns": [
+        "count_star()",
+        "nationality"
+      ],
+      "group_by": [
+        "nationality"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "formula_1 visible cluster 1 query 5 rows=24"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_vq_c01_06",
+      "sql": "SELECT count(*) , nationality FROM raw.constructors GROUP BY nationality",
+      "original_sql": "SELECT count(*) ,  nationality FROM constructors GROUP BY nationality",
+      "normalized_sql": "select count(*) , nationality from raw.constructors group by nationality",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_01",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.constructors"
+      ],
+      "canonical_tables": [
+        "raw.constructors"
+      ],
+      "columns": [
+        "nationality",
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()",
+        "nationality"
+      ],
+      "canonical_output_columns": [
+        "count_star()",
+        "nationality"
+      ],
+      "group_by": [
+        "nationality"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "formula_1 visible cluster 1 query 6 rows=24"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_vq_c02_01",
+      "sql": "SELECT count(*) , constructorid FROM raw.constructorStandings GROUP BY constructorid",
+      "original_sql": "SELECT count(*) ,  constructorid FROM constructorStandings GROUP BY constructorid",
+      "normalized_sql": "select count(*) , constructorid from raw.constructorstandings group by constructorid",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_02",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.constructorstandings"
+      ],
+      "canonical_tables": [
+        "raw.constructorstandings"
+      ],
+      "columns": [
+        "constructorid",
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()",
+        "constructorid"
+      ],
+      "canonical_output_columns": [
+        "count_star()",
+        "constructorid"
+      ],
+      "group_by": [
+        "constructorid"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "formula_1 visible cluster 2 query 1 rows=156"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_vq_c02_02",
+      "sql": "SELECT count(*) , constructorid FROM raw.constructorStandings GROUP BY constructorid",
+      "original_sql": "SELECT count(*) ,  constructorid FROM constructorStandings GROUP BY constructorid",
+      "normalized_sql": "select count(*) , constructorid from raw.constructorstandings group by constructorid",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_02",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.constructorstandings"
+      ],
+      "canonical_tables": [
+        "raw.constructorstandings"
+      ],
+      "columns": [
+        "constructorid",
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()",
+        "constructorid"
+      ],
+      "canonical_output_columns": [
+        "count_star()",
+        "constructorid"
+      ],
+      "group_by": [
+        "constructorid"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "formula_1 visible cluster 2 query 2 rows=156"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_vq_c02_03",
+      "sql": "SELECT count(*) , constructorid FROM raw.constructorStandings GROUP BY constructorid",
+      "original_sql": "SELECT count(*) ,  constructorid FROM constructorStandings GROUP BY constructorid",
+      "normalized_sql": "select count(*) , constructorid from raw.constructorstandings group by constructorid",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_02",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.constructorstandings"
+      ],
+      "canonical_tables": [
+        "raw.constructorstandings"
+      ],
+      "columns": [
+        "constructorid",
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()",
+        "constructorid"
+      ],
+      "canonical_output_columns": [
+        "count_star()",
+        "constructorid"
+      ],
+      "group_by": [
+        "constructorid"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "formula_1 visible cluster 2 query 3 rows=156"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_vq_c02_04",
+      "sql": "SELECT count(*) , constructorid FROM raw.constructorStandings GROUP BY constructorid",
+      "original_sql": "SELECT count(*) ,  constructorid FROM constructorStandings GROUP BY constructorid",
+      "normalized_sql": "select count(*) , constructorid from raw.constructorstandings group by constructorid",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_02",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.constructorstandings"
+      ],
+      "canonical_tables": [
+        "raw.constructorstandings"
+      ],
+      "columns": [
+        "constructorid",
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()",
+        "constructorid"
+      ],
+      "canonical_output_columns": [
+        "count_star()",
+        "constructorid"
+      ],
+      "group_by": [
+        "constructorid"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "formula_1 visible cluster 2 query 4 rows=156"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_vq_c02_05",
+      "sql": "SELECT count(*) , constructorid FROM raw.constructorStandings GROUP BY constructorid",
+      "original_sql": "SELECT count(*) ,  constructorid FROM constructorStandings GROUP BY constructorid",
+      "normalized_sql": "select count(*) , constructorid from raw.constructorstandings group by constructorid",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_02",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.constructorstandings"
+      ],
+      "canonical_tables": [
+        "raw.constructorstandings"
+      ],
+      "columns": [
+        "constructorid",
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()",
+        "constructorid"
+      ],
+      "canonical_output_columns": [
+        "count_star()",
+        "constructorid"
+      ],
+      "group_by": [
+        "constructorid"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "formula_1 visible cluster 2 query 5 rows=156"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_vq_c02_06",
+      "sql": "SELECT count(*) , constructorid FROM raw.constructorStandings GROUP BY constructorid",
+      "original_sql": "SELECT count(*) ,  constructorid FROM constructorStandings GROUP BY constructorid",
+      "normalized_sql": "select count(*) , constructorid from raw.constructorstandings group by constructorid",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_02",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.constructorstandings"
+      ],
+      "canonical_tables": [
+        "raw.constructorstandings"
+      ],
+      "columns": [
+        "constructorid",
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()",
+        "constructorid"
+      ],
+      "canonical_output_columns": [
+        "count_star()",
+        "constructorid"
+      ],
+      "group_by": [
+        "constructorid"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "formula_1 visible cluster 2 query 6 rows=156"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_vq_c03_01",
+      "sql": "SELECT count(*) FROM raw.results AS T1 JOIN raw.races AS T2 ON T1.raceid = T2.raceid WHERE T2.name = 'Australian Grand Prix' AND YEAR = 2009",
+      "original_sql": "SELECT count(*) FROM results AS T1 JOIN races AS T2 ON T1.raceid = T2.raceid WHERE T2.name = \"Australian Grand Prix\" AND YEAR = 2009",
+      "normalized_sql": "select count(*) from raw.results as t1 join raw.races as t2 on t1.raceid = t2.raceid where t2.name = 'australian grand prix' and year = 2009",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_03",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.results",
+        "raw.races"
+      ],
+      "canonical_tables": [
+        "raw.results",
+        "raw.races"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_=_'australian_grand_prix'",
+        "year_=_2009"
+      ],
+      "filter_predicates": [
+        "T2.name = 'Australian Grand Prix'",
+        "YEAR = 2009"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "formula_1 visible cluster 3 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_vq_c03_02",
+      "sql": "SELECT count(*) FROM raw.results AS T1 JOIN raw.races AS T2 ON T1.raceid = T2.raceid WHERE T2.name = 'Australian Grand Prix' AND YEAR = 2009",
+      "original_sql": "SELECT count(*) FROM results AS T1 JOIN races AS T2 ON T1.raceid = T2.raceid WHERE T2.name = \"Australian Grand Prix\" AND YEAR = 2009",
+      "normalized_sql": "select count(*) from raw.results as t1 join raw.races as t2 on t1.raceid = t2.raceid where t2.name = 'australian grand prix' and year = 2009",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_03",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.results",
+        "raw.races"
+      ],
+      "canonical_tables": [
+        "raw.results",
+        "raw.races"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_=_'australian_grand_prix'",
+        "year_=_2009"
+      ],
+      "filter_predicates": [
+        "T2.name = 'Australian Grand Prix'",
+        "YEAR = 2009"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "formula_1 visible cluster 3 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_vq_c03_03",
+      "sql": "SELECT count(*) FROM raw.results AS T1 JOIN raw.races AS T2 ON T1.raceid = T2.raceid WHERE T2.name = 'Australian Grand Prix' AND YEAR = 2009",
+      "original_sql": "SELECT count(*) FROM results AS T1 JOIN races AS T2 ON T1.raceid = T2.raceid WHERE T2.name = \"Australian Grand Prix\" AND YEAR = 2009",
+      "normalized_sql": "select count(*) from raw.results as t1 join raw.races as t2 on t1.raceid = t2.raceid where t2.name = 'australian grand prix' and year = 2009",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_03",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.results",
+        "raw.races"
+      ],
+      "canonical_tables": [
+        "raw.results",
+        "raw.races"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_=_'australian_grand_prix'",
+        "year_=_2009"
+      ],
+      "filter_predicates": [
+        "T2.name = 'Australian Grand Prix'",
+        "YEAR = 2009"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "formula_1 visible cluster 3 query 3 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_vq_c03_04",
+      "sql": "SELECT count(*) FROM raw.results AS T1 JOIN raw.races AS T2 ON T1.raceid = T2.raceid WHERE T2.name = 'Australian Grand Prix' AND YEAR = 2009",
+      "original_sql": "SELECT count(*) FROM results AS T1 JOIN races AS T2 ON T1.raceid = T2.raceid WHERE T2.name = \"Australian Grand Prix\" AND YEAR = 2009",
+      "normalized_sql": "select count(*) from raw.results as t1 join raw.races as t2 on t1.raceid = t2.raceid where t2.name = 'australian grand prix' and year = 2009",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_03",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.results",
+        "raw.races"
+      ],
+      "canonical_tables": [
+        "raw.results",
+        "raw.races"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_=_'australian_grand_prix'",
+        "year_=_2009"
+      ],
+      "filter_predicates": [
+        "T2.name = 'Australian Grand Prix'",
+        "YEAR = 2009"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "formula_1 visible cluster 3 query 4 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_vq_c03_05",
+      "sql": "SELECT count(*) FROM raw.results AS T1 JOIN raw.races AS T2 ON T1.raceid = T2.raceid WHERE T2.name = 'Australian Grand Prix' AND YEAR = 2009",
+      "original_sql": "SELECT count(*) FROM results AS T1 JOIN races AS T2 ON T1.raceid = T2.raceid WHERE T2.name = \"Australian Grand Prix\" AND YEAR = 2009",
+      "normalized_sql": "select count(*) from raw.results as t1 join raw.races as t2 on t1.raceid = t2.raceid where t2.name = 'australian grand prix' and year = 2009",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_03",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.results",
+        "raw.races"
+      ],
+      "canonical_tables": [
+        "raw.results",
+        "raw.races"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_=_'australian_grand_prix'",
+        "year_=_2009"
+      ],
+      "filter_predicates": [
+        "T2.name = 'Australian Grand Prix'",
+        "YEAR = 2009"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "formula_1 visible cluster 3 query 5 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_vq_c03_06",
+      "sql": "SELECT count(*) FROM raw.results AS T1 JOIN raw.races AS T2 ON T1.raceid = T2.raceid WHERE T2.name = 'Australian Grand Prix' AND YEAR = 2009",
+      "original_sql": "SELECT count(*) FROM results AS T1 JOIN races AS T2 ON T1.raceid = T2.raceid WHERE T2.name = \"Australian Grand Prix\" AND YEAR = 2009",
+      "normalized_sql": "select count(*) from raw.results as t1 join raw.races as t2 on t1.raceid = t2.raceid where t2.name = 'australian grand prix' and year = 2009",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_03",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.results",
+        "raw.races"
+      ],
+      "canonical_tables": [
+        "raw.results",
+        "raw.races"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_=_'australian_grand_prix'",
+        "year_=_2009"
+      ],
+      "filter_predicates": [
+        "T2.name = 'Australian Grand Prix'",
+        "YEAR = 2009"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "formula_1 visible cluster 3 query 6 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_vq_c04_01",
+      "sql": "SELECT max(T2.fastestlapspeed) FROM raw.races AS T1 JOIN raw.results AS T2 ON T1.raceid = T2.raceid WHERE T1.year = 2008 AND T1.name = 'Monaco Grand Prix'",
+      "original_sql": "SELECT max(T2.fastestlapspeed) FROM races AS T1 JOIN results AS T2 ON T1.raceid = T2.raceid WHERE T1.year = 2008 AND T1.name = \"Monaco Grand Prix\"",
+      "normalized_sql": "select max(t2.fastestlapspeed) from raw.races as t1 join raw.results as t2 on t1.raceid = t2.raceid where t1.year = 2008 and t1.name = 'monaco grand prix'",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_04",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.races",
+        "raw.results"
+      ],
+      "canonical_tables": [
+        "raw.races",
+        "raw.results"
+      ],
+      "columns": [
+        "fastestlapspeed"
+      ],
+      "result_columns": [
+        "max(t2.fastestlapspeed)"
+      ],
+      "canonical_output_columns": [
+        "max_t2_fastestlapspeed"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_2008",
+        "name_=_'monaco_grand_prix'"
+      ],
+      "filter_predicates": [
+        "T1.year = 2008",
+        "T1.name = 'Monaco Grand Prix'"
+      ],
+      "measure_columns": [
+        "fastestlapspeed"
+      ],
+      "aggregate_functions": [
+        "max"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join",
+        "numeric_aggregation"
+      ],
+      "description": "formula_1 visible cluster 4 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_vq_c04_02",
+      "sql": "SELECT max(T2.fastestlapspeed) FROM raw.races AS T1 JOIN raw.results AS T2 ON T1.raceid = T2.raceid WHERE T1.year = 2008 AND T1.name = 'Monaco Grand Prix'",
+      "original_sql": "SELECT max(T2.fastestlapspeed) FROM races AS T1 JOIN results AS T2 ON T1.raceid = T2.raceid WHERE T1.year = 2008 AND T1.name = \"Monaco Grand Prix\"",
+      "normalized_sql": "select max(t2.fastestlapspeed) from raw.races as t1 join raw.results as t2 on t1.raceid = t2.raceid where t1.year = 2008 and t1.name = 'monaco grand prix'",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_04",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.races",
+        "raw.results"
+      ],
+      "canonical_tables": [
+        "raw.races",
+        "raw.results"
+      ],
+      "columns": [
+        "fastestlapspeed"
+      ],
+      "result_columns": [
+        "max(t2.fastestlapspeed)"
+      ],
+      "canonical_output_columns": [
+        "max_t2_fastestlapspeed"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_2008",
+        "name_=_'monaco_grand_prix'"
+      ],
+      "filter_predicates": [
+        "T1.year = 2008",
+        "T1.name = 'Monaco Grand Prix'"
+      ],
+      "measure_columns": [
+        "fastestlapspeed"
+      ],
+      "aggregate_functions": [
+        "max"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join",
+        "numeric_aggregation"
+      ],
+      "description": "formula_1 visible cluster 4 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_vq_c04_03",
+      "sql": "SELECT max(T2.fastestlapspeed) FROM raw.races AS T1 JOIN raw.results AS T2 ON T1.raceid = T2.raceid WHERE T1.year = 2008 AND T1.name = 'Monaco Grand Prix'",
+      "original_sql": "SELECT max(T2.fastestlapspeed) FROM races AS T1 JOIN results AS T2 ON T1.raceid = T2.raceid WHERE T1.year = 2008 AND T1.name = \"Monaco Grand Prix\"",
+      "normalized_sql": "select max(t2.fastestlapspeed) from raw.races as t1 join raw.results as t2 on t1.raceid = t2.raceid where t1.year = 2008 and t1.name = 'monaco grand prix'",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_04",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.races",
+        "raw.results"
+      ],
+      "canonical_tables": [
+        "raw.races",
+        "raw.results"
+      ],
+      "columns": [
+        "fastestlapspeed"
+      ],
+      "result_columns": [
+        "max(t2.fastestlapspeed)"
+      ],
+      "canonical_output_columns": [
+        "max_t2_fastestlapspeed"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_2008",
+        "name_=_'monaco_grand_prix'"
+      ],
+      "filter_predicates": [
+        "T1.year = 2008",
+        "T1.name = 'Monaco Grand Prix'"
+      ],
+      "measure_columns": [
+        "fastestlapspeed"
+      ],
+      "aggregate_functions": [
+        "max"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join",
+        "numeric_aggregation"
+      ],
+      "description": "formula_1 visible cluster 4 query 3 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_vq_c04_04",
+      "sql": "SELECT max(T2.fastestlapspeed) FROM raw.races AS T1 JOIN raw.results AS T2 ON T1.raceid = T2.raceid WHERE T1.year = 2008 AND T1.name = 'Monaco Grand Prix'",
+      "original_sql": "SELECT max(T2.fastestlapspeed) FROM races AS T1 JOIN results AS T2 ON T1.raceid = T2.raceid WHERE T1.year = 2008 AND T1.name = \"Monaco Grand Prix\"",
+      "normalized_sql": "select max(t2.fastestlapspeed) from raw.races as t1 join raw.results as t2 on t1.raceid = t2.raceid where t1.year = 2008 and t1.name = 'monaco grand prix'",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_04",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.races",
+        "raw.results"
+      ],
+      "canonical_tables": [
+        "raw.races",
+        "raw.results"
+      ],
+      "columns": [
+        "fastestlapspeed"
+      ],
+      "result_columns": [
+        "max(t2.fastestlapspeed)"
+      ],
+      "canonical_output_columns": [
+        "max_t2_fastestlapspeed"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_2008",
+        "name_=_'monaco_grand_prix'"
+      ],
+      "filter_predicates": [
+        "T1.year = 2008",
+        "T1.name = 'Monaco Grand Prix'"
+      ],
+      "measure_columns": [
+        "fastestlapspeed"
+      ],
+      "aggregate_functions": [
+        "max"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join",
+        "numeric_aggregation"
+      ],
+      "description": "formula_1 visible cluster 4 query 4 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_vq_c04_05",
+      "sql": "SELECT max(T2.fastestlapspeed) FROM raw.races AS T1 JOIN raw.results AS T2 ON T1.raceid = T2.raceid WHERE T1.year = 2008 AND T1.name = 'Monaco Grand Prix'",
+      "original_sql": "SELECT max(T2.fastestlapspeed) FROM races AS T1 JOIN results AS T2 ON T1.raceid = T2.raceid WHERE T1.year = 2008 AND T1.name = \"Monaco Grand Prix\"",
+      "normalized_sql": "select max(t2.fastestlapspeed) from raw.races as t1 join raw.results as t2 on t1.raceid = t2.raceid where t1.year = 2008 and t1.name = 'monaco grand prix'",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_04",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.races",
+        "raw.results"
+      ],
+      "canonical_tables": [
+        "raw.races",
+        "raw.results"
+      ],
+      "columns": [
+        "fastestlapspeed"
+      ],
+      "result_columns": [
+        "max(t2.fastestlapspeed)"
+      ],
+      "canonical_output_columns": [
+        "max_t2_fastestlapspeed"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_2008",
+        "name_=_'monaco_grand_prix'"
+      ],
+      "filter_predicates": [
+        "T1.year = 2008",
+        "T1.name = 'Monaco Grand Prix'"
+      ],
+      "measure_columns": [
+        "fastestlapspeed"
+      ],
+      "aggregate_functions": [
+        "max"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join",
+        "numeric_aggregation"
+      ],
+      "description": "formula_1 visible cluster 4 query 5 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_vq_c04_06",
+      "sql": "SELECT max(T2.fastestlapspeed) FROM raw.races AS T1 JOIN raw.results AS T2 ON T1.raceid = T2.raceid WHERE T1.year = 2008 AND T1.name = 'Monaco Grand Prix'",
+      "original_sql": "SELECT max(T2.fastestlapspeed) FROM races AS T1 JOIN results AS T2 ON T1.raceid = T2.raceid WHERE T1.year = 2008 AND T1.name = \"Monaco Grand Prix\"",
+      "normalized_sql": "select max(t2.fastestlapspeed) from raw.races as t1 join raw.results as t2 on t1.raceid = t2.raceid where t1.year = 2008 and t1.name = 'monaco grand prix'",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_04",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.races",
+        "raw.results"
+      ],
+      "canonical_tables": [
+        "raw.races",
+        "raw.results"
+      ],
+      "columns": [
+        "fastestlapspeed"
+      ],
+      "result_columns": [
+        "max(t2.fastestlapspeed)"
+      ],
+      "canonical_output_columns": [
+        "max_t2_fastestlapspeed"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_2008",
+        "name_=_'monaco_grand_prix'"
+      ],
+      "filter_predicates": [
+        "T1.year = 2008",
+        "T1.name = 'Monaco Grand Prix'"
+      ],
+      "measure_columns": [
+        "fastestlapspeed"
+      ],
+      "aggregate_functions": [
+        "max"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join",
+        "numeric_aggregation"
+      ],
+      "description": "formula_1 visible cluster 4 query 6 rows=1"
+    }
+  ],
+  "holdout_queries": [
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_hq_c01_01",
+      "sql": "SELECT count(*) , nationality FROM raw.constructors GROUP BY nationality",
+      "original_sql": "SELECT count(*) ,  nationality FROM constructors GROUP BY nationality",
+      "normalized_sql": "select count(*) , nationality from raw.constructors group by nationality",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_01",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.constructors"
+      ],
+      "canonical_tables": [
+        "raw.constructors"
+      ],
+      "columns": [
+        "nationality",
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()",
+        "nationality"
+      ],
+      "canonical_output_columns": [
+        "count_star()",
+        "nationality"
+      ],
+      "group_by": [
+        "nationality"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "formula_1 holdout cluster 1 query 1 rows=24"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_hq_c01_02",
+      "sql": "SELECT count(*) , nationality FROM raw.constructors GROUP BY nationality",
+      "original_sql": "SELECT count(*) ,  nationality FROM constructors GROUP BY nationality",
+      "normalized_sql": "select count(*) , nationality from raw.constructors group by nationality",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_01",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.constructors"
+      ],
+      "canonical_tables": [
+        "raw.constructors"
+      ],
+      "columns": [
+        "nationality",
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()",
+        "nationality"
+      ],
+      "canonical_output_columns": [
+        "count_star()",
+        "nationality"
+      ],
+      "group_by": [
+        "nationality"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "formula_1 holdout cluster 1 query 2 rows=24"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_hq_c01_03",
+      "sql": "SELECT count(*) , nationality FROM raw.constructors GROUP BY nationality",
+      "original_sql": "SELECT count(*) ,  nationality FROM constructors GROUP BY nationality",
+      "normalized_sql": "select count(*) , nationality from raw.constructors group by nationality",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_01",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.constructors"
+      ],
+      "canonical_tables": [
+        "raw.constructors"
+      ],
+      "columns": [
+        "nationality",
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()",
+        "nationality"
+      ],
+      "canonical_output_columns": [
+        "count_star()",
+        "nationality"
+      ],
+      "group_by": [
+        "nationality"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "formula_1 holdout cluster 1 query 3 rows=24"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_hq_c02_01",
+      "sql": "SELECT count(*) , constructorid FROM raw.constructorStandings GROUP BY constructorid",
+      "original_sql": "SELECT count(*) ,  constructorid FROM constructorStandings GROUP BY constructorid",
+      "normalized_sql": "select count(*) , constructorid from raw.constructorstandings group by constructorid",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_02",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.constructorstandings"
+      ],
+      "canonical_tables": [
+        "raw.constructorstandings"
+      ],
+      "columns": [
+        "constructorid",
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()",
+        "constructorid"
+      ],
+      "canonical_output_columns": [
+        "count_star()",
+        "constructorid"
+      ],
+      "group_by": [
+        "constructorid"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "formula_1 holdout cluster 2 query 1 rows=156"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_hq_c02_02",
+      "sql": "SELECT count(*) , constructorid FROM raw.constructorStandings GROUP BY constructorid",
+      "original_sql": "SELECT count(*) ,  constructorid FROM constructorStandings GROUP BY constructorid",
+      "normalized_sql": "select count(*) , constructorid from raw.constructorstandings group by constructorid",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_02",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.constructorstandings"
+      ],
+      "canonical_tables": [
+        "raw.constructorstandings"
+      ],
+      "columns": [
+        "constructorid",
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()",
+        "constructorid"
+      ],
+      "canonical_output_columns": [
+        "count_star()",
+        "constructorid"
+      ],
+      "group_by": [
+        "constructorid"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "formula_1 holdout cluster 2 query 2 rows=156"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_hq_c02_03",
+      "sql": "SELECT count(*) , constructorid FROM raw.constructorStandings GROUP BY constructorid",
+      "original_sql": "SELECT count(*) ,  constructorid FROM constructorStandings GROUP BY constructorid",
+      "normalized_sql": "select count(*) , constructorid from raw.constructorstandings group by constructorid",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_02",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.constructorstandings"
+      ],
+      "canonical_tables": [
+        "raw.constructorstandings"
+      ],
+      "columns": [
+        "constructorid",
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()",
+        "constructorid"
+      ],
+      "canonical_output_columns": [
+        "count_star()",
+        "constructorid"
+      ],
+      "group_by": [
+        "constructorid"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "formula_1 holdout cluster 2 query 3 rows=156"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_hq_c03_01",
+      "sql": "SELECT count(*) FROM raw.results AS T1 JOIN raw.races AS T2 ON T1.raceid = T2.raceid WHERE T2.name = 'Australian Grand Prix' AND YEAR = 2009",
+      "original_sql": "SELECT count(*) FROM results AS T1 JOIN races AS T2 ON T1.raceid = T2.raceid WHERE T2.name = \"Australian Grand Prix\" AND YEAR = 2009",
+      "normalized_sql": "select count(*) from raw.results as t1 join raw.races as t2 on t1.raceid = t2.raceid where t2.name = 'australian grand prix' and year = 2009",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_03",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.results",
+        "raw.races"
+      ],
+      "canonical_tables": [
+        "raw.results",
+        "raw.races"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_=_'australian_grand_prix'",
+        "year_=_2009"
+      ],
+      "filter_predicates": [
+        "T2.name = 'Australian Grand Prix'",
+        "YEAR = 2009"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "formula_1 holdout cluster 3 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_hq_c03_02",
+      "sql": "SELECT count(*) FROM raw.results AS T1 JOIN raw.races AS T2 ON T1.raceid = T2.raceid WHERE T2.name = 'Australian Grand Prix' AND YEAR = 2009",
+      "original_sql": "SELECT count(*) FROM results AS T1 JOIN races AS T2 ON T1.raceid = T2.raceid WHERE T2.name = \"Australian Grand Prix\" AND YEAR = 2009",
+      "normalized_sql": "select count(*) from raw.results as t1 join raw.races as t2 on t1.raceid = t2.raceid where t2.name = 'australian grand prix' and year = 2009",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_03",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.results",
+        "raw.races"
+      ],
+      "canonical_tables": [
+        "raw.results",
+        "raw.races"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_=_'australian_grand_prix'",
+        "year_=_2009"
+      ],
+      "filter_predicates": [
+        "T2.name = 'Australian Grand Prix'",
+        "YEAR = 2009"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "formula_1 holdout cluster 3 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_hq_c03_03",
+      "sql": "SELECT count(*) FROM raw.results AS T1 JOIN raw.races AS T2 ON T1.raceid = T2.raceid WHERE T2.name = 'Australian Grand Prix' AND YEAR = 2009",
+      "original_sql": "SELECT count(*) FROM results AS T1 JOIN races AS T2 ON T1.raceid = T2.raceid WHERE T2.name = \"Australian Grand Prix\" AND YEAR = 2009",
+      "normalized_sql": "select count(*) from raw.results as t1 join raw.races as t2 on t1.raceid = t2.raceid where t2.name = 'australian grand prix' and year = 2009",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_03",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.results",
+        "raw.races"
+      ],
+      "canonical_tables": [
+        "raw.results",
+        "raw.races"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_=_'australian_grand_prix'",
+        "year_=_2009"
+      ],
+      "filter_predicates": [
+        "T2.name = 'Australian Grand Prix'",
+        "YEAR = 2009"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "formula_1 holdout cluster 3 query 3 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_hq_c04_01",
+      "sql": "SELECT max(T2.fastestlapspeed) FROM raw.races AS T1 JOIN raw.results AS T2 ON T1.raceid = T2.raceid WHERE T1.year = 2008 AND T1.name = 'Monaco Grand Prix'",
+      "original_sql": "SELECT max(T2.fastestlapspeed) FROM races AS T1 JOIN results AS T2 ON T1.raceid = T2.raceid WHERE T1.year = 2008 AND T1.name = \"Monaco Grand Prix\"",
+      "normalized_sql": "select max(t2.fastestlapspeed) from raw.races as t1 join raw.results as t2 on t1.raceid = t2.raceid where t1.year = 2008 and t1.name = 'monaco grand prix'",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_04",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.races",
+        "raw.results"
+      ],
+      "canonical_tables": [
+        "raw.races",
+        "raw.results"
+      ],
+      "columns": [
+        "fastestlapspeed"
+      ],
+      "result_columns": [
+        "max(t2.fastestlapspeed)"
+      ],
+      "canonical_output_columns": [
+        "max_t2_fastestlapspeed"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_2008",
+        "name_=_'monaco_grand_prix'"
+      ],
+      "filter_predicates": [
+        "T1.year = 2008",
+        "T1.name = 'Monaco Grand Prix'"
+      ],
+      "measure_columns": [
+        "fastestlapspeed"
+      ],
+      "aggregate_functions": [
+        "max"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join",
+        "numeric_aggregation"
+      ],
+      "description": "formula_1 holdout cluster 4 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_hq_c04_02",
+      "sql": "SELECT max(T2.fastestlapspeed) FROM raw.races AS T1 JOIN raw.results AS T2 ON T1.raceid = T2.raceid WHERE T1.year = 2008 AND T1.name = 'Monaco Grand Prix'",
+      "original_sql": "SELECT max(T2.fastestlapspeed) FROM races AS T1 JOIN results AS T2 ON T1.raceid = T2.raceid WHERE T1.year = 2008 AND T1.name = \"Monaco Grand Prix\"",
+      "normalized_sql": "select max(t2.fastestlapspeed) from raw.races as t1 join raw.results as t2 on t1.raceid = t2.raceid where t1.year = 2008 and t1.name = 'monaco grand prix'",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_04",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.races",
+        "raw.results"
+      ],
+      "canonical_tables": [
+        "raw.races",
+        "raw.results"
+      ],
+      "columns": [
+        "fastestlapspeed"
+      ],
+      "result_columns": [
+        "max(t2.fastestlapspeed)"
+      ],
+      "canonical_output_columns": [
+        "max_t2_fastestlapspeed"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_2008",
+        "name_=_'monaco_grand_prix'"
+      ],
+      "filter_predicates": [
+        "T1.year = 2008",
+        "T1.name = 'Monaco Grand Prix'"
+      ],
+      "measure_columns": [
+        "fastestlapspeed"
+      ],
+      "aggregate_functions": [
+        "max"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join",
+        "numeric_aggregation"
+      ],
+      "description": "formula_1 holdout cluster 4 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_spider_medium_formula_1_hq_c04_03",
+      "sql": "SELECT max(T2.fastestlapspeed) FROM raw.races AS T1 JOIN raw.results AS T2 ON T1.raceid = T2.raceid WHERE T1.year = 2008 AND T1.name = 'Monaco Grand Prix'",
+      "original_sql": "SELECT max(T2.fastestlapspeed) FROM races AS T1 JOIN results AS T2 ON T1.raceid = T2.raceid WHERE T1.year = 2008 AND T1.name = \"Monaco Grand Prix\"",
+      "normalized_sql": "select max(t2.fastestlapspeed) from raw.races as t1 join raw.results as t2 on t1.raceid = t2.raceid where t1.year = 2008 and t1.name = 'monaco grand prix'",
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_04",
+      "business_tag": "Spider formula_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.races",
+        "raw.results"
+      ],
+      "canonical_tables": [
+        "raw.races",
+        "raw.results"
+      ],
+      "columns": [
+        "fastestlapspeed"
+      ],
+      "result_columns": [
+        "max(t2.fastestlapspeed)"
+      ],
+      "canonical_output_columns": [
+        "max_t2_fastestlapspeed"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_2008",
+        "name_=_'monaco_grand_prix'"
+      ],
+      "filter_predicates": [
+        "T1.year = 2008",
+        "T1.name = 'Monaco Grand Prix'"
+      ],
+      "measure_columns": [
+        "fastestlapspeed"
+      ],
+      "aggregate_functions": [
+        "max"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join",
+        "numeric_aggregation"
+      ],
+      "description": "formula_1 holdout cluster 4 query 3 rows=1"
+    }
+  ],
+  "clusters": [
+    {
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_01",
+      "label": "formula_1 workload cluster 1",
+      "business_label": "Spider formula_1 analytics cluster 1",
+      "query_ids": [
+        "schemaopt_spider_medium_formula_1_vq_c01_01",
+        "schemaopt_spider_medium_formula_1_vq_c01_02",
+        "schemaopt_spider_medium_formula_1_vq_c01_03",
+        "schemaopt_spider_medium_formula_1_vq_c01_04",
+        "schemaopt_spider_medium_formula_1_vq_c01_05",
+        "schemaopt_spider_medium_formula_1_vq_c01_06"
+      ],
+      "query_count": 6,
+      "total_frequency_weight": 12.0,
+      "total_weighted_baseline_cost": 12.0,
+      "top_tables": [
+        "raw.constructors"
+      ],
+      "common_operator_patterns": [
+        "aggregate"
+      ],
+      "representative_dimensions": [
+        "nationality"
+      ],
+      "representative_measures": [
+        "count_star"
+      ],
+      "hotspot_rank": 1,
+      "preferred_object_kind": "agg_matview",
+      "representative_query_id": "schemaopt_spider_medium_formula_1_vq_c01_01",
+      "cluster_grain_emphasis": [
+        "nationality"
+      ],
+      "suggested_exact_derived_shape": {
+        "object_kind": "agg_matview",
+        "source_objects": [
+          "raw.constructors"
+        ],
+        "group_by": [
+          "nationality"
+        ],
+        "canonical_predicates": [],
+        "measure_columns": [
+          "count_star"
+        ],
+        "aggregate_functions": [
+          "count"
+        ]
+      },
+      "reference_rewrite_feasible": true
+    },
+    {
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_02",
+      "label": "formula_1 workload cluster 2",
+      "business_label": "Spider formula_1 analytics cluster 2",
+      "query_ids": [
+        "schemaopt_spider_medium_formula_1_vq_c02_01",
+        "schemaopt_spider_medium_formula_1_vq_c02_02",
+        "schemaopt_spider_medium_formula_1_vq_c02_03",
+        "schemaopt_spider_medium_formula_1_vq_c02_04",
+        "schemaopt_spider_medium_formula_1_vq_c02_05",
+        "schemaopt_spider_medium_formula_1_vq_c02_06"
+      ],
+      "query_count": 6,
+      "total_frequency_weight": 12.0,
+      "total_weighted_baseline_cost": 12.0,
+      "top_tables": [
+        "raw.constructorstandings"
+      ],
+      "common_operator_patterns": [
+        "aggregate"
+      ],
+      "representative_dimensions": [
+        "constructorid"
+      ],
+      "representative_measures": [
+        "count_star"
+      ],
+      "hotspot_rank": 2,
+      "preferred_object_kind": "agg_matview",
+      "representative_query_id": "schemaopt_spider_medium_formula_1_vq_c02_01",
+      "cluster_grain_emphasis": [
+        "constructorid"
+      ],
+      "suggested_exact_derived_shape": {
+        "object_kind": "agg_matview",
+        "source_objects": [
+          "raw.constructorstandings"
+        ],
+        "group_by": [
+          "constructorid"
+        ],
+        "canonical_predicates": [],
+        "measure_columns": [
+          "count_star"
+        ],
+        "aggregate_functions": [
+          "count"
+        ]
+      },
+      "reference_rewrite_feasible": true
+    },
+    {
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_03",
+      "label": "formula_1 workload cluster 3",
+      "business_label": "Spider formula_1 analytics cluster 3",
+      "query_ids": [
+        "schemaopt_spider_medium_formula_1_vq_c03_01",
+        "schemaopt_spider_medium_formula_1_vq_c03_02",
+        "schemaopt_spider_medium_formula_1_vq_c03_03",
+        "schemaopt_spider_medium_formula_1_vq_c03_04",
+        "schemaopt_spider_medium_formula_1_vq_c03_05",
+        "schemaopt_spider_medium_formula_1_vq_c03_06"
+      ],
+      "query_count": 6,
+      "total_frequency_weight": 12.0,
+      "total_weighted_baseline_cost": 12.0,
+      "top_tables": [
+        "raw.results",
+        "raw.races"
+      ],
+      "common_operator_patterns": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "representative_dimensions": [],
+      "representative_measures": [
+        "count_star"
+      ],
+      "hotspot_rank": 3,
+      "preferred_object_kind": "agg_matview",
+      "representative_query_id": "schemaopt_spider_medium_formula_1_vq_c03_01",
+      "cluster_grain_emphasis": [],
+      "suggested_exact_derived_shape": {
+        "object_kind": "agg_matview",
+        "source_objects": [
+          "raw.results",
+          "raw.races"
+        ],
+        "group_by": [],
+        "canonical_predicates": [
+          "name = 'australian grand prix'",
+          "year = 2009"
+        ],
+        "measure_columns": [
+          "count_star"
+        ],
+        "aggregate_functions": [
+          "count"
+        ]
+      },
+      "reference_rewrite_feasible": true
+    },
+    {
+      "cluster_id": "schemaopt_spider_medium_formula_1_cluster_04",
+      "label": "formula_1 workload cluster 4",
+      "business_label": "Spider formula_1 analytics cluster 4",
+      "query_ids": [
+        "schemaopt_spider_medium_formula_1_vq_c04_01",
+        "schemaopt_spider_medium_formula_1_vq_c04_02",
+        "schemaopt_spider_medium_formula_1_vq_c04_03",
+        "schemaopt_spider_medium_formula_1_vq_c04_04",
+        "schemaopt_spider_medium_formula_1_vq_c04_05",
+        "schemaopt_spider_medium_formula_1_vq_c04_06"
+      ],
+      "query_count": 6,
+      "total_frequency_weight": 12.0,
+      "total_weighted_baseline_cost": 12.0,
+      "top_tables": [
+        "raw.races",
+        "raw.results"
+      ],
+      "common_operator_patterns": [
+        "aggregate",
+        "filter",
+        "join",
+        "numeric_aggregation"
+      ],
+      "representative_dimensions": [],
+      "representative_measures": [
+        "fastestlapspeed"
+      ],
+      "hotspot_rank": 4,
+      "preferred_object_kind": "agg_matview",
+      "representative_query_id": "schemaopt_spider_medium_formula_1_vq_c04_01",
+      "cluster_grain_emphasis": [],
+      "suggested_exact_derived_shape": {
+        "object_kind": "agg_matview",
+        "source_objects": [
+          "raw.races",
+          "raw.results"
+        ],
+        "group_by": [],
+        "canonical_predicates": [
+          "year = 2008",
+          "name = 'monaco grand prix'"
+        ],
+        "measure_columns": [
+          "fastestlapspeed"
+        ],
+        "aggregate_functions": [
+          "max"
+        ]
+      },
+      "reference_rewrite_feasible": true
+    }
+  ],
+  "budgets": {
+    "max_new_derived_objects": 4,
+    "max_storage_bytes": 24000000,
+    "max_refresh_runtime_ms": 15000.0,
+    "max_steps": 24
+  },
+  "allowed_object_kinds": [
+    "join_matview",
+    "agg_matview",
+    "filtered_projection",
+    "denorm_table"
+  ],
+  "engine_capabilities": {
+    "engine": "duckdb",
+    "uses_real_duckdb_database": true,
+    "uses_real_query_execution": true,
+    "uses_explain_plan_metrics": true,
+    "rewrite_model": "explicit_rewritten_sql",
+    "source_dataset": "spider",
+    "source_database_engine": "sqlite",
+    "source_db_id": "formula_1",
+    "sql_normalized_for_duckdb": true
+  },
+  "validation_metadata": {
+    "source_db_id": "formula_1",
+    "validated_under_duckdb": true,
+    "raw_candidate_query_count": 7,
+    "validated_query_count": 4,
+    "selected_cluster_count": 4
+  }
+}
