@@ -412,14 +412,16 @@ def build_manifest(task_id: str, difficulty: str, domain: str, dataset_index: in
     schema = _parse_simple_schema_yaml(start_yaml)
     shapes = _build_query_shapes(domain, difficulty, schema)
     visible_queries, holdout_queries, clusters = _expand_cluster_queries(task_id, difficulty, shapes)
+    curated_dir = Path("schemaopt_env") / "task_assets" / "schemaopt_curated" / domain
+    curated_db = curated_dir / f"{domain}_start.duckdb"
     return {
         "task_id": task_id,
         "difficulty": difficulty,
         "domain": domain,
         "objective": f"Optimize the {domain.replace('_', ' ')} workload over the real DuckDB source database by materializing derived objects that reduce measured execution cost while preserving exact query results.",
-        "seed_source": str(dataset_dir.relative_to(REPO_ROOT)).replace("\\", "/"),
-        "dataset_dir": str(dataset_dir.relative_to(REPO_ROOT)).replace("\\", "/"),
-        "database_path": str(db_file.relative_to(REPO_ROOT)).replace("\\", "/"),
+        "seed_source": str(curated_dir).replace("\\", "/"),
+        "dataset_dir": str(curated_dir).replace("\\", "/"),
+        "database_path": str(curated_db).replace("\\", "/"),
         "tables": _tables_payload(schema),
         "visible_queries": visible_queries,
         "holdout_queries": holdout_queries,
