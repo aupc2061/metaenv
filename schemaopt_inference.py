@@ -41,10 +41,10 @@ if str(PROJECT_ROOT) not in sys.path:
 from schemaopt_env.models import SchemaOptAction
 from schemaopt_env.server.schemaopt_environment import SchemaOptEnvironment
 
-DEFAULT_MODEL_NAME = os.getenv("MODEL_NAME", "gpt-5.4-mini")
+DEFAULT_MODEL_NAME = os.getenv("MODEL_NAME", "gpt-5.4-mini"), 
 DEFAULT_API_BASE_URL = os.getenv("API_BASE_URL")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY") or os.getenv("HF_TOKEN")
-DEFAULT_MAX_STEPS = int(os.getenv("MAX_STEPS")) if os.getenv("MAX_STEPS") else 25
+DEFAULT_MAX_STEPS = os.getenv("MAX_STEPS", "25")
 DEFAULT_TASK_ID = os.getenv("TASK_ID", "schemaopt_hard_mobile_revenue_ops")
 DEFAULT_MAX_ACTION_RETRIES = int(os.getenv("MAX_ACTION_RETRIES", "4"))
 
