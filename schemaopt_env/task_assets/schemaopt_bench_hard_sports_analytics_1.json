@@ -1,11 +1,11 @@
 {
-  "task_id": "schemaopt_spider_hard_baseball_1",
+  "task_id": "schemaopt_bench_hard_sports_analytics_1",
   "difficulty": "hard",
-  "domain": "spider_baseball_1",
-  "objective": "Optimize the Spider baseball_1 workload over a DuckDB-converted database by materializing derived objects that reduce measured execution cost while preserving exact query results.",
-  "seed_source": "spider_data/spider_data/database/baseball_1/baseball_1.sqlite",
-  "dataset_dir": "spider_data/spider_data/database/baseball_1",
-  "database_path": "schemaopt_env/task_assets_spider/databases/schemaopt_spider_hard_baseball_1.duckdb",
+  "domain": "bench_sports_analytics",
+  "objective": "Optimize the sports analytics benchmark workload over a DuckDB-converted database by materializing derived objects that reduce measured execution cost while preserving exact query results.",
+  "seed_source": "benchmark_source/sqlite/baseball_1/baseball_1.sqlite",
+  "dataset_dir": "benchmark_source/sqlite/baseball_1",
+  "database_path": "schemaopt_env/task_assets/databases/schemaopt_bench_hard_sports_analytics_1.duckdb",
   "tables": [
     {
       "name": "raw.all_star",
@@ -1574,12 +1574,12 @@
   ],
   "visible_queries": [
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c01_01",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c01_01",
       "sql": "SELECT avg(T1.height) FROM raw.player AS T1 JOIN raw.player_college AS T2 ON T1.player_id = T2.player_id JOIN raw.college AS T3 ON T3.college_id = T2.college_id WHERE T3.name_full = 'Yale University'",
       "original_sql": "SELECT avg(T1.height) FROM player AS T1 JOIN player_college AS T2 ON T1.player_id  =  T2.player_id JOIN college AS T3 ON T3.college_id  =  T2.college_id WHERE T3.name_full  =  'Yale University';",
       "normalized_sql": "select avg(t1.height) from raw.player as t1 join raw.player_college as t2 on t1.player_id = t2.player_id join raw.college as t3 on t3.college_id = t2.college_id where t3.name_full = 'yale university'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_01",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_01",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -1625,12 +1625,12 @@
       "description": "baseball_1 visible cluster 1 query 1 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c01_02",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c01_02",
       "sql": "SELECT avg(T1.height) FROM raw.player AS T1 JOIN raw.player_college AS T2 ON T1.player_id = T2.player_id JOIN raw.college AS T3 ON T3.college_id = T2.college_id WHERE T3.name_full = 'Yale University'",
       "original_sql": "SELECT avg(T1.height) FROM player AS T1 JOIN player_college AS T2 ON T1.player_id  =  T2.player_id JOIN college AS T3 ON T3.college_id  =  T2.college_id WHERE T3.name_full  =  'Yale University';",
       "normalized_sql": "select avg(t1.height) from raw.player as t1 join raw.player_college as t2 on t1.player_id = t2.player_id join raw.college as t3 on t3.college_id = t2.college_id where t3.name_full = 'yale university'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_01",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_01",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -1676,12 +1676,12 @@
       "description": "baseball_1 visible cluster 1 query 2 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c01_03",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c01_03",
       "sql": "SELECT avg(T1.height) FROM raw.player AS T1 JOIN raw.player_college AS T2 ON T1.player_id = T2.player_id JOIN raw.college AS T3 ON T3.college_id = T2.college_id WHERE T3.name_full = 'Yale University'",
       "original_sql": "SELECT avg(T1.height) FROM player AS T1 JOIN player_college AS T2 ON T1.player_id  =  T2.player_id JOIN college AS T3 ON T3.college_id  =  T2.college_id WHERE T3.name_full  =  'Yale University';",
       "normalized_sql": "select avg(t1.height) from raw.player as t1 join raw.player_college as t2 on t1.player_id = t2.player_id join raw.college as t3 on t3.college_id = t2.college_id where t3.name_full = 'yale university'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_01",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_01",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -1727,12 +1727,12 @@
       "description": "baseball_1 visible cluster 1 query 3 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c01_04",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c01_04",
       "sql": "SELECT avg(T1.height) FROM raw.player AS T1 JOIN raw.player_college AS T2 ON T1.player_id = T2.player_id JOIN raw.college AS T3 ON T3.college_id = T2.college_id WHERE T3.name_full = 'Yale University'",
       "original_sql": "SELECT avg(T1.height) FROM player AS T1 JOIN player_college AS T2 ON T1.player_id  =  T2.player_id JOIN college AS T3 ON T3.college_id  =  T2.college_id WHERE T3.name_full  =  'Yale University';",
       "normalized_sql": "select avg(t1.height) from raw.player as t1 join raw.player_college as t2 on t1.player_id = t2.player_id join raw.college as t3 on t3.college_id = t2.college_id where t3.name_full = 'yale university'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_01",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_01",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -1778,12 +1778,12 @@
       "description": "baseball_1 visible cluster 1 query 4 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c01_05",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c01_05",
       "sql": "SELECT avg(T1.height) FROM raw.player AS T1 JOIN raw.player_college AS T2 ON T1.player_id = T2.player_id JOIN raw.college AS T3 ON T3.college_id = T2.college_id WHERE T3.name_full = 'Yale University'",
       "original_sql": "SELECT avg(T1.height) FROM player AS T1 JOIN player_college AS T2 ON T1.player_id  =  T2.player_id JOIN college AS T3 ON T3.college_id  =  T2.college_id WHERE T3.name_full  =  'Yale University';",
       "normalized_sql": "select avg(t1.height) from raw.player as t1 join raw.player_college as t2 on t1.player_id = t2.player_id join raw.college as t3 on t3.college_id = t2.college_id where t3.name_full = 'yale university'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_01",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_01",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -1829,12 +1829,12 @@
       "description": "baseball_1 visible cluster 1 query 5 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c01_06",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c01_06",
       "sql": "SELECT avg(T1.height) FROM raw.player AS T1 JOIN raw.player_college AS T2 ON T1.player_id = T2.player_id JOIN raw.college AS T3 ON T3.college_id = T2.college_id WHERE T3.name_full = 'Yale University'",
       "original_sql": "SELECT avg(T1.height) FROM player AS T1 JOIN player_college AS T2 ON T1.player_id  =  T2.player_id JOIN college AS T3 ON T3.college_id  =  T2.college_id WHERE T3.name_full  =  'Yale University';",
       "normalized_sql": "select avg(t1.height) from raw.player as t1 join raw.player_college as t2 on t1.player_id = t2.player_id join raw.college as t3 on t3.college_id = t2.college_id where t3.name_full = 'yale university'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_01",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_01",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -1880,12 +1880,12 @@
       "description": "baseball_1 visible cluster 1 query 6 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c01_07",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c01_07",
       "sql": "SELECT avg(T1.height) FROM raw.player AS T1 JOIN raw.player_college AS T2 ON T1.player_id = T2.player_id JOIN raw.college AS T3 ON T3.college_id = T2.college_id WHERE T3.name_full = 'Yale University'",
       "original_sql": "SELECT avg(T1.height) FROM player AS T1 JOIN player_college AS T2 ON T1.player_id  =  T2.player_id JOIN college AS T3 ON T3.college_id  =  T2.college_id WHERE T3.name_full  =  'Yale University';",
       "normalized_sql": "select avg(t1.height) from raw.player as t1 join raw.player_college as t2 on t1.player_id = t2.player_id join raw.college as t3 on t3.college_id = t2.college_id where t3.name_full = 'yale university'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_01",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_01",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -1931,12 +1931,12 @@
       "description": "baseball_1 visible cluster 1 query 7 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c02_01",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c02_01",
       "sql": "SELECT yearid , count(*) FROM raw.hall_of_fame GROUP BY yearid",
       "original_sql": "SELECT yearid ,  count(*) FROM hall_of_fame GROUP BY yearid;",
       "normalized_sql": "select yearid , count(*) from raw.hall_of_fame group by yearid",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_02",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_02",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -1976,12 +1976,12 @@
       "description": "baseball_1 visible cluster 2 query 1 rows=78"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c02_02",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c02_02",
       "sql": "SELECT yearid , count(*) FROM raw.hall_of_fame GROUP BY yearid",
       "original_sql": "SELECT yearid ,  count(*) FROM hall_of_fame GROUP BY yearid;",
       "normalized_sql": "select yearid , count(*) from raw.hall_of_fame group by yearid",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_02",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_02",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -2021,12 +2021,12 @@
       "description": "baseball_1 visible cluster 2 query 2 rows=78"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c02_03",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c02_03",
       "sql": "SELECT yearid , count(*) FROM raw.hall_of_fame GROUP BY yearid",
       "original_sql": "SELECT yearid ,  count(*) FROM hall_of_fame GROUP BY yearid;",
       "normalized_sql": "select yearid , count(*) from raw.hall_of_fame group by yearid",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_02",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_02",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -2066,12 +2066,12 @@
       "description": "baseball_1 visible cluster 2 query 3 rows=78"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c02_04",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c02_04",
       "sql": "SELECT yearid , count(*) FROM raw.hall_of_fame GROUP BY yearid",
       "original_sql": "SELECT yearid ,  count(*) FROM hall_of_fame GROUP BY yearid;",
       "normalized_sql": "select yearid , count(*) from raw.hall_of_fame group by yearid",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_02",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_02",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -2111,12 +2111,12 @@
       "description": "baseball_1 visible cluster 2 query 4 rows=78"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c02_05",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c02_05",
       "sql": "SELECT yearid , count(*) FROM raw.hall_of_fame GROUP BY yearid",
       "original_sql": "SELECT yearid ,  count(*) FROM hall_of_fame GROUP BY yearid;",
       "normalized_sql": "select yearid , count(*) from raw.hall_of_fame group by yearid",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_02",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_02",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -2156,12 +2156,12 @@
       "description": "baseball_1 visible cluster 2 query 5 rows=78"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c02_06",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c02_06",
       "sql": "SELECT yearid , count(*) FROM raw.hall_of_fame GROUP BY yearid",
       "original_sql": "SELECT yearid ,  count(*) FROM hall_of_fame GROUP BY yearid;",
       "normalized_sql": "select yearid , count(*) from raw.hall_of_fame group by yearid",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_02",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_02",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -2201,12 +2201,12 @@
       "description": "baseball_1 visible cluster 2 query 6 rows=78"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c02_07",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c02_07",
       "sql": "SELECT yearid , count(*) FROM raw.hall_of_fame GROUP BY yearid",
       "original_sql": "SELECT yearid ,  count(*) FROM hall_of_fame GROUP BY yearid;",
       "normalized_sql": "select yearid , count(*) from raw.hall_of_fame group by yearid",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_02",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_02",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -2246,12 +2246,12 @@
       "description": "baseball_1 visible cluster 2 query 7 rows=78"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c03_01",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c03_01",
       "sql": "SELECT YEAR , avg(attendance) FROM raw.home_game GROUP BY YEAR",
       "original_sql": "SELECT YEAR ,  avg(attendance) FROM home_game GROUP BY YEAR;",
       "normalized_sql": "select year , avg(attendance) from raw.home_game group by year",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_03",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_03",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -2292,12 +2292,12 @@
       "description": "baseball_1 visible cluster 3 query 1 rows=144"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c03_02",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c03_02",
       "sql": "SELECT YEAR , avg(attendance) FROM raw.home_game GROUP BY YEAR",
       "original_sql": "SELECT YEAR ,  avg(attendance) FROM home_game GROUP BY YEAR;",
       "normalized_sql": "select year , avg(attendance) from raw.home_game group by year",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_03",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_03",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -2338,12 +2338,12 @@
       "description": "baseball_1 visible cluster 3 query 2 rows=144"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c03_03",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c03_03",
       "sql": "SELECT YEAR , avg(attendance) FROM raw.home_game GROUP BY YEAR",
       "original_sql": "SELECT YEAR ,  avg(attendance) FROM home_game GROUP BY YEAR;",
       "normalized_sql": "select year , avg(attendance) from raw.home_game group by year",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_03",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_03",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -2384,12 +2384,12 @@
       "description": "baseball_1 visible cluster 3 query 3 rows=144"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c03_04",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c03_04",
       "sql": "SELECT YEAR , avg(attendance) FROM raw.home_game GROUP BY YEAR",
       "original_sql": "SELECT YEAR ,  avg(attendance) FROM home_game GROUP BY YEAR;",
       "normalized_sql": "select year , avg(attendance) from raw.home_game group by year",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_03",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_03",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -2430,12 +2430,12 @@
       "description": "baseball_1 visible cluster 3 query 4 rows=144"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c03_05",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c03_05",
       "sql": "SELECT YEAR , avg(attendance) FROM raw.home_game GROUP BY YEAR",
       "original_sql": "SELECT YEAR ,  avg(attendance) FROM home_game GROUP BY YEAR;",
       "normalized_sql": "select year , avg(attendance) from raw.home_game group by year",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_03",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_03",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -2476,12 +2476,12 @@
       "description": "baseball_1 visible cluster 3 query 5 rows=144"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c03_06",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c03_06",
       "sql": "SELECT YEAR , avg(attendance) FROM raw.home_game GROUP BY YEAR",
       "original_sql": "SELECT YEAR ,  avg(attendance) FROM home_game GROUP BY YEAR;",
       "normalized_sql": "select year , avg(attendance) from raw.home_game group by year",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_03",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_03",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -2522,12 +2522,12 @@
       "description": "baseball_1 visible cluster 3 query 6 rows=144"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c03_07",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c03_07",
       "sql": "SELECT YEAR , avg(attendance) FROM raw.home_game GROUP BY YEAR",
       "original_sql": "SELECT YEAR ,  avg(attendance) FROM home_game GROUP BY YEAR;",
       "normalized_sql": "select year , avg(attendance) from raw.home_game group by year",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_03",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_03",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -2568,12 +2568,12 @@
       "description": "baseball_1 visible cluster 3 query 7 rows=144"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c04_01",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c04_01",
       "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 2000 AND T2.city = 'Atlanta'",
       "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year  =  2000 AND T2.city  =  'Atlanta';",
       "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 2000 and t2.city = 'atlanta'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_04",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_04",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -2618,12 +2618,12 @@
       "description": "baseball_1 visible cluster 4 query 1 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c04_02",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c04_02",
       "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 2000 AND T2.city = 'Atlanta'",
       "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year  =  2000 AND T2.city  =  'Atlanta';",
       "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 2000 and t2.city = 'atlanta'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_04",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_04",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -2668,12 +2668,12 @@
       "description": "baseball_1 visible cluster 4 query 2 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c04_03",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c04_03",
       "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 2000 AND T2.city = 'Atlanta'",
       "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year  =  2000 AND T2.city  =  'Atlanta';",
       "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 2000 and t2.city = 'atlanta'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_04",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_04",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -2718,12 +2718,12 @@
       "description": "baseball_1 visible cluster 4 query 3 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c04_04",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c04_04",
       "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 2000 AND T2.city = 'Atlanta'",
       "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year  =  2000 AND T2.city  =  'Atlanta';",
       "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 2000 and t2.city = 'atlanta'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_04",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_04",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -2768,12 +2768,12 @@
       "description": "baseball_1 visible cluster 4 query 4 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c04_05",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c04_05",
       "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 2000 AND T2.city = 'Atlanta'",
       "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year  =  2000 AND T2.city  =  'Atlanta';",
       "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 2000 and t2.city = 'atlanta'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_04",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_04",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -2818,12 +2818,12 @@
       "description": "baseball_1 visible cluster 4 query 5 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c04_06",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c04_06",
       "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 2000 AND T2.city = 'Atlanta'",
       "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year  =  2000 AND T2.city  =  'Atlanta';",
       "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 2000 and t2.city = 'atlanta'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_04",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_04",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -2868,12 +2868,12 @@
       "description": "baseball_1 visible cluster 4 query 6 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c04_07",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c04_07",
       "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 2000 AND T2.city = 'Atlanta'",
       "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year  =  2000 AND T2.city  =  'Atlanta';",
       "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 2000 and t2.city = 'atlanta'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_04",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_04",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -2918,12 +2918,12 @@
       "description": "baseball_1 visible cluster 4 query 7 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c05_01",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c05_01",
       "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park'",
       "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park';",
       "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 1907 and t2.park_name = 'columbia park'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_05",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_05",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -2968,12 +2968,12 @@
       "description": "baseball_1 visible cluster 5 query 1 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c05_02",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c05_02",
       "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park'",
       "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park';",
       "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 1907 and t2.park_name = 'columbia park'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_05",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_05",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -3018,12 +3018,12 @@
       "description": "baseball_1 visible cluster 5 query 2 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c05_03",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c05_03",
       "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park'",
       "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park';",
       "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 1907 and t2.park_name = 'columbia park'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_05",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_05",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -3068,12 +3068,12 @@
       "description": "baseball_1 visible cluster 5 query 3 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c05_04",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c05_04",
       "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park'",
       "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park';",
       "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 1907 and t2.park_name = 'columbia park'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_05",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_05",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -3118,12 +3118,12 @@
       "description": "baseball_1 visible cluster 5 query 4 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c05_05",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c05_05",
       "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park'",
       "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park';",
       "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 1907 and t2.park_name = 'columbia park'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_05",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_05",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -3168,12 +3168,12 @@
       "description": "baseball_1 visible cluster 5 query 5 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c05_06",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c05_06",
       "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park'",
       "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park';",
       "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 1907 and t2.park_name = 'columbia park'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_05",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_05",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -3218,12 +3218,12 @@
       "description": "baseball_1 visible cluster 5 query 6 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_vq_c05_07",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c05_07",
       "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park'",
       "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park';",
       "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 1907 and t2.park_name = 'columbia park'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_05",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_05",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -3270,12 +3270,12 @@
   ],
   "holdout_queries": [
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_hq_c01_01",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_hq_c01_01",
       "sql": "SELECT avg(T1.height) FROM raw.player AS T1 JOIN raw.player_college AS T2 ON T1.player_id = T2.player_id JOIN raw.college AS T3 ON T3.college_id = T2.college_id WHERE T3.name_full = 'Yale University'",
       "original_sql": "SELECT avg(T1.height) FROM player AS T1 JOIN player_college AS T2 ON T1.player_id  =  T2.player_id JOIN college AS T3 ON T3.college_id  =  T2.college_id WHERE T3.name_full  =  'Yale University';",
       "normalized_sql": "select avg(t1.height) from raw.player as t1 join raw.player_college as t2 on t1.player_id = t2.player_id join raw.college as t3 on t3.college_id = t2.college_id where t3.name_full = 'yale university'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_01",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_01",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -3321,12 +3321,12 @@
       "description": "baseball_1 holdout cluster 1 query 1 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_hq_c01_02",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_hq_c01_02",
       "sql": "SELECT avg(T1.height) FROM raw.player AS T1 JOIN raw.player_college AS T2 ON T1.player_id = T2.player_id JOIN raw.college AS T3 ON T3.college_id = T2.college_id WHERE T3.name_full = 'Yale University'",
       "original_sql": "SELECT avg(T1.height) FROM player AS T1 JOIN player_college AS T2 ON T1.player_id  =  T2.player_id JOIN college AS T3 ON T3.college_id  =  T2.college_id WHERE T3.name_full  =  'Yale University';",
       "normalized_sql": "select avg(t1.height) from raw.player as t1 join raw.player_college as t2 on t1.player_id = t2.player_id join raw.college as t3 on t3.college_id = t2.college_id where t3.name_full = 'yale university'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_01",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_01",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -3372,12 +3372,12 @@
       "description": "baseball_1 holdout cluster 1 query 2 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_hq_c01_03",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_hq_c01_03",
       "sql": "SELECT avg(T1.height) FROM raw.player AS T1 JOIN raw.player_college AS T2 ON T1.player_id = T2.player_id JOIN raw.college AS T3 ON T3.college_id = T2.college_id WHERE T3.name_full = 'Yale University'",
       "original_sql": "SELECT avg(T1.height) FROM player AS T1 JOIN player_college AS T2 ON T1.player_id  =  T2.player_id JOIN college AS T3 ON T3.college_id  =  T2.college_id WHERE T3.name_full  =  'Yale University';",
       "normalized_sql": "select avg(t1.height) from raw.player as t1 join raw.player_college as t2 on t1.player_id = t2.player_id join raw.college as t3 on t3.college_id = t2.college_id where t3.name_full = 'yale university'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_01",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_01",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -3423,12 +3423,12 @@
       "description": "baseball_1 holdout cluster 1 query 3 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_hq_c01_04",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_hq_c01_04",
       "sql": "SELECT avg(T1.height) FROM raw.player AS T1 JOIN raw.player_college AS T2 ON T1.player_id = T2.player_id JOIN raw.college AS T3 ON T3.college_id = T2.college_id WHERE T3.name_full = 'Yale University'",
       "original_sql": "SELECT avg(T1.height) FROM player AS T1 JOIN player_college AS T2 ON T1.player_id  =  T2.player_id JOIN college AS T3 ON T3.college_id  =  T2.college_id WHERE T3.name_full  =  'Yale University';",
       "normalized_sql": "select avg(t1.height) from raw.player as t1 join raw.player_college as t2 on t1.player_id = t2.player_id join raw.college as t3 on t3.college_id = t2.college_id where t3.name_full = 'yale university'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_01",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_01",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -3474,12 +3474,12 @@
       "description": "baseball_1 holdout cluster 1 query 4 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_hq_c02_01",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_hq_c02_01",
       "sql": "SELECT yearid , count(*) FROM raw.hall_of_fame GROUP BY yearid",
       "original_sql": "SELECT yearid ,  count(*) FROM hall_of_fame GROUP BY yearid;",
       "normalized_sql": "select yearid , count(*) from raw.hall_of_fame group by yearid",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_02",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_02",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -3519,12 +3519,12 @@
       "description": "baseball_1 holdout cluster 2 query 1 rows=78"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_hq_c02_02",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_hq_c02_02",
       "sql": "SELECT yearid , count(*) FROM raw.hall_of_fame GROUP BY yearid",
       "original_sql": "SELECT yearid ,  count(*) FROM hall_of_fame GROUP BY yearid;",
       "normalized_sql": "select yearid , count(*) from raw.hall_of_fame group by yearid",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_02",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_02",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -3564,12 +3564,12 @@
       "description": "baseball_1 holdout cluster 2 query 2 rows=78"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_hq_c02_03",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_hq_c02_03",
       "sql": "SELECT yearid , count(*) FROM raw.hall_of_fame GROUP BY yearid",
       "original_sql": "SELECT yearid ,  count(*) FROM hall_of_fame GROUP BY yearid;",
       "normalized_sql": "select yearid , count(*) from raw.hall_of_fame group by yearid",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_02",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_02",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -3609,12 +3609,12 @@
       "description": "baseball_1 holdout cluster 2 query 3 rows=78"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_hq_c02_04",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_hq_c02_04",
       "sql": "SELECT yearid , count(*) FROM raw.hall_of_fame GROUP BY yearid",
       "original_sql": "SELECT yearid ,  count(*) FROM hall_of_fame GROUP BY yearid;",
       "normalized_sql": "select yearid , count(*) from raw.hall_of_fame group by yearid",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_02",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_02",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -3654,12 +3654,12 @@
       "description": "baseball_1 holdout cluster 2 query 4 rows=78"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_hq_c03_01",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_hq_c03_01",
       "sql": "SELECT YEAR , avg(attendance) FROM raw.home_game GROUP BY YEAR",
       "original_sql": "SELECT YEAR ,  avg(attendance) FROM home_game GROUP BY YEAR;",
       "normalized_sql": "select year , avg(attendance) from raw.home_game group by year",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_03",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_03",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -3700,12 +3700,12 @@
       "description": "baseball_1 holdout cluster 3 query 1 rows=144"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_hq_c03_02",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_hq_c03_02",
       "sql": "SELECT YEAR , avg(attendance) FROM raw.home_game GROUP BY YEAR",
       "original_sql": "SELECT YEAR ,  avg(attendance) FROM home_game GROUP BY YEAR;",
       "normalized_sql": "select year , avg(attendance) from raw.home_game group by year",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_03",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_03",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -3746,12 +3746,12 @@
       "description": "baseball_1 holdout cluster 3 query 2 rows=144"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_hq_c03_03",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_hq_c03_03",
       "sql": "SELECT YEAR , avg(attendance) FROM raw.home_game GROUP BY YEAR",
       "original_sql": "SELECT YEAR ,  avg(attendance) FROM home_game GROUP BY YEAR;",
       "normalized_sql": "select year , avg(attendance) from raw.home_game group by year",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_03",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_03",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -3792,12 +3792,12 @@
       "description": "baseball_1 holdout cluster 3 query 3 rows=144"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_hq_c03_04",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_hq_c03_04",
       "sql": "SELECT YEAR , avg(attendance) FROM raw.home_game GROUP BY YEAR",
       "original_sql": "SELECT YEAR ,  avg(attendance) FROM home_game GROUP BY YEAR;",
       "normalized_sql": "select year , avg(attendance) from raw.home_game group by year",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_03",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_03",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -3838,12 +3838,12 @@
       "description": "baseball_1 holdout cluster 3 query 4 rows=144"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_hq_c04_01",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_hq_c04_01",
       "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 2000 AND T2.city = 'Atlanta'",
       "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year  =  2000 AND T2.city  =  'Atlanta';",
       "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 2000 and t2.city = 'atlanta'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_04",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_04",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -3888,12 +3888,12 @@
       "description": "baseball_1 holdout cluster 4 query 1 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_hq_c04_02",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_hq_c04_02",
       "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 2000 AND T2.city = 'Atlanta'",
       "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year  =  2000 AND T2.city  =  'Atlanta';",
       "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 2000 and t2.city = 'atlanta'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_04",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_04",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -3938,12 +3938,12 @@
       "description": "baseball_1 holdout cluster 4 query 2 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_hq_c04_03",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_hq_c04_03",
       "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 2000 AND T2.city = 'Atlanta'",
       "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year  =  2000 AND T2.city  =  'Atlanta';",
       "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 2000 and t2.city = 'atlanta'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_04",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_04",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -3988,12 +3988,12 @@
       "description": "baseball_1 holdout cluster 4 query 3 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_hq_c04_04",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_hq_c04_04",
       "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 2000 AND T2.city = 'Atlanta'",
       "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year  =  2000 AND T2.city  =  'Atlanta';",
       "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 2000 and t2.city = 'atlanta'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_04",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_04",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -4038,12 +4038,12 @@
       "description": "baseball_1 holdout cluster 4 query 4 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_hq_c05_01",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_hq_c05_01",
       "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park'",
       "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park';",
       "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 1907 and t2.park_name = 'columbia park'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_05",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_05",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -4088,12 +4088,12 @@
       "description": "baseball_1 holdout cluster 5 query 1 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_hq_c05_02",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_hq_c05_02",
       "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park'",
       "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park';",
       "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 1907 and t2.park_name = 'columbia park'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_05",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_05",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -4138,12 +4138,12 @@
       "description": "baseball_1 holdout cluster 5 query 2 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_hq_c05_03",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_hq_c05_03",
       "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park'",
       "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park';",
       "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 1907 and t2.park_name = 'columbia park'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_05",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_05",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -4188,12 +4188,12 @@
       "description": "baseball_1 holdout cluster 5 query 3 rows=1"
     },
     {
-      "query_id": "schemaopt_spider_hard_baseball_1_hq_c05_04",
+      "query_id": "schemaopt_bench_hard_sports_analytics_1_hq_c05_04",
       "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park'",
       "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park';",
       "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 1907 and t2.park_name = 'columbia park'",
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_05",
-      "business_tag": "Spider baseball_1 workload",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_05",
+      "business_tag": "Benchmark baseball_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
       "tables": [
@@ -4240,17 +4240,17 @@
   ],
   "clusters": [
     {
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_01",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_01",
       "label": "baseball_1 workload cluster 1",
-      "business_label": "Spider baseball_1 analytics cluster 1",
+      "business_label": "Benchmark baseball_1 analytics cluster 1",
       "query_ids": [
-        "schemaopt_spider_hard_baseball_1_vq_c01_01",
-        "schemaopt_spider_hard_baseball_1_vq_c01_02",
-        "schemaopt_spider_hard_baseball_1_vq_c01_03",
-        "schemaopt_spider_hard_baseball_1_vq_c01_04",
-        "schemaopt_spider_hard_baseball_1_vq_c01_05",
-        "schemaopt_spider_hard_baseball_1_vq_c01_06",
-        "schemaopt_spider_hard_baseball_1_vq_c01_07"
+        "schemaopt_bench_hard_sports_analytics_1_vq_c01_01",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c01_02",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c01_03",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c01_04",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c01_05",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c01_06",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c01_07"
       ],
       "query_count": 7,
       "total_frequency_weight": 14.0,
@@ -4272,7 +4272,7 @@
       ],
       "hotspot_rank": 1,
       "preferred_object_kind": "agg_matview",
-      "representative_query_id": "schemaopt_spider_hard_baseball_1_vq_c01_01",
+      "representative_query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c01_01",
       "cluster_grain_emphasis": [],
       "suggested_exact_derived_shape": {
         "object_kind": "agg_matview",
@@ -4295,17 +4295,17 @@
       "reference_rewrite_feasible": true
     },
     {
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_02",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_02",
       "label": "baseball_1 workload cluster 2",
-      "business_label": "Spider baseball_1 analytics cluster 2",
+      "business_label": "Benchmark baseball_1 analytics cluster 2",
       "query_ids": [
-        "schemaopt_spider_hard_baseball_1_vq_c02_01",
-        "schemaopt_spider_hard_baseball_1_vq_c02_02",
-        "schemaopt_spider_hard_baseball_1_vq_c02_03",
-        "schemaopt_spider_hard_baseball_1_vq_c02_04",
-        "schemaopt_spider_hard_baseball_1_vq_c02_05",
-        "schemaopt_spider_hard_baseball_1_vq_c02_06",
-        "schemaopt_spider_hard_baseball_1_vq_c02_07"
+        "schemaopt_bench_hard_sports_analytics_1_vq_c02_01",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c02_02",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c02_03",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c02_04",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c02_05",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c02_06",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c02_07"
       ],
       "query_count": 7,
       "total_frequency_weight": 14.0,
@@ -4324,7 +4324,7 @@
       ],
       "hotspot_rank": 2,
       "preferred_object_kind": "agg_matview",
-      "representative_query_id": "schemaopt_spider_hard_baseball_1_vq_c02_01",
+      "representative_query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c02_01",
       "cluster_grain_emphasis": [
         "yearid"
       ],
@@ -4347,17 +4347,17 @@
       "reference_rewrite_feasible": true
     },
     {
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_03",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_03",
       "label": "baseball_1 workload cluster 3",
-      "business_label": "Spider baseball_1 analytics cluster 3",
+      "business_label": "Benchmark baseball_1 analytics cluster 3",
       "query_ids": [
-        "schemaopt_spider_hard_baseball_1_vq_c03_01",
-        "schemaopt_spider_hard_baseball_1_vq_c03_02",
-        "schemaopt_spider_hard_baseball_1_vq_c03_03",
-        "schemaopt_spider_hard_baseball_1_vq_c03_04",
-        "schemaopt_spider_hard_baseball_1_vq_c03_05",
-        "schemaopt_spider_hard_baseball_1_vq_c03_06",
-        "schemaopt_spider_hard_baseball_1_vq_c03_07"
+        "schemaopt_bench_hard_sports_analytics_1_vq_c03_01",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c03_02",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c03_03",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c03_04",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c03_05",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c03_06",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c03_07"
       ],
       "query_count": 7,
       "total_frequency_weight": 14.0,
@@ -4377,7 +4377,7 @@
       ],
       "hotspot_rank": 3,
       "preferred_object_kind": "agg_matview",
-      "representative_query_id": "schemaopt_spider_hard_baseball_1_vq_c03_01",
+      "representative_query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c03_01",
       "cluster_grain_emphasis": [
         "year"
       ],
@@ -4400,17 +4400,17 @@
       "reference_rewrite_feasible": true
     },
     {
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_04",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_04",
       "label": "baseball_1 workload cluster 4",
-      "business_label": "Spider baseball_1 analytics cluster 4",
+      "business_label": "Benchmark baseball_1 analytics cluster 4",
       "query_ids": [
-        "schemaopt_spider_hard_baseball_1_vq_c04_01",
-        "schemaopt_spider_hard_baseball_1_vq_c04_02",
-        "schemaopt_spider_hard_baseball_1_vq_c04_03",
-        "schemaopt_spider_hard_baseball_1_vq_c04_04",
-        "schemaopt_spider_hard_baseball_1_vq_c04_05",
-        "schemaopt_spider_hard_baseball_1_vq_c04_06",
-        "schemaopt_spider_hard_baseball_1_vq_c04_07"
+        "schemaopt_bench_hard_sports_analytics_1_vq_c04_01",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c04_02",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c04_03",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c04_04",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c04_05",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c04_06",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c04_07"
       ],
       "query_count": 7,
       "total_frequency_weight": 14.0,
@@ -4430,7 +4430,7 @@
       ],
       "hotspot_rank": 4,
       "preferred_object_kind": "agg_matview",
-      "representative_query_id": "schemaopt_spider_hard_baseball_1_vq_c04_01",
+      "representative_query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c04_01",
       "cluster_grain_emphasis": [],
       "suggested_exact_derived_shape": {
         "object_kind": "agg_matview",
@@ -4453,17 +4453,17 @@
       "reference_rewrite_feasible": true
     },
     {
-      "cluster_id": "schemaopt_spider_hard_baseball_1_cluster_05",
+      "cluster_id": "schemaopt_bench_hard_sports_analytics_1_cluster_05",
       "label": "baseball_1 workload cluster 5",
-      "business_label": "Spider baseball_1 analytics cluster 5",
+      "business_label": "Benchmark baseball_1 analytics cluster 5",
       "query_ids": [
-        "schemaopt_spider_hard_baseball_1_vq_c05_01",
-        "schemaopt_spider_hard_baseball_1_vq_c05_02",
-        "schemaopt_spider_hard_baseball_1_vq_c05_03",
-        "schemaopt_spider_hard_baseball_1_vq_c05_04",
-        "schemaopt_spider_hard_baseball_1_vq_c05_05",
-        "schemaopt_spider_hard_baseball_1_vq_c05_06",
-        "schemaopt_spider_hard_baseball_1_vq_c05_07"
+        "schemaopt_bench_hard_sports_analytics_1_vq_c05_01",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c05_02",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c05_03",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c05_04",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c05_05",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c05_06",
+        "schemaopt_bench_hard_sports_analytics_1_vq_c05_07"
       ],
       "query_count": 7,
       "total_frequency_weight": 14.0,
@@ -4483,7 +4483,7 @@
       ],
       "hotspot_rank": 5,
       "preferred_object_kind": "agg_matview",
-      "representative_query_id": "schemaopt_spider_hard_baseball_1_vq_c05_01",
+      "representative_query_id": "schemaopt_bench_hard_sports_analytics_1_vq_c05_01",
       "cluster_grain_emphasis": [],
       "suggested_exact_derived_shape": {
         "object_kind": "agg_matview",
@@ -4524,7 +4524,7 @@
     "uses_real_query_execution": true,
     "uses_explain_plan_metrics": true,
     "rewrite_model": "explicit_rewritten_sql",
-    "source_dataset": "spider",
+    "source_dataset": "public_sql_benchmark",
     "source_database_engine": "sqlite",
     "source_db_id": "baseball_1",
     "sql_normalized_for_duckdb": true

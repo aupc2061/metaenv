@@ -11,7 +11,6 @@ from typing import Any, Dict, Iterable, List, Optional, Sequence
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _TASK_ASSET_ROOTS = (
     Path(__file__).resolve().parent / "task_assets",
-    Path(__file__).resolve().parent / "task_assets_spider",
 )
 _ALIAS_TOKEN_RE = re.compile(r'\b[a-zA-Z_][a-zA-Z0-9_]*\.((?:"[^"]+")|(?:[a-zA-Z_][a-zA-Z0-9_]*))')
 
