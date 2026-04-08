@@ -42,3 +42,6 @@ logs/
 evals/
 
 datasets/
+tests/
+scripts/
+schemaopt_env/scripts/
