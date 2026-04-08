@@ -1,6 +1,6 @@
 import pytest
 
-from schemaopt_inference import (
+from inference import (
     _sanitize_filename_component,
     choose_action,
     parse_action,

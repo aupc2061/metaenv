@@ -18,7 +18,7 @@ Core files:
 - `schemaopt_env/tasks.py`
 - `schemaopt_env/server/app.py`
 - `schemaopt_env/server/schemaopt_environment.py`
-- `schemaopt_inference.py`
+- `inference.py`
 
 Main API / interaction surface:
 - `reset`
@@ -98,7 +98,7 @@ Behavior added:
 - create reward is no longer unconditional
 
 ### 4. Improved inference prompt and control loop
-`schemaopt_inference.py` was updated so the model is guided to:
+`inference.py` was updated so the model is guided to:
 - copy predicates from query context closely
 - inspect router status or benchmark after create/modify
 - avoid repeated duplicate creations

@@ -1,0 +1,12 @@
+.git
+.venv
+__pycache__/
+*.py[cod]
+.DS_Store
+.env
+.env.*
+outputs/
+logs/
+evals/
+datasets/
+tests/

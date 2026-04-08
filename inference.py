@@ -1,5 +1,9 @@
 """Inference runner for the standalone schema optimization benchmark.
 
+Submission-facing root runner for SchemaOpt. This file contains the full
+policy logic and emits structured stdout logs using the required
+[START] / [STEP] / [END] tags.
+
 Environment variables:
 - OPENAI_API_KEY: required for OpenAI client auth
 - HF_TOKEN: optional fallback token if OPENAI_API_KEY is not set
@@ -14,10 +18,12 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter
+import io
 import json
 import os
 import re
 import sys
+from contextlib import redirect_stdout
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -64,12 +70,33 @@ def _shorten_for_log(text: str, max_len: int = 280) -> str:
     return f"{compact[: max_len - 3]}..."
 
 
+def _clamp01(value: float) -> float:
+    return max(0.0, min(1.0, value))
+
+
+def _print_json_line(tag: str, payload: Dict[str, Any]) -> None:
+    print(tag, flush=True)
+    print(json.dumps(payload, ensure_ascii=True), flush=True)
+
+
+def _task_list_from_arg(raw: str) -> List[str]:
+    items = [item.strip() for item in raw.split(",")]
+    return [item for item in items if item]
+
+
 DEFAULT_MODEL_NAME = os.getenv("MODEL_NAME", "gpt-5.4-mini")
 DEFAULT_API_BASE_URL = os.getenv("API_BASE_URL")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY") or os.getenv("HF_TOKEN")
 DEFAULT_MAX_STEPS = _safe_int_from_env("MAX_STEPS", None)
 DEFAULT_TASK_ID = os.getenv("TASK_ID", "schemaopt_hard_mobile_revenue_ops")
 DEFAULT_MAX_ACTION_RETRIES = _safe_int_from_env("MAX_ACTION_RETRIES", 4) or 4
+DEFAULT_SUBMISSION_TASKS = ",".join(
+    [
+        "schemaopt_easy_hiring_pipeline",
+        "schemaopt_medium_campaign_performance",
+        "schemaopt_hard_mobile_revenue_ops",
+    ]
+)
 
 SYSTEM_PROMPT = """You are operating a workload-adaptive schema optimization environment.
 
@@ -387,28 +414,41 @@ def run_episode(
     cluster_context_requests: Counter[str] = Counter()
     action_trace: List[Dict[str, Any]] = []
     total_reward = 0.0
+    rewards: List[float] = []
 
-    print(f"Starting schema optimization inference run for {task_id}")
+    _print_json_line(
+        "[START]",
+        {
+            "task": task_id,
+            "env": "schemaopt_env",
+            "model": model_name,
+            "max_steps": effective_max_steps,
+        },
+    )
 
     terminated_due_to_max_steps = False
 
     for step in range(1, effective_max_steps + 1):
-        action = choose_action(
-            observation,
-            history,
-            step,
-            benchmark_history,
-            dict(cluster_context_requests),
-            model_name,
-            api_base_url,
-            effective_max_steps,
-            max_action_retries,
-        )
-        print(f"Step {step}: {json.dumps(action.model_dump(exclude_none=True), ensure_ascii=True)}")
+        if observation.done:
+            break
+
+        with io.StringIO() as sink, redirect_stdout(sink):
+            action = choose_action(
+                observation,
+                history,
+                step,
+                benchmark_history,
+                dict(cluster_context_requests),
+                model_name,
+                api_base_url,
+                effective_max_steps,
+                max_action_retries,
+            )
 
         observation = env.step(action)
-        reward = observation.reward or 0.0
+        reward = float(observation.reward or 0.0)
         total_reward += reward
+        rewards.append(reward)
 
         if action.operation in {"benchmark_cluster", "benchmark_subset"}:
             benchmark_history.append(
@@ -441,14 +481,21 @@ def run_episode(
             }
         )
 
-        print(f"  Reward: {reward:+.3f} | Done: {observation.done} | Message: {observation.message}")
+        _print_json_line(
+            "[STEP]",
+            {
+                "step": step,
+                "action": action.model_dump(exclude_none=True),
+                "reward": reward,
+                "done": bool(observation.done),
+                "error": observation.message if observation.status == "error" else None,
+            },
+        )
 
         if observation.done:
-            print("Episode complete.")
             break
     else:
         terminated_due_to_max_steps = True
-        print(f"Reached max steps ({effective_max_steps}) without a model-issued submit action.")
 
     final_feedback = observation.action_feedback or {}
     warnings: List[str] = []
@@ -462,9 +509,14 @@ def run_episode(
     else:
         termination_reason = "runner_max_steps_reached"
     terminated_due_to_max_steps = terminated_due_to_max_steps or termination_reason == "budget_exhausted"
+    final_score = float(env.state.final_score or 0.0)
+    score = _clamp01(final_score)
+    success = observation.done and final_score > 0.0
     result = {
         "task_id": task_id,
-        "final_score": env.state.final_score,
+        "final_score": final_score,
+        "score": score,
+        "success": success,
         "total_reward": round(total_reward, 6),
         "steps": env.state.step_count,
         "derived_object_count": env.state.derived_object_count,
@@ -485,9 +537,20 @@ def run_episode(
             "warnings": warnings,
             "trace_tail": action_trace[-10:],
         },
+        "rewards": rewards,
     }
 
-    print("\nFinal result:")
+    _print_json_line(
+        "[END]",
+        {
+            "task": task_id,
+            "success": success,
+            "steps": env.state.step_count,
+            "score": score,
+            "rewards": rewards,
+        },
+    )
+
     if output_path is None:
         safe_task_id = _sanitize_filename_component(task_id)
         safe_model_name = _sanitize_filename_component(model_name)
@@ -500,8 +563,13 @@ def run_episode(
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run model-driven inference against schemaopt_env.")
-    parser.add_argument("--task-id", default=DEFAULT_TASK_ID, help="Task id to run.")
+    parser = argparse.ArgumentParser(description="Run submission-style inference against schemaopt_env.")
+    parser.add_argument(
+        "--tasks",
+        default=DEFAULT_SUBMISSION_TASKS,
+        help="Comma-separated task ids to run. Defaults to a representative easy/medium/hard sweep.",
+    )
+    parser.add_argument("--task-id", default=None, help="Optional single task id override.")
     parser.add_argument("--model-name", default=DEFAULT_MODEL_NAME, help="Model id for the OpenAI-compatible API.")
     parser.add_argument("--api-base-url", default=DEFAULT_API_BASE_URL, help="Optional OpenAI-compatible API base URL.")
     parser.add_argument("--max-steps", type=int, default=DEFAULT_MAX_STEPS, help="Maximum number of environment steps. Defaults to the task budget when omitted.")
@@ -512,14 +580,21 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    run_episode(
-        task_id=args.task_id,
-        model_name=args.model_name,
-        api_base_url=args.api_base_url,
-        max_steps=args.max_steps,
-        max_action_retries=args.max_action_retries,
-        output_path=args.output,
-    )
+    task_ids = [args.task_id] if args.task_id else _task_list_from_arg(args.tasks)
+    results = [
+        run_episode(
+            task_id=task_id,
+            model_name=args.model_name,
+            api_base_url=args.api_base_url,
+            max_steps=args.max_steps,
+            max_action_retries=args.max_action_retries,
+            output_path=(args.output if len(task_ids) == 1 else None),
+        )
+        for task_id in task_ids
+    ]
+    if args.output is not None and len(task_ids) > 1:
+        with args.output.open("w", encoding="utf-8") as f:
+            json.dump({"results": results}, f, indent=2)
 
 
 if __name__ == "__main__":
