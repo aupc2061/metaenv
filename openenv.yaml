@@ -2,5 +2,6 @@ spec_version: 1
 name: schemaopt_env
 type: space
 runtime: fastapi
-app: schemaopt_env.server.app:app
+app: server.app:app
 port: 8000
+
