@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import json
+import os
 from pathlib import Path
 import re
 from typing import Any, Dict, Iterable, List, Optional, Sequence
@@ -13,6 +14,7 @@ _TASK_ASSET_ROOTS = (
     Path(__file__).resolve().parent / "task_assets",
 )
 _ALIAS_TOKEN_RE = re.compile(r'\b[a-zA-Z_][a-zA-Z0-9_]*\.((?:"[^"]+")|(?:[a-zA-Z_][a-zA-Z0-9_]*))')
+_GIT_LFS_POINTER_PREFIX = b"version https://git-lfs.github.com/spec/v1"
 
 
 def _normalize_sql(sql: str) -> str:
@@ -395,6 +397,58 @@ def _resolve_repo_path(path_str: str) -> str:
     if path.is_absolute():
         return str(path)
     return str((_REPO_ROOT / path).resolve())
+
+
+def _is_git_lfs_pointer(path: Path) -> bool:
+    if not path.exists() or not path.is_file():
+        return False
+    try:
+        if path.stat().st_size > 512:
+            return False
+        return path.read_bytes().startswith(_GIT_LFS_POINTER_PREFIX)
+    except OSError:
+        return False
+
+
+def _repo_relative_asset_path(path: Path) -> Optional[str]:
+    try:
+        return path.resolve().relative_to(_REPO_ROOT.resolve()).as_posix()
+    except ValueError:
+        return None
+
+
+def resolve_runtime_asset_path(path_str: str) -> str:
+    resolved = Path(_resolve_repo_path(path_str))
+    if resolved.exists() and not _is_git_lfs_pointer(resolved):
+        return str(resolved)
+
+    repo_relative_path = _repo_relative_asset_path(resolved)
+    if repo_relative_path is None:
+        if resolved.exists():
+            raise RuntimeError(f"Task asset is a Git LFS pointer outside repo root: {resolved}")
+        raise FileNotFoundError(f"Task asset not found: {resolved}")
+
+    repo_id = os.getenv("HF_SPACE_REPO_ID") or os.getenv("SPACE_ID")
+    if not repo_id:
+        if resolved.exists():
+            raise RuntimeError(
+                f"Task asset at {resolved} is a Git LFS pointer. "
+                "Set HF_SPACE_REPO_ID or SPACE_ID so the runtime can download the real file."
+            )
+        raise FileNotFoundError(
+            f"Task asset not found at {resolved}. "
+            "Set HF_SPACE_REPO_ID or SPACE_ID so the runtime can download it from the Space repo."
+        )
+
+    try:
+        from huggingface_hub import hf_hub_download
+    except ImportError as exc:
+        raise RuntimeError(
+            "huggingface_hub is required to materialize Git LFS-backed task assets at runtime"
+        ) from exc
+
+    downloaded_path = hf_hub_download(repo_id=repo_id, repo_type="space", filename=repo_relative_path)
+    return str(Path(downloaded_path).resolve())
 
 
 def _load_table(payload: Dict[str, Any]) -> TableSpec:

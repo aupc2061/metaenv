@@ -19,11 +19,11 @@ from uuid import uuid4
 
 try:
     from ..models import SchemaOptAction, SchemaOptObservation, SchemaOptState
-    from ..tasks import TASK_CATALOG, QuerySpec, TaskSpec, cluster_lookup, get_task, match_queries, query_lookup, similar_query_ids, visible_queries_for_cluster
+    from ..tasks import TASK_CATALOG, QuerySpec, TaskSpec, cluster_lookup, get_task, match_queries, query_lookup, resolve_runtime_asset_path, similar_query_ids, visible_queries_for_cluster
     from .rubrics import SchemaOptRubric
 except ImportError:
     from models import SchemaOptAction, SchemaOptObservation, SchemaOptState
-    from tasks import TASK_CATALOG, QuerySpec, TaskSpec, cluster_lookup, get_task, match_queries, query_lookup, similar_query_ids, visible_queries_for_cluster
+    from tasks import TASK_CATALOG, QuerySpec, TaskSpec, cluster_lookup, get_task, match_queries, query_lookup, resolve_runtime_asset_path, similar_query_ids, visible_queries_for_cluster
     from rubrics import SchemaOptRubric
 
 try:
@@ -198,7 +198,7 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
             shutil.rmtree(self._episode_root, ignore_errors=True)
         self._episode_root = Path(tempfile.mkdtemp(prefix="schemaopt_episodes_")) / str(uuid4())
         self._episode_root.mkdir(parents=True, exist_ok=True)
-        source_db_path = Path(self._task.database_path)
+        source_db_path = Path(resolve_runtime_asset_path(self._task.database_path))
         if not source_db_path.exists():
             raise FileNotFoundError(f"Task database not found: {source_db_path}")
         self._episode_db_path = self._episode_root / source_db_path.name
@@ -1382,5 +1382,4 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
             else:
                 result.append(item.strip('"'))
         return result
-
 
