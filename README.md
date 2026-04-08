@@ -1,4 +1,4 @@
-```---
+---
 title: SchemaOpt OpenEnv
 emoji: 🧠
 colorFrom: blue
@@ -311,4 +311,3 @@ metaenv/
 
 - The environment can auto-submit when the step budget is exhausted.
 - Large or low-utility derived objects increase pressure and reduce rewards.
-```
