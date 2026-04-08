@@ -1,34 +1,73 @@
 ---
 title: SchemaOpt OpenEnv
+emoji: 🧠
+colorFrom: blue
+colorTo: teal
 sdk: docker
+pinned: false
 app_port: 8000
+base_path: /web
 suggested_hardware: cpu-basic
 tags:
-- openenv
-- fastapi
-- duckdb
-- benchmark
+  - openenv
+  - fastapi
+  - duckdb
+  - benchmark
 ---
 
 # SchemaOpt OpenEnv
 
-SchemaOpt is an OpenEnv benchmark for workload-adaptive warehouse optimization. Agents operate over real DuckDB-backed analytical workloads and must design reusable derived objects that improve routed query performance while preserving exact correctness.
+SchemaOpt is an OpenEnv environment for workload-adaptive warehouse optimization. Agents interact with real DuckDB workloads, propose derived objects, and are scored on correctness-gated performance improvement under realistic budgets.
+
+## Quick Start
+
+### 1. Run locally
+
+```bash
+pip install -r requirements.txt
+uvicorn schemaopt_env.server.app:app --host 0.0.0.0 --port 8000
+```
+
+### 2. Smoke test
+
+```bash
+curl http://localhost:8000/tasks
+curl -X POST http://localhost:8000/reset -H "Content-Type: application/json" -d '{}'
+```
+
+### 3. Run inference
+
+```bash
+python inference.py --tasks schemaopt_easy_hiring_pipeline,schemaopt_medium_campaign_performance,schemaopt_hard_mobile_revenue_ops
+```
 
 ## Why this environment
 
-Schema optimization is a real data-platform task: engineers and automated advisors routinely decide whether to materialize joins, aggregates, and denormalized tables to improve dashboard and reporting performance under storage and maintenance constraints. SchemaOpt turns that process into a grounded agent benchmark with explicit actions, correctness-gated rewrites, and holdout generalization.
+Schema optimization is a practical data-platform problem: choosing joins, aggregates, and denormalized structures that improve repeated analytics while respecting storage and refresh costs. SchemaOpt benchmarks this process with explicit actions, deterministic scoring, and holdout generalization.
 
-## Environment shape
+## Environment Highlights
 
 - Real DuckDB execution on isolated per-episode database copies
-- Typed OpenEnv action, observation, and state models
-- Dense reward shaping for object utility, benchmark progress, and cleanup quality
-- Final unified grader over visible improvement, holdout improvement, correctness, migration quality, and storage efficiency
-- Eleven tasks spanning easy, medium, and hard workloads
+- Typed action, observation, and state models
+- Correctness-gated query rewrites and routed benchmarking
+- Dense step rewards plus final unified grading
+- 11 tasks across easy, medium, and hard difficulty
 
-## Action space
+## API Surface
 
-The environment currently supports:
+Endpoints:
+
+- POST /reset
+- POST /step
+- GET /state
+- GET /schema
+- GET /tasks
+- GET /grader
+- POST /baseline
+
+## Action Space
+
+Supported operations:
 
 - `inspect_catalog`
 - `inspect_table_stats`
@@ -41,7 +80,17 @@ The environment currently supports:
 - `benchmark_cluster`
 - `submit`
 
-## Observation and state
+Key validation constraints:
+
+- inspect_table_stats requires target_id
+- get_cluster_context requires cluster_id
+- inspect_rewrite_status requires exactly one scope: target_id, cluster_id, or query_ids
+- create_derived_object and modify_derived_object require object_kind, name, sql_definition, source_objects
+- drop_derived_object requires target_id
+- benchmark_subset requires query_ids
+- benchmark_cluster requires cluster_id
+
+## Observation and State
 
 Observations include:
 
@@ -52,7 +101,7 @@ Observations include:
 - action feedback
 - decision state
 
-The state tracks:
+State tracks:
 
 - step count and difficulty
 - remaining step and object budget
@@ -61,56 +110,116 @@ The state tracks:
 - cluster attempt and benchmark history
 - useful vs unused derived objects
 
+## Scoring
+
+Step-time rewards are rubric-based:
+
+- Error penalties for validation and runtime failures
+- Utility/pressure-based rewards for create and modify
+- Cleanup incentives for dropping low-value objects
+- Delta-style rewards for benchmark actions
+- Submit reward equals final score
+
+Final score combines:
+
+- 0.45 \* visible_gated_improvement
+- 0.20 \* holdout_gated_improvement
+- 0.20 \* correctness
+- 0.10 \* migration_score
+- 0.05 \* storage_score
+
 ## Tasks
 
-The suite currently includes curated warehouse tasks plus benchmark-style tasks, with at least easy, medium, and hard coverage. Each task has a deterministic grader and task-local workload/database assets under `schemaopt_env/task_assets/`.
+Task assets live in schemaopt_env/task_assets and schemaopt_env/task_assets/databases.
 
-## Local run
+Available task IDs:
 
-Install dependencies:
+- schemaopt_easy_geo_metrics
+- schemaopt_easy_hiring_pipeline
+- schemaopt_easy_product_adoption
+- schemaopt_easy_retail_ops
+- schemaopt_medium_campaign_performance
+- schemaopt_medium_customer_ops
+- schemaopt_medium_delivery_operations
+- schemaopt_medium_motorsport_ops
+- schemaopt_hard_lifecycle_engagement
+- schemaopt_hard_mobile_revenue_ops
+- schemaopt_hard_sports_analytics
+
+## Deployment
+
+### Docker
 
 ```bash
-pip install -r requirements.txt
+docker build -t schemaopt-openenv .
+docker run --rm -p 8000:8000 schemaopt-openenv
 ```
 
-Start the API server:
+### Hugging Face Spaces
 
 ```bash
-uvicorn schemaopt_env.server.app:app --host 0.0.0.0 --port 8000
+openenv push
 ```
 
-Smoke test:
+Optional:
 
 ```bash
-curl http://localhost:8000/tasks
-curl -X POST http://localhost:8000/reset -H "Content-Type: application/json" -d '{}'
+openenv push --namespace my-org --private
+openenv push --repo-id my-org/schemaopt-openenv
 ```
 
-## Inference
+Deployed routes typically include:
 
-The submission runner is at repo root:
+- /web
+- /docs
+- /health
+- /ws
+
+## Inference Runner
+
+The submission runner is inference.py at the repository root.
+
+Common usage:
 
 ```bash
-python inference.py --tasks schemaopt_easy_hiring_pipeline,schemaopt_medium_campaign_performance,schemaopt_hard_mobile_revenue_ops
+python inference.py --task-id schemaopt_easy_hiring_pipeline --model-name gpt-5.4-mini --max-steps 40 --max-action-retries 4
 ```
 
 Environment variables:
 
-- `OPENAI_API_KEY`
-- `API_BASE_URL`
-- `MODEL_NAME`
-- `HF_TOKEN`
+- OPENAI_API_KEY
+- HF_TOKEN
+- API_BASE_URL
+- MODEL_NAME
+- MAX_STEPS
+- TASK_ID
+- MAX_ACTION_RETRIES
+- SCHEMAOPT_ENABLE_DEBUG_ENDPOINTS (set to 1 to expose /grader and /baseline in dev/pipeline)
+- HF_SPACE_REPO_ID or SPACE_ID (for runtime task asset materialization when using Git LFS pointers)
 
-## Docker
+## Project Layout
 
-Build:
-
-```bash
-docker build -t schemaopt-openenv .
+```text
+metaenv/
+|- Dockerfile
+|- inference.py
+|- openenv.yaml
+|- requirements.txt
+|- schemaopt_env/
+|  |- client.py
+|  |- models.py
+|  |- tasks.py
+|  |- openenv.yaml
+|  |- server/
+|  |  |- app.py
+|  |  |- rubrics.py
+|  |  |- schemaopt_environment.py
+|  |- task_assets/
+|     |- *.json
+|     |- databases/*.duckdb
 ```
 
-Run:
+## Notes
 
-```bash
-docker run --rm -p 8000:8000 schemaopt-openenv
-```
+- The environment can auto-submit when the step budget is exhausted.
+- Large or low-utility derived objects increase pressure and reduce rewards.
