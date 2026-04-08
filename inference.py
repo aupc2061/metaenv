@@ -130,9 +130,9 @@ def _task_list_from_arg(raw: str) -> List[str]:
     return [item for item in items if item]
 
 
-DEFAULT_MODEL_NAME = os.environ["MODEL_NAME"]
-DEFAULT_API_BASE_URL = os.environ["API_BASE_URL"]
-API_KEY = os.environ["API_KEY"]
+DEFAULT_MODEL_NAME = os.environ["MODEL_NAME"] or "Qwen/Qwen2.5-72B-Instruct"
+DEFAULT_API_BASE_URL = os.environ["API_BASE_URL"] or "https://router.huggingface.co/v1"
+API_KEY = os.environ["API_KEY"] or os.environ["HF_TOKEN"]
 DEFAULT_MAX_STEPS = _safe_int_from_env("MAX_STEPS", None)
 DEFAULT_TASK_ID = os.getenv("TASK_ID", "schemaopt_hard_mobile_revenue_ops")
 DEFAULT_MAX_ACTION_RETRIES = _safe_int_from_env("MAX_ACTION_RETRIES", 4) or 4
