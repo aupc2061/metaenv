@@ -136,13 +136,6 @@ Rules:
 - If a previous attempt was invalid, return a valid action that matches the schema.
 """
 
-# Prompt-neutrality standard for this runner:
-# - Allowed: high-level objective, action schema, formatting constraints, and
-#   environment-native observation payload.
-# - Disallowed: evaluator decomposition, hidden controller heuristics,
-#   task-family playbooks, difficulty-specific behavior rules, and prompt-side
-#   strategy recommendations.
-
 
 def _extract_json_object_candidates(text: str) -> List[Dict[str, Any]]:
     text = text.strip()
