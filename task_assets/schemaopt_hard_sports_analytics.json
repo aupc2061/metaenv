@@ -1,0 +1,4539 @@
+{
+  "task_id": "schemaopt_hard_sports_analytics",
+  "difficulty": "hard",
+  "domain": "bench_sports_analytics",
+  "objective": "Optimize the sports analytics benchmark workload over a DuckDB-converted database by materializing derived objects that reduce measured execution cost while preserving exact query results.",
+  "seed_source": "benchmark_source/sqlite/baseball_1/baseball_1.sqlite",
+  "dataset_dir": "benchmark_source/sqlite/baseball_1",
+  "database_path": "task_assets/databases/schemaopt_hard_sports_analytics.duckdb",
+  "tables": [
+    {
+      "name": "raw.all_star",
+      "columns": [
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "year",
+          "type": "BIGINT"
+        },
+        {
+          "name": "game_num",
+          "type": "BIGINT"
+        },
+        {
+          "name": "game_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "team_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "league_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "gp",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "starting_pos",
+          "type": "DOUBLE"
+        }
+      ],
+      "row_count": 5069
+    },
+    {
+      "name": "raw.appearances",
+      "columns": [
+        {
+          "name": "year",
+          "type": "BIGINT"
+        },
+        {
+          "name": "team_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "league_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "g_all",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "gs",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "g_batting",
+          "type": "BIGINT"
+        },
+        {
+          "name": "g_defense",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "g_p",
+          "type": "BIGINT"
+        },
+        {
+          "name": "g_c",
+          "type": "BIGINT"
+        },
+        {
+          "name": "g_1b",
+          "type": "BIGINT"
+        },
+        {
+          "name": "g_2b",
+          "type": "BIGINT"
+        },
+        {
+          "name": "g_3b",
+          "type": "BIGINT"
+        },
+        {
+          "name": "g_ss",
+          "type": "BIGINT"
+        },
+        {
+          "name": "g_lf",
+          "type": "BIGINT"
+        },
+        {
+          "name": "g_cf",
+          "type": "BIGINT"
+        },
+        {
+          "name": "g_rf",
+          "type": "BIGINT"
+        },
+        {
+          "name": "g_of",
+          "type": "BIGINT"
+        },
+        {
+          "name": "g_dh",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "g_ph",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "g_pr",
+          "type": "DOUBLE"
+        }
+      ],
+      "row_count": 100951
+    },
+    {
+      "name": "raw.batting",
+      "columns": [
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "year",
+          "type": "BIGINT"
+        },
+        {
+          "name": "stint",
+          "type": "BIGINT"
+        },
+        {
+          "name": "team_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "league_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "g",
+          "type": "BIGINT"
+        },
+        {
+          "name": "ab",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "r",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "h",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "double",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "triple",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "hr",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "rbi",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "sb",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "cs",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "bb",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "so",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "ibb",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "hbp",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "sh",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "sf",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "g_idp",
+          "type": "DOUBLE"
+        }
+      ],
+      "row_count": 101332
+    },
+    {
+      "name": "raw.batting_postseason",
+      "columns": [
+        {
+          "name": "year",
+          "type": "BIGINT"
+        },
+        {
+          "name": "round",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "team_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "league_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "g",
+          "type": "BIGINT"
+        },
+        {
+          "name": "ab",
+          "type": "BIGINT"
+        },
+        {
+          "name": "r",
+          "type": "BIGINT"
+        },
+        {
+          "name": "h",
+          "type": "BIGINT"
+        },
+        {
+          "name": "double",
+          "type": "BIGINT"
+        },
+        {
+          "name": "triple",
+          "type": "BIGINT"
+        },
+        {
+          "name": "hr",
+          "type": "BIGINT"
+        },
+        {
+          "name": "rbi",
+          "type": "BIGINT"
+        },
+        {
+          "name": "sb",
+          "type": "BIGINT"
+        },
+        {
+          "name": "cs",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "bb",
+          "type": "BIGINT"
+        },
+        {
+          "name": "so",
+          "type": "BIGINT"
+        },
+        {
+          "name": "ibb",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "hbp",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "sh",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "sf",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "g_idp",
+          "type": "DOUBLE"
+        }
+      ],
+      "row_count": 11690
+    },
+    {
+      "name": "raw.college",
+      "columns": [
+        {
+          "name": "college_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "name_full",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "city",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "state",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "country",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 1207
+    },
+    {
+      "name": "raw.fielding",
+      "columns": [
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "year",
+          "type": "BIGINT"
+        },
+        {
+          "name": "stint",
+          "type": "BIGINT"
+        },
+        {
+          "name": "team_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "league_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "pos",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "g",
+          "type": "BIGINT"
+        },
+        {
+          "name": "gs",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "inn_outs",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "po",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "a",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "e",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "dp",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "pb",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "wp",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "sb",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "cs",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "zr",
+          "type": "DOUBLE"
+        }
+      ],
+      "row_count": 170526
+    },
+    {
+      "name": "raw.fielding_outfield",
+      "columns": [
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "year",
+          "type": "BIGINT"
+        },
+        {
+          "name": "stint",
+          "type": "BIGINT"
+        },
+        {
+          "name": "glf",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "gcf",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "grf",
+          "type": "DOUBLE"
+        }
+      ],
+      "row_count": 12028
+    },
+    {
+      "name": "raw.fielding_postseason",
+      "columns": [
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "year",
+          "type": "BIGINT"
+        },
+        {
+          "name": "team_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "league_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "round",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "pos",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "g",
+          "type": "BIGINT"
+        },
+        {
+          "name": "gs",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "inn_outs",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "po",
+          "type": "BIGINT"
+        },
+        {
+          "name": "a",
+          "type": "BIGINT"
+        },
+        {
+          "name": "e",
+          "type": "BIGINT"
+        },
+        {
+          "name": "dp",
+          "type": "BIGINT"
+        },
+        {
+          "name": "tp",
+          "type": "BIGINT"
+        },
+        {
+          "name": "pb",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "sb",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "cs",
+          "type": "DOUBLE"
+        }
+      ],
+      "row_count": 12311
+    },
+    {
+      "name": "raw.hall_of_fame",
+      "columns": [
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "yearid",
+          "type": "BIGINT"
+        },
+        {
+          "name": "votedby",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "ballots",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "needed",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "votes",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "inducted",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "category",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "needed_note",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 4120
+    },
+    {
+      "name": "raw.home_game",
+      "columns": [
+        {
+          "name": "year",
+          "type": "BIGINT"
+        },
+        {
+          "name": "league_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "team_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "park_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "span_first",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "span_last",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "games",
+          "type": "BIGINT"
+        },
+        {
+          "name": "openings",
+          "type": "BIGINT"
+        },
+        {
+          "name": "attendance",
+          "type": "BIGINT"
+        }
+      ],
+      "row_count": 2944
+    },
+    {
+      "name": "raw.manager",
+      "columns": [
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "year",
+          "type": "BIGINT"
+        },
+        {
+          "name": "team_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "league_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "inseason",
+          "type": "BIGINT"
+        },
+        {
+          "name": "g",
+          "type": "BIGINT"
+        },
+        {
+          "name": "w",
+          "type": "BIGINT"
+        },
+        {
+          "name": "l",
+          "type": "BIGINT"
+        },
+        {
+          "name": "rank",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "plyr_mgr",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 3405
+    },
+    {
+      "name": "raw.manager_award",
+      "columns": [
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "award_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "year",
+          "type": "BIGINT"
+        },
+        {
+          "name": "league_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "tie",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "notes",
+          "type": "DOUBLE"
+        }
+      ],
+      "row_count": 177
+    },
+    {
+      "name": "raw.manager_award_vote",
+      "columns": [
+        {
+          "name": "award_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "year",
+          "type": "BIGINT"
+        },
+        {
+          "name": "league_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "points_won",
+          "type": "BIGINT"
+        },
+        {
+          "name": "points_max",
+          "type": "BIGINT"
+        },
+        {
+          "name": "votes_first",
+          "type": "BIGINT"
+        }
+      ],
+      "row_count": 414
+    },
+    {
+      "name": "raw.manager_half",
+      "columns": [
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "year",
+          "type": "BIGINT"
+        },
+        {
+          "name": "team_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "league_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "inseason",
+          "type": "BIGINT"
+        },
+        {
+          "name": "half",
+          "type": "BIGINT"
+        },
+        {
+          "name": "g",
+          "type": "BIGINT"
+        },
+        {
+          "name": "w",
+          "type": "BIGINT"
+        },
+        {
+          "name": "l",
+          "type": "BIGINT"
+        },
+        {
+          "name": "rank",
+          "type": "BIGINT"
+        }
+      ],
+      "row_count": 93
+    },
+    {
+      "name": "raw.park",
+      "columns": [
+        {
+          "name": "park_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "park_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "park_alias",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "city",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "state",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "country",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 250
+    },
+    {
+      "name": "raw.pitching",
+      "columns": [
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "year",
+          "type": "BIGINT"
+        },
+        {
+          "name": "stint",
+          "type": "BIGINT"
+        },
+        {
+          "name": "team_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "league_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "w",
+          "type": "BIGINT"
+        },
+        {
+          "name": "l",
+          "type": "BIGINT"
+        },
+        {
+          "name": "g",
+          "type": "BIGINT"
+        },
+        {
+          "name": "gs",
+          "type": "BIGINT"
+        },
+        {
+          "name": "cg",
+          "type": "BIGINT"
+        },
+        {
+          "name": "sho",
+          "type": "BIGINT"
+        },
+        {
+          "name": "sv",
+          "type": "BIGINT"
+        },
+        {
+          "name": "ipouts",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "h",
+          "type": "BIGINT"
+        },
+        {
+          "name": "er",
+          "type": "BIGINT"
+        },
+        {
+          "name": "hr",
+          "type": "BIGINT"
+        },
+        {
+          "name": "bb",
+          "type": "BIGINT"
+        },
+        {
+          "name": "so",
+          "type": "BIGINT"
+        },
+        {
+          "name": "baopp",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "era",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "ibb",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "wp",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "hbp",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "bk",
+          "type": "BIGINT"
+        },
+        {
+          "name": "bfp",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "gf",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "r",
+          "type": "BIGINT"
+        },
+        {
+          "name": "sh",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "sf",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "g_idp",
+          "type": "DOUBLE"
+        }
+      ],
+      "row_count": 44139
+    },
+    {
+      "name": "raw.pitching_postseason",
+      "columns": [
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "year",
+          "type": "BIGINT"
+        },
+        {
+          "name": "round",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "team_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "league_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "w",
+          "type": "BIGINT"
+        },
+        {
+          "name": "l",
+          "type": "BIGINT"
+        },
+        {
+          "name": "g",
+          "type": "BIGINT"
+        },
+        {
+          "name": "gs",
+          "type": "BIGINT"
+        },
+        {
+          "name": "cg",
+          "type": "BIGINT"
+        },
+        {
+          "name": "sho",
+          "type": "BIGINT"
+        },
+        {
+          "name": "sv",
+          "type": "BIGINT"
+        },
+        {
+          "name": "ipouts",
+          "type": "BIGINT"
+        },
+        {
+          "name": "h",
+          "type": "BIGINT"
+        },
+        {
+          "name": "er",
+          "type": "BIGINT"
+        },
+        {
+          "name": "hr",
+          "type": "BIGINT"
+        },
+        {
+          "name": "bb",
+          "type": "BIGINT"
+        },
+        {
+          "name": "so",
+          "type": "BIGINT"
+        },
+        {
+          "name": "baopp",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "era",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "ibb",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "wp",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "hbp",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "bk",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "bfp",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "gf",
+          "type": "BIGINT"
+        },
+        {
+          "name": "r",
+          "type": "BIGINT"
+        },
+        {
+          "name": "sh",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "sf",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "g_idp",
+          "type": "DOUBLE"
+        }
+      ],
+      "row_count": 5109
+    },
+    {
+      "name": "raw.player",
+      "columns": [
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "birth_year",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "birth_month",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "birth_day",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "birth_country",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "birth_state",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "birth_city",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "death_year",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "death_month",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "death_day",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "death_country",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "death_state",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "death_city",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "name_first",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "name_last",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "name_given",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "weight",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "height",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "bats",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "throws",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "debut",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "final_game",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "retro_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "bbref_id",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 18846
+    },
+    {
+      "name": "raw.player_award",
+      "columns": [
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "award_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "year",
+          "type": "BIGINT"
+        },
+        {
+          "name": "league_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "tie",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "notes",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 6078
+    },
+    {
+      "name": "raw.player_award_vote",
+      "columns": [
+        {
+          "name": "award_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "year",
+          "type": "BIGINT"
+        },
+        {
+          "name": "league_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "points_won",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "points_max",
+          "type": "BIGINT"
+        },
+        {
+          "name": "votes_first",
+          "type": "DOUBLE"
+        }
+      ],
+      "row_count": 6795
+    },
+    {
+      "name": "raw.player_college",
+      "columns": [
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "college_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "year",
+          "type": "BIGINT"
+        }
+      ],
+      "row_count": 17350
+    },
+    {
+      "name": "raw.postseason",
+      "columns": [
+        {
+          "name": "year",
+          "type": "BIGINT"
+        },
+        {
+          "name": "round",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "team_id_winner",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "league_id_winner",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "team_id_loser",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "league_id_loser",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "wins",
+          "type": "BIGINT"
+        },
+        {
+          "name": "losses",
+          "type": "BIGINT"
+        },
+        {
+          "name": "ties",
+          "type": "BIGINT"
+        }
+      ],
+      "row_count": 307
+    },
+    {
+      "name": "raw.salary",
+      "columns": [
+        {
+          "name": "year",
+          "type": "BIGINT"
+        },
+        {
+          "name": "team_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "league_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "salary",
+          "type": "BIGINT"
+        }
+      ],
+      "row_count": 25575
+    },
+    {
+      "name": "raw.team",
+      "columns": [
+        {
+          "name": "year",
+          "type": "BIGINT"
+        },
+        {
+          "name": "league_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "team_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "franchise_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "div_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "rank",
+          "type": "BIGINT"
+        },
+        {
+          "name": "g",
+          "type": "BIGINT"
+        },
+        {
+          "name": "ghome",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "w",
+          "type": "BIGINT"
+        },
+        {
+          "name": "l",
+          "type": "BIGINT"
+        },
+        {
+          "name": "div_win",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "wc_win",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "lg_win",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "ws_win",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "r",
+          "type": "BIGINT"
+        },
+        {
+          "name": "ab",
+          "type": "BIGINT"
+        },
+        {
+          "name": "h",
+          "type": "BIGINT"
+        },
+        {
+          "name": "double",
+          "type": "BIGINT"
+        },
+        {
+          "name": "triple",
+          "type": "BIGINT"
+        },
+        {
+          "name": "hr",
+          "type": "BIGINT"
+        },
+        {
+          "name": "bb",
+          "type": "BIGINT"
+        },
+        {
+          "name": "so",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "sb",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "cs",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "hbp",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "sf",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "ra",
+          "type": "BIGINT"
+        },
+        {
+          "name": "er",
+          "type": "BIGINT"
+        },
+        {
+          "name": "era",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "cg",
+          "type": "BIGINT"
+        },
+        {
+          "name": "sho",
+          "type": "BIGINT"
+        },
+        {
+          "name": "sv",
+          "type": "BIGINT"
+        },
+        {
+          "name": "ipouts",
+          "type": "BIGINT"
+        },
+        {
+          "name": "ha",
+          "type": "BIGINT"
+        },
+        {
+          "name": "hra",
+          "type": "BIGINT"
+        },
+        {
+          "name": "bba",
+          "type": "BIGINT"
+        },
+        {
+          "name": "soa",
+          "type": "BIGINT"
+        },
+        {
+          "name": "e",
+          "type": "BIGINT"
+        },
+        {
+          "name": "dp",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "fp",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "park",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "attendance",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "bpf",
+          "type": "BIGINT"
+        },
+        {
+          "name": "ppf",
+          "type": "BIGINT"
+        },
+        {
+          "name": "team_id_br",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "team_id_lahman45",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "team_id_retro",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 2805
+    },
+    {
+      "name": "raw.team_franchise",
+      "columns": [
+        {
+          "name": "franchise_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "franchise_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "active",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "na_assoc",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 120
+    },
+    {
+      "name": "raw.team_half",
+      "columns": [
+        {
+          "name": "year",
+          "type": "BIGINT"
+        },
+        {
+          "name": "league_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "team_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "half",
+          "type": "BIGINT"
+        },
+        {
+          "name": "div_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "div_win",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "rank",
+          "type": "BIGINT"
+        },
+        {
+          "name": "g",
+          "type": "BIGINT"
+        },
+        {
+          "name": "w",
+          "type": "BIGINT"
+        },
+        {
+          "name": "l",
+          "type": "BIGINT"
+        }
+      ],
+      "row_count": 52
+    }
+  ],
+  "visible_queries": [
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c01_01",
+      "sql": "SELECT avg(T1.height) FROM raw.player AS T1 JOIN raw.player_college AS T2 ON T1.player_id = T2.player_id JOIN raw.college AS T3 ON T3.college_id = T2.college_id WHERE T3.name_full = 'Yale University'",
+      "original_sql": "SELECT avg(T1.height) FROM player AS T1 JOIN player_college AS T2 ON T1.player_id  =  T2.player_id JOIN college AS T3 ON T3.college_id  =  T2.college_id WHERE T3.name_full  =  'Yale University';",
+      "normalized_sql": "select avg(t1.height) from raw.player as t1 join raw.player_college as t2 on t1.player_id = t2.player_id join raw.college as t3 on t3.college_id = t2.college_id where t3.name_full = 'yale university'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_01",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.player",
+        "raw.player_college",
+        "raw.college"
+      ],
+      "canonical_tables": [
+        "raw.player",
+        "raw.player_college",
+        "raw.college"
+      ],
+      "columns": [
+        "height"
+      ],
+      "result_columns": [
+        "avg(t1.height)"
+      ],
+      "canonical_output_columns": [
+        "avg_t1_height"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_full_=_'yale_university'"
+      ],
+      "filter_predicates": [
+        "T3.name_full = 'Yale University'"
+      ],
+      "measure_columns": [
+        "height"
+      ],
+      "aggregate_functions": [
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join",
+        "numeric_aggregation"
+      ],
+      "description": "baseball_1 visible cluster 1 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c01_02",
+      "sql": "SELECT avg(T1.height) FROM raw.player AS T1 JOIN raw.player_college AS T2 ON T1.player_id = T2.player_id JOIN raw.college AS T3 ON T3.college_id = T2.college_id WHERE T3.name_full = 'Yale University'",
+      "original_sql": "SELECT avg(T1.height) FROM player AS T1 JOIN player_college AS T2 ON T1.player_id  =  T2.player_id JOIN college AS T3 ON T3.college_id  =  T2.college_id WHERE T3.name_full  =  'Yale University';",
+      "normalized_sql": "select avg(t1.height) from raw.player as t1 join raw.player_college as t2 on t1.player_id = t2.player_id join raw.college as t3 on t3.college_id = t2.college_id where t3.name_full = 'yale university'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_01",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.player",
+        "raw.player_college",
+        "raw.college"
+      ],
+      "canonical_tables": [
+        "raw.player",
+        "raw.player_college",
+        "raw.college"
+      ],
+      "columns": [
+        "height"
+      ],
+      "result_columns": [
+        "avg(t1.height)"
+      ],
+      "canonical_output_columns": [
+        "avg_t1_height"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_full_=_'yale_university'"
+      ],
+      "filter_predicates": [
+        "T3.name_full = 'Yale University'"
+      ],
+      "measure_columns": [
+        "height"
+      ],
+      "aggregate_functions": [
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join",
+        "numeric_aggregation"
+      ],
+      "description": "baseball_1 visible cluster 1 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c01_03",
+      "sql": "SELECT avg(T1.height) FROM raw.player AS T1 JOIN raw.player_college AS T2 ON T1.player_id = T2.player_id JOIN raw.college AS T3 ON T3.college_id = T2.college_id WHERE T3.name_full = 'Yale University'",
+      "original_sql": "SELECT avg(T1.height) FROM player AS T1 JOIN player_college AS T2 ON T1.player_id  =  T2.player_id JOIN college AS T3 ON T3.college_id  =  T2.college_id WHERE T3.name_full  =  'Yale University';",
+      "normalized_sql": "select avg(t1.height) from raw.player as t1 join raw.player_college as t2 on t1.player_id = t2.player_id join raw.college as t3 on t3.college_id = t2.college_id where t3.name_full = 'yale university'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_01",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.player",
+        "raw.player_college",
+        "raw.college"
+      ],
+      "canonical_tables": [
+        "raw.player",
+        "raw.player_college",
+        "raw.college"
+      ],
+      "columns": [
+        "height"
+      ],
+      "result_columns": [
+        "avg(t1.height)"
+      ],
+      "canonical_output_columns": [
+        "avg_t1_height"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_full_=_'yale_university'"
+      ],
+      "filter_predicates": [
+        "T3.name_full = 'Yale University'"
+      ],
+      "measure_columns": [
+        "height"
+      ],
+      "aggregate_functions": [
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join",
+        "numeric_aggregation"
+      ],
+      "description": "baseball_1 visible cluster 1 query 3 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c01_04",
+      "sql": "SELECT avg(T1.height) FROM raw.player AS T1 JOIN raw.player_college AS T2 ON T1.player_id = T2.player_id JOIN raw.college AS T3 ON T3.college_id = T2.college_id WHERE T3.name_full = 'Yale University'",
+      "original_sql": "SELECT avg(T1.height) FROM player AS T1 JOIN player_college AS T2 ON T1.player_id  =  T2.player_id JOIN college AS T3 ON T3.college_id  =  T2.college_id WHERE T3.name_full  =  'Yale University';",
+      "normalized_sql": "select avg(t1.height) from raw.player as t1 join raw.player_college as t2 on t1.player_id = t2.player_id join raw.college as t3 on t3.college_id = t2.college_id where t3.name_full = 'yale university'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_01",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.player",
+        "raw.player_college",
+        "raw.college"
+      ],
+      "canonical_tables": [
+        "raw.player",
+        "raw.player_college",
+        "raw.college"
+      ],
+      "columns": [
+        "height"
+      ],
+      "result_columns": [
+        "avg(t1.height)"
+      ],
+      "canonical_output_columns": [
+        "avg_t1_height"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_full_=_'yale_university'"
+      ],
+      "filter_predicates": [
+        "T3.name_full = 'Yale University'"
+      ],
+      "measure_columns": [
+        "height"
+      ],
+      "aggregate_functions": [
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join",
+        "numeric_aggregation"
+      ],
+      "description": "baseball_1 visible cluster 1 query 4 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c01_05",
+      "sql": "SELECT avg(T1.height) FROM raw.player AS T1 JOIN raw.player_college AS T2 ON T1.player_id = T2.player_id JOIN raw.college AS T3 ON T3.college_id = T2.college_id WHERE T3.name_full = 'Yale University'",
+      "original_sql": "SELECT avg(T1.height) FROM player AS T1 JOIN player_college AS T2 ON T1.player_id  =  T2.player_id JOIN college AS T3 ON T3.college_id  =  T2.college_id WHERE T3.name_full  =  'Yale University';",
+      "normalized_sql": "select avg(t1.height) from raw.player as t1 join raw.player_college as t2 on t1.player_id = t2.player_id join raw.college as t3 on t3.college_id = t2.college_id where t3.name_full = 'yale university'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_01",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.player",
+        "raw.player_college",
+        "raw.college"
+      ],
+      "canonical_tables": [
+        "raw.player",
+        "raw.player_college",
+        "raw.college"
+      ],
+      "columns": [
+        "height"
+      ],
+      "result_columns": [
+        "avg(t1.height)"
+      ],
+      "canonical_output_columns": [
+        "avg_t1_height"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_full_=_'yale_university'"
+      ],
+      "filter_predicates": [
+        "T3.name_full = 'Yale University'"
+      ],
+      "measure_columns": [
+        "height"
+      ],
+      "aggregate_functions": [
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join",
+        "numeric_aggregation"
+      ],
+      "description": "baseball_1 visible cluster 1 query 5 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c01_06",
+      "sql": "SELECT avg(T1.height) FROM raw.player AS T1 JOIN raw.player_college AS T2 ON T1.player_id = T2.player_id JOIN raw.college AS T3 ON T3.college_id = T2.college_id WHERE T3.name_full = 'Yale University'",
+      "original_sql": "SELECT avg(T1.height) FROM player AS T1 JOIN player_college AS T2 ON T1.player_id  =  T2.player_id JOIN college AS T3 ON T3.college_id  =  T2.college_id WHERE T3.name_full  =  'Yale University';",
+      "normalized_sql": "select avg(t1.height) from raw.player as t1 join raw.player_college as t2 on t1.player_id = t2.player_id join raw.college as t3 on t3.college_id = t2.college_id where t3.name_full = 'yale university'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_01",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.player",
+        "raw.player_college",
+        "raw.college"
+      ],
+      "canonical_tables": [
+        "raw.player",
+        "raw.player_college",
+        "raw.college"
+      ],
+      "columns": [
+        "height"
+      ],
+      "result_columns": [
+        "avg(t1.height)"
+      ],
+      "canonical_output_columns": [
+        "avg_t1_height"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_full_=_'yale_university'"
+      ],
+      "filter_predicates": [
+        "T3.name_full = 'Yale University'"
+      ],
+      "measure_columns": [
+        "height"
+      ],
+      "aggregate_functions": [
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join",
+        "numeric_aggregation"
+      ],
+      "description": "baseball_1 visible cluster 1 query 6 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c01_07",
+      "sql": "SELECT avg(T1.height) FROM raw.player AS T1 JOIN raw.player_college AS T2 ON T1.player_id = T2.player_id JOIN raw.college AS T3 ON T3.college_id = T2.college_id WHERE T3.name_full = 'Yale University'",
+      "original_sql": "SELECT avg(T1.height) FROM player AS T1 JOIN player_college AS T2 ON T1.player_id  =  T2.player_id JOIN college AS T3 ON T3.college_id  =  T2.college_id WHERE T3.name_full  =  'Yale University';",
+      "normalized_sql": "select avg(t1.height) from raw.player as t1 join raw.player_college as t2 on t1.player_id = t2.player_id join raw.college as t3 on t3.college_id = t2.college_id where t3.name_full = 'yale university'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_01",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.player",
+        "raw.player_college",
+        "raw.college"
+      ],
+      "canonical_tables": [
+        "raw.player",
+        "raw.player_college",
+        "raw.college"
+      ],
+      "columns": [
+        "height"
+      ],
+      "result_columns": [
+        "avg(t1.height)"
+      ],
+      "canonical_output_columns": [
+        "avg_t1_height"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_full_=_'yale_university'"
+      ],
+      "filter_predicates": [
+        "T3.name_full = 'Yale University'"
+      ],
+      "measure_columns": [
+        "height"
+      ],
+      "aggregate_functions": [
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join",
+        "numeric_aggregation"
+      ],
+      "description": "baseball_1 visible cluster 1 query 7 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c02_01",
+      "sql": "SELECT yearid , count(*) FROM raw.hall_of_fame GROUP BY yearid",
+      "original_sql": "SELECT yearid ,  count(*) FROM hall_of_fame GROUP BY yearid;",
+      "normalized_sql": "select yearid , count(*) from raw.hall_of_fame group by yearid",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_02",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.hall_of_fame"
+      ],
+      "canonical_tables": [
+        "raw.hall_of_fame"
+      ],
+      "columns": [
+        "yearid",
+        "count_star"
+      ],
+      "result_columns": [
+        "yearid",
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "yearid",
+        "count_star"
+      ],
+      "group_by": [
+        "yearid"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "baseball_1 visible cluster 2 query 1 rows=78"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c02_02",
+      "sql": "SELECT yearid , count(*) FROM raw.hall_of_fame GROUP BY yearid",
+      "original_sql": "SELECT yearid ,  count(*) FROM hall_of_fame GROUP BY yearid;",
+      "normalized_sql": "select yearid , count(*) from raw.hall_of_fame group by yearid",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_02",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.hall_of_fame"
+      ],
+      "canonical_tables": [
+        "raw.hall_of_fame"
+      ],
+      "columns": [
+        "yearid",
+        "count_star"
+      ],
+      "result_columns": [
+        "yearid",
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "yearid",
+        "count_star"
+      ],
+      "group_by": [
+        "yearid"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "baseball_1 visible cluster 2 query 2 rows=78"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c02_03",
+      "sql": "SELECT yearid , count(*) FROM raw.hall_of_fame GROUP BY yearid",
+      "original_sql": "SELECT yearid ,  count(*) FROM hall_of_fame GROUP BY yearid;",
+      "normalized_sql": "select yearid , count(*) from raw.hall_of_fame group by yearid",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_02",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.hall_of_fame"
+      ],
+      "canonical_tables": [
+        "raw.hall_of_fame"
+      ],
+      "columns": [
+        "yearid",
+        "count_star"
+      ],
+      "result_columns": [
+        "yearid",
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "yearid",
+        "count_star"
+      ],
+      "group_by": [
+        "yearid"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "baseball_1 visible cluster 2 query 3 rows=78"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c02_04",
+      "sql": "SELECT yearid , count(*) FROM raw.hall_of_fame GROUP BY yearid",
+      "original_sql": "SELECT yearid ,  count(*) FROM hall_of_fame GROUP BY yearid;",
+      "normalized_sql": "select yearid , count(*) from raw.hall_of_fame group by yearid",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_02",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.hall_of_fame"
+      ],
+      "canonical_tables": [
+        "raw.hall_of_fame"
+      ],
+      "columns": [
+        "yearid",
+        "count_star"
+      ],
+      "result_columns": [
+        "yearid",
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "yearid",
+        "count_star"
+      ],
+      "group_by": [
+        "yearid"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "baseball_1 visible cluster 2 query 4 rows=78"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c02_05",
+      "sql": "SELECT yearid , count(*) FROM raw.hall_of_fame GROUP BY yearid",
+      "original_sql": "SELECT yearid ,  count(*) FROM hall_of_fame GROUP BY yearid;",
+      "normalized_sql": "select yearid , count(*) from raw.hall_of_fame group by yearid",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_02",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.hall_of_fame"
+      ],
+      "canonical_tables": [
+        "raw.hall_of_fame"
+      ],
+      "columns": [
+        "yearid",
+        "count_star"
+      ],
+      "result_columns": [
+        "yearid",
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "yearid",
+        "count_star"
+      ],
+      "group_by": [
+        "yearid"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "baseball_1 visible cluster 2 query 5 rows=78"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c02_06",
+      "sql": "SELECT yearid , count(*) FROM raw.hall_of_fame GROUP BY yearid",
+      "original_sql": "SELECT yearid ,  count(*) FROM hall_of_fame GROUP BY yearid;",
+      "normalized_sql": "select yearid , count(*) from raw.hall_of_fame group by yearid",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_02",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.hall_of_fame"
+      ],
+      "canonical_tables": [
+        "raw.hall_of_fame"
+      ],
+      "columns": [
+        "yearid",
+        "count_star"
+      ],
+      "result_columns": [
+        "yearid",
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "yearid",
+        "count_star"
+      ],
+      "group_by": [
+        "yearid"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "baseball_1 visible cluster 2 query 6 rows=78"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c02_07",
+      "sql": "SELECT yearid , count(*) FROM raw.hall_of_fame GROUP BY yearid",
+      "original_sql": "SELECT yearid ,  count(*) FROM hall_of_fame GROUP BY yearid;",
+      "normalized_sql": "select yearid , count(*) from raw.hall_of_fame group by yearid",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_02",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.hall_of_fame"
+      ],
+      "canonical_tables": [
+        "raw.hall_of_fame"
+      ],
+      "columns": [
+        "yearid",
+        "count_star"
+      ],
+      "result_columns": [
+        "yearid",
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "yearid",
+        "count_star"
+      ],
+      "group_by": [
+        "yearid"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "baseball_1 visible cluster 2 query 7 rows=78"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c03_01",
+      "sql": "SELECT YEAR , avg(attendance) FROM raw.home_game GROUP BY YEAR",
+      "original_sql": "SELECT YEAR ,  avg(attendance) FROM home_game GROUP BY YEAR;",
+      "normalized_sql": "select year , avg(attendance) from raw.home_game group by year",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_03",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game"
+      ],
+      "canonical_tables": [
+        "raw.home_game"
+      ],
+      "columns": [
+        "year",
+        "avg_attendance"
+      ],
+      "result_columns": [
+        "year",
+        "avg(attendance)"
+      ],
+      "canonical_output_columns": [
+        "year",
+        "avg_attendance"
+      ],
+      "group_by": [
+        "year"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "avg_attendance"
+      ],
+      "aggregate_functions": [
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "numeric_aggregation"
+      ],
+      "description": "baseball_1 visible cluster 3 query 1 rows=144"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c03_02",
+      "sql": "SELECT YEAR , avg(attendance) FROM raw.home_game GROUP BY YEAR",
+      "original_sql": "SELECT YEAR ,  avg(attendance) FROM home_game GROUP BY YEAR;",
+      "normalized_sql": "select year , avg(attendance) from raw.home_game group by year",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_03",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game"
+      ],
+      "canonical_tables": [
+        "raw.home_game"
+      ],
+      "columns": [
+        "year",
+        "avg_attendance"
+      ],
+      "result_columns": [
+        "year",
+        "avg(attendance)"
+      ],
+      "canonical_output_columns": [
+        "year",
+        "avg_attendance"
+      ],
+      "group_by": [
+        "year"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "avg_attendance"
+      ],
+      "aggregate_functions": [
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "numeric_aggregation"
+      ],
+      "description": "baseball_1 visible cluster 3 query 2 rows=144"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c03_03",
+      "sql": "SELECT YEAR , avg(attendance) FROM raw.home_game GROUP BY YEAR",
+      "original_sql": "SELECT YEAR ,  avg(attendance) FROM home_game GROUP BY YEAR;",
+      "normalized_sql": "select year , avg(attendance) from raw.home_game group by year",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_03",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game"
+      ],
+      "canonical_tables": [
+        "raw.home_game"
+      ],
+      "columns": [
+        "year",
+        "avg_attendance"
+      ],
+      "result_columns": [
+        "year",
+        "avg(attendance)"
+      ],
+      "canonical_output_columns": [
+        "year",
+        "avg_attendance"
+      ],
+      "group_by": [
+        "year"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "avg_attendance"
+      ],
+      "aggregate_functions": [
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "numeric_aggregation"
+      ],
+      "description": "baseball_1 visible cluster 3 query 3 rows=144"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c03_04",
+      "sql": "SELECT YEAR , avg(attendance) FROM raw.home_game GROUP BY YEAR",
+      "original_sql": "SELECT YEAR ,  avg(attendance) FROM home_game GROUP BY YEAR;",
+      "normalized_sql": "select year , avg(attendance) from raw.home_game group by year",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_03",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game"
+      ],
+      "canonical_tables": [
+        "raw.home_game"
+      ],
+      "columns": [
+        "year",
+        "avg_attendance"
+      ],
+      "result_columns": [
+        "year",
+        "avg(attendance)"
+      ],
+      "canonical_output_columns": [
+        "year",
+        "avg_attendance"
+      ],
+      "group_by": [
+        "year"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "avg_attendance"
+      ],
+      "aggregate_functions": [
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "numeric_aggregation"
+      ],
+      "description": "baseball_1 visible cluster 3 query 4 rows=144"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c03_05",
+      "sql": "SELECT YEAR , avg(attendance) FROM raw.home_game GROUP BY YEAR",
+      "original_sql": "SELECT YEAR ,  avg(attendance) FROM home_game GROUP BY YEAR;",
+      "normalized_sql": "select year , avg(attendance) from raw.home_game group by year",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_03",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game"
+      ],
+      "canonical_tables": [
+        "raw.home_game"
+      ],
+      "columns": [
+        "year",
+        "avg_attendance"
+      ],
+      "result_columns": [
+        "year",
+        "avg(attendance)"
+      ],
+      "canonical_output_columns": [
+        "year",
+        "avg_attendance"
+      ],
+      "group_by": [
+        "year"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "avg_attendance"
+      ],
+      "aggregate_functions": [
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "numeric_aggregation"
+      ],
+      "description": "baseball_1 visible cluster 3 query 5 rows=144"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c03_06",
+      "sql": "SELECT YEAR , avg(attendance) FROM raw.home_game GROUP BY YEAR",
+      "original_sql": "SELECT YEAR ,  avg(attendance) FROM home_game GROUP BY YEAR;",
+      "normalized_sql": "select year , avg(attendance) from raw.home_game group by year",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_03",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game"
+      ],
+      "canonical_tables": [
+        "raw.home_game"
+      ],
+      "columns": [
+        "year",
+        "avg_attendance"
+      ],
+      "result_columns": [
+        "year",
+        "avg(attendance)"
+      ],
+      "canonical_output_columns": [
+        "year",
+        "avg_attendance"
+      ],
+      "group_by": [
+        "year"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "avg_attendance"
+      ],
+      "aggregate_functions": [
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "numeric_aggregation"
+      ],
+      "description": "baseball_1 visible cluster 3 query 6 rows=144"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c03_07",
+      "sql": "SELECT YEAR , avg(attendance) FROM raw.home_game GROUP BY YEAR",
+      "original_sql": "SELECT YEAR ,  avg(attendance) FROM home_game GROUP BY YEAR;",
+      "normalized_sql": "select year , avg(attendance) from raw.home_game group by year",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_03",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game"
+      ],
+      "canonical_tables": [
+        "raw.home_game"
+      ],
+      "columns": [
+        "year",
+        "avg_attendance"
+      ],
+      "result_columns": [
+        "year",
+        "avg(attendance)"
+      ],
+      "canonical_output_columns": [
+        "year",
+        "avg_attendance"
+      ],
+      "group_by": [
+        "year"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "avg_attendance"
+      ],
+      "aggregate_functions": [
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "numeric_aggregation"
+      ],
+      "description": "baseball_1 visible cluster 3 query 7 rows=144"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c04_01",
+      "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 2000 AND T2.city = 'Atlanta'",
+      "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year  =  2000 AND T2.city  =  'Atlanta';",
+      "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 2000 and t2.city = 'atlanta'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_04",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "canonical_tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_2000",
+        "city_=_'atlanta'"
+      ],
+      "filter_predicates": [
+        "T1.year = 2000",
+        "T2.city = 'Atlanta'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "baseball_1 visible cluster 4 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c04_02",
+      "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 2000 AND T2.city = 'Atlanta'",
+      "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year  =  2000 AND T2.city  =  'Atlanta';",
+      "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 2000 and t2.city = 'atlanta'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_04",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "canonical_tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_2000",
+        "city_=_'atlanta'"
+      ],
+      "filter_predicates": [
+        "T1.year = 2000",
+        "T2.city = 'Atlanta'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "baseball_1 visible cluster 4 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c04_03",
+      "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 2000 AND T2.city = 'Atlanta'",
+      "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year  =  2000 AND T2.city  =  'Atlanta';",
+      "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 2000 and t2.city = 'atlanta'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_04",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "canonical_tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_2000",
+        "city_=_'atlanta'"
+      ],
+      "filter_predicates": [
+        "T1.year = 2000",
+        "T2.city = 'Atlanta'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "baseball_1 visible cluster 4 query 3 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c04_04",
+      "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 2000 AND T2.city = 'Atlanta'",
+      "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year  =  2000 AND T2.city  =  'Atlanta';",
+      "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 2000 and t2.city = 'atlanta'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_04",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "canonical_tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_2000",
+        "city_=_'atlanta'"
+      ],
+      "filter_predicates": [
+        "T1.year = 2000",
+        "T2.city = 'Atlanta'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "baseball_1 visible cluster 4 query 4 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c04_05",
+      "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 2000 AND T2.city = 'Atlanta'",
+      "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year  =  2000 AND T2.city  =  'Atlanta';",
+      "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 2000 and t2.city = 'atlanta'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_04",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "canonical_tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_2000",
+        "city_=_'atlanta'"
+      ],
+      "filter_predicates": [
+        "T1.year = 2000",
+        "T2.city = 'Atlanta'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "baseball_1 visible cluster 4 query 5 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c04_06",
+      "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 2000 AND T2.city = 'Atlanta'",
+      "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year  =  2000 AND T2.city  =  'Atlanta';",
+      "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 2000 and t2.city = 'atlanta'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_04",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "canonical_tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_2000",
+        "city_=_'atlanta'"
+      ],
+      "filter_predicates": [
+        "T1.year = 2000",
+        "T2.city = 'Atlanta'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "baseball_1 visible cluster 4 query 6 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c04_07",
+      "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 2000 AND T2.city = 'Atlanta'",
+      "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year  =  2000 AND T2.city  =  'Atlanta';",
+      "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 2000 and t2.city = 'atlanta'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_04",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "canonical_tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_2000",
+        "city_=_'atlanta'"
+      ],
+      "filter_predicates": [
+        "T1.year = 2000",
+        "T2.city = 'Atlanta'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "baseball_1 visible cluster 4 query 7 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c05_01",
+      "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park'",
+      "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park';",
+      "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 1907 and t2.park_name = 'columbia park'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_05",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "canonical_tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_1907",
+        "park_name_=_'columbia_park'"
+      ],
+      "filter_predicates": [
+        "T1.year = 1907",
+        "T2.park_name = 'Columbia Park'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "baseball_1 visible cluster 5 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c05_02",
+      "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park'",
+      "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park';",
+      "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 1907 and t2.park_name = 'columbia park'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_05",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "canonical_tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_1907",
+        "park_name_=_'columbia_park'"
+      ],
+      "filter_predicates": [
+        "T1.year = 1907",
+        "T2.park_name = 'Columbia Park'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "baseball_1 visible cluster 5 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c05_03",
+      "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park'",
+      "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park';",
+      "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 1907 and t2.park_name = 'columbia park'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_05",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "canonical_tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_1907",
+        "park_name_=_'columbia_park'"
+      ],
+      "filter_predicates": [
+        "T1.year = 1907",
+        "T2.park_name = 'Columbia Park'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "baseball_1 visible cluster 5 query 3 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c05_04",
+      "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park'",
+      "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park';",
+      "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 1907 and t2.park_name = 'columbia park'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_05",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "canonical_tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_1907",
+        "park_name_=_'columbia_park'"
+      ],
+      "filter_predicates": [
+        "T1.year = 1907",
+        "T2.park_name = 'Columbia Park'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "baseball_1 visible cluster 5 query 4 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c05_05",
+      "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park'",
+      "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park';",
+      "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 1907 and t2.park_name = 'columbia park'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_05",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "canonical_tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_1907",
+        "park_name_=_'columbia_park'"
+      ],
+      "filter_predicates": [
+        "T1.year = 1907",
+        "T2.park_name = 'Columbia Park'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "baseball_1 visible cluster 5 query 5 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c05_06",
+      "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park'",
+      "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park';",
+      "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 1907 and t2.park_name = 'columbia park'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_05",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "canonical_tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_1907",
+        "park_name_=_'columbia_park'"
+      ],
+      "filter_predicates": [
+        "T1.year = 1907",
+        "T2.park_name = 'Columbia Park'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "baseball_1 visible cluster 5 query 6 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_vq_c05_07",
+      "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park'",
+      "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park';",
+      "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 1907 and t2.park_name = 'columbia park'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_05",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "canonical_tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_1907",
+        "park_name_=_'columbia_park'"
+      ],
+      "filter_predicates": [
+        "T1.year = 1907",
+        "T2.park_name = 'Columbia Park'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "baseball_1 visible cluster 5 query 7 rows=1"
+    }
+  ],
+  "holdout_queries": [
+    {
+      "query_id": "schemaopt_hard_sports_analytics_hq_c01_01",
+      "sql": "SELECT avg(T1.height) FROM raw.player AS T1 JOIN raw.player_college AS T2 ON T1.player_id = T2.player_id JOIN raw.college AS T3 ON T3.college_id = T2.college_id WHERE T3.name_full = 'Yale University'",
+      "original_sql": "SELECT avg(T1.height) FROM player AS T1 JOIN player_college AS T2 ON T1.player_id  =  T2.player_id JOIN college AS T3 ON T3.college_id  =  T2.college_id WHERE T3.name_full  =  'Yale University';",
+      "normalized_sql": "select avg(t1.height) from raw.player as t1 join raw.player_college as t2 on t1.player_id = t2.player_id join raw.college as t3 on t3.college_id = t2.college_id where t3.name_full = 'yale university'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_01",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.player",
+        "raw.player_college",
+        "raw.college"
+      ],
+      "canonical_tables": [
+        "raw.player",
+        "raw.player_college",
+        "raw.college"
+      ],
+      "columns": [
+        "height"
+      ],
+      "result_columns": [
+        "avg(t1.height)"
+      ],
+      "canonical_output_columns": [
+        "avg_t1_height"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_full_=_'yale_university'"
+      ],
+      "filter_predicates": [
+        "T3.name_full = 'Yale University'"
+      ],
+      "measure_columns": [
+        "height"
+      ],
+      "aggregate_functions": [
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join",
+        "numeric_aggregation"
+      ],
+      "description": "baseball_1 holdout cluster 1 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_hq_c01_02",
+      "sql": "SELECT avg(T1.height) FROM raw.player AS T1 JOIN raw.player_college AS T2 ON T1.player_id = T2.player_id JOIN raw.college AS T3 ON T3.college_id = T2.college_id WHERE T3.name_full = 'Yale University'",
+      "original_sql": "SELECT avg(T1.height) FROM player AS T1 JOIN player_college AS T2 ON T1.player_id  =  T2.player_id JOIN college AS T3 ON T3.college_id  =  T2.college_id WHERE T3.name_full  =  'Yale University';",
+      "normalized_sql": "select avg(t1.height) from raw.player as t1 join raw.player_college as t2 on t1.player_id = t2.player_id join raw.college as t3 on t3.college_id = t2.college_id where t3.name_full = 'yale university'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_01",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.player",
+        "raw.player_college",
+        "raw.college"
+      ],
+      "canonical_tables": [
+        "raw.player",
+        "raw.player_college",
+        "raw.college"
+      ],
+      "columns": [
+        "height"
+      ],
+      "result_columns": [
+        "avg(t1.height)"
+      ],
+      "canonical_output_columns": [
+        "avg_t1_height"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_full_=_'yale_university'"
+      ],
+      "filter_predicates": [
+        "T3.name_full = 'Yale University'"
+      ],
+      "measure_columns": [
+        "height"
+      ],
+      "aggregate_functions": [
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join",
+        "numeric_aggregation"
+      ],
+      "description": "baseball_1 holdout cluster 1 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_hq_c01_03",
+      "sql": "SELECT avg(T1.height) FROM raw.player AS T1 JOIN raw.player_college AS T2 ON T1.player_id = T2.player_id JOIN raw.college AS T3 ON T3.college_id = T2.college_id WHERE T3.name_full = 'Yale University'",
+      "original_sql": "SELECT avg(T1.height) FROM player AS T1 JOIN player_college AS T2 ON T1.player_id  =  T2.player_id JOIN college AS T3 ON T3.college_id  =  T2.college_id WHERE T3.name_full  =  'Yale University';",
+      "normalized_sql": "select avg(t1.height) from raw.player as t1 join raw.player_college as t2 on t1.player_id = t2.player_id join raw.college as t3 on t3.college_id = t2.college_id where t3.name_full = 'yale university'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_01",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.player",
+        "raw.player_college",
+        "raw.college"
+      ],
+      "canonical_tables": [
+        "raw.player",
+        "raw.player_college",
+        "raw.college"
+      ],
+      "columns": [
+        "height"
+      ],
+      "result_columns": [
+        "avg(t1.height)"
+      ],
+      "canonical_output_columns": [
+        "avg_t1_height"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_full_=_'yale_university'"
+      ],
+      "filter_predicates": [
+        "T3.name_full = 'Yale University'"
+      ],
+      "measure_columns": [
+        "height"
+      ],
+      "aggregate_functions": [
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join",
+        "numeric_aggregation"
+      ],
+      "description": "baseball_1 holdout cluster 1 query 3 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_hq_c01_04",
+      "sql": "SELECT avg(T1.height) FROM raw.player AS T1 JOIN raw.player_college AS T2 ON T1.player_id = T2.player_id JOIN raw.college AS T3 ON T3.college_id = T2.college_id WHERE T3.name_full = 'Yale University'",
+      "original_sql": "SELECT avg(T1.height) FROM player AS T1 JOIN player_college AS T2 ON T1.player_id  =  T2.player_id JOIN college AS T3 ON T3.college_id  =  T2.college_id WHERE T3.name_full  =  'Yale University';",
+      "normalized_sql": "select avg(t1.height) from raw.player as t1 join raw.player_college as t2 on t1.player_id = t2.player_id join raw.college as t3 on t3.college_id = t2.college_id where t3.name_full = 'yale university'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_01",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.player",
+        "raw.player_college",
+        "raw.college"
+      ],
+      "canonical_tables": [
+        "raw.player",
+        "raw.player_college",
+        "raw.college"
+      ],
+      "columns": [
+        "height"
+      ],
+      "result_columns": [
+        "avg(t1.height)"
+      ],
+      "canonical_output_columns": [
+        "avg_t1_height"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_full_=_'yale_university'"
+      ],
+      "filter_predicates": [
+        "T3.name_full = 'Yale University'"
+      ],
+      "measure_columns": [
+        "height"
+      ],
+      "aggregate_functions": [
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join",
+        "numeric_aggregation"
+      ],
+      "description": "baseball_1 holdout cluster 1 query 4 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_hq_c02_01",
+      "sql": "SELECT yearid , count(*) FROM raw.hall_of_fame GROUP BY yearid",
+      "original_sql": "SELECT yearid ,  count(*) FROM hall_of_fame GROUP BY yearid;",
+      "normalized_sql": "select yearid , count(*) from raw.hall_of_fame group by yearid",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_02",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.hall_of_fame"
+      ],
+      "canonical_tables": [
+        "raw.hall_of_fame"
+      ],
+      "columns": [
+        "yearid",
+        "count_star"
+      ],
+      "result_columns": [
+        "yearid",
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "yearid",
+        "count_star"
+      ],
+      "group_by": [
+        "yearid"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "baseball_1 holdout cluster 2 query 1 rows=78"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_hq_c02_02",
+      "sql": "SELECT yearid , count(*) FROM raw.hall_of_fame GROUP BY yearid",
+      "original_sql": "SELECT yearid ,  count(*) FROM hall_of_fame GROUP BY yearid;",
+      "normalized_sql": "select yearid , count(*) from raw.hall_of_fame group by yearid",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_02",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.hall_of_fame"
+      ],
+      "canonical_tables": [
+        "raw.hall_of_fame"
+      ],
+      "columns": [
+        "yearid",
+        "count_star"
+      ],
+      "result_columns": [
+        "yearid",
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "yearid",
+        "count_star"
+      ],
+      "group_by": [
+        "yearid"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "baseball_1 holdout cluster 2 query 2 rows=78"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_hq_c02_03",
+      "sql": "SELECT yearid , count(*) FROM raw.hall_of_fame GROUP BY yearid",
+      "original_sql": "SELECT yearid ,  count(*) FROM hall_of_fame GROUP BY yearid;",
+      "normalized_sql": "select yearid , count(*) from raw.hall_of_fame group by yearid",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_02",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.hall_of_fame"
+      ],
+      "canonical_tables": [
+        "raw.hall_of_fame"
+      ],
+      "columns": [
+        "yearid",
+        "count_star"
+      ],
+      "result_columns": [
+        "yearid",
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "yearid",
+        "count_star"
+      ],
+      "group_by": [
+        "yearid"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "baseball_1 holdout cluster 2 query 3 rows=78"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_hq_c02_04",
+      "sql": "SELECT yearid , count(*) FROM raw.hall_of_fame GROUP BY yearid",
+      "original_sql": "SELECT yearid ,  count(*) FROM hall_of_fame GROUP BY yearid;",
+      "normalized_sql": "select yearid , count(*) from raw.hall_of_fame group by yearid",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_02",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.hall_of_fame"
+      ],
+      "canonical_tables": [
+        "raw.hall_of_fame"
+      ],
+      "columns": [
+        "yearid",
+        "count_star"
+      ],
+      "result_columns": [
+        "yearid",
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "yearid",
+        "count_star"
+      ],
+      "group_by": [
+        "yearid"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate"
+      ],
+      "description": "baseball_1 holdout cluster 2 query 4 rows=78"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_hq_c03_01",
+      "sql": "SELECT YEAR , avg(attendance) FROM raw.home_game GROUP BY YEAR",
+      "original_sql": "SELECT YEAR ,  avg(attendance) FROM home_game GROUP BY YEAR;",
+      "normalized_sql": "select year , avg(attendance) from raw.home_game group by year",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_03",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game"
+      ],
+      "canonical_tables": [
+        "raw.home_game"
+      ],
+      "columns": [
+        "year",
+        "avg_attendance"
+      ],
+      "result_columns": [
+        "year",
+        "avg(attendance)"
+      ],
+      "canonical_output_columns": [
+        "year",
+        "avg_attendance"
+      ],
+      "group_by": [
+        "year"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "avg_attendance"
+      ],
+      "aggregate_functions": [
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "numeric_aggregation"
+      ],
+      "description": "baseball_1 holdout cluster 3 query 1 rows=144"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_hq_c03_02",
+      "sql": "SELECT YEAR , avg(attendance) FROM raw.home_game GROUP BY YEAR",
+      "original_sql": "SELECT YEAR ,  avg(attendance) FROM home_game GROUP BY YEAR;",
+      "normalized_sql": "select year , avg(attendance) from raw.home_game group by year",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_03",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game"
+      ],
+      "canonical_tables": [
+        "raw.home_game"
+      ],
+      "columns": [
+        "year",
+        "avg_attendance"
+      ],
+      "result_columns": [
+        "year",
+        "avg(attendance)"
+      ],
+      "canonical_output_columns": [
+        "year",
+        "avg_attendance"
+      ],
+      "group_by": [
+        "year"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "avg_attendance"
+      ],
+      "aggregate_functions": [
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "numeric_aggregation"
+      ],
+      "description": "baseball_1 holdout cluster 3 query 2 rows=144"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_hq_c03_03",
+      "sql": "SELECT YEAR , avg(attendance) FROM raw.home_game GROUP BY YEAR",
+      "original_sql": "SELECT YEAR ,  avg(attendance) FROM home_game GROUP BY YEAR;",
+      "normalized_sql": "select year , avg(attendance) from raw.home_game group by year",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_03",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game"
+      ],
+      "canonical_tables": [
+        "raw.home_game"
+      ],
+      "columns": [
+        "year",
+        "avg_attendance"
+      ],
+      "result_columns": [
+        "year",
+        "avg(attendance)"
+      ],
+      "canonical_output_columns": [
+        "year",
+        "avg_attendance"
+      ],
+      "group_by": [
+        "year"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "avg_attendance"
+      ],
+      "aggregate_functions": [
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "numeric_aggregation"
+      ],
+      "description": "baseball_1 holdout cluster 3 query 3 rows=144"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_hq_c03_04",
+      "sql": "SELECT YEAR , avg(attendance) FROM raw.home_game GROUP BY YEAR",
+      "original_sql": "SELECT YEAR ,  avg(attendance) FROM home_game GROUP BY YEAR;",
+      "normalized_sql": "select year , avg(attendance) from raw.home_game group by year",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_03",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game"
+      ],
+      "canonical_tables": [
+        "raw.home_game"
+      ],
+      "columns": [
+        "year",
+        "avg_attendance"
+      ],
+      "result_columns": [
+        "year",
+        "avg(attendance)"
+      ],
+      "canonical_output_columns": [
+        "year",
+        "avg_attendance"
+      ],
+      "group_by": [
+        "year"
+      ],
+      "filter_tokens": [],
+      "filter_predicates": [],
+      "measure_columns": [
+        "avg_attendance"
+      ],
+      "aggregate_functions": [
+        "avg"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "numeric_aggregation"
+      ],
+      "description": "baseball_1 holdout cluster 3 query 4 rows=144"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_hq_c04_01",
+      "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 2000 AND T2.city = 'Atlanta'",
+      "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year  =  2000 AND T2.city  =  'Atlanta';",
+      "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 2000 and t2.city = 'atlanta'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_04",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "canonical_tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_2000",
+        "city_=_'atlanta'"
+      ],
+      "filter_predicates": [
+        "T1.year = 2000",
+        "T2.city = 'Atlanta'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "baseball_1 holdout cluster 4 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_hq_c04_02",
+      "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 2000 AND T2.city = 'Atlanta'",
+      "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year  =  2000 AND T2.city  =  'Atlanta';",
+      "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 2000 and t2.city = 'atlanta'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_04",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "canonical_tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_2000",
+        "city_=_'atlanta'"
+      ],
+      "filter_predicates": [
+        "T1.year = 2000",
+        "T2.city = 'Atlanta'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "baseball_1 holdout cluster 4 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_hq_c04_03",
+      "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 2000 AND T2.city = 'Atlanta'",
+      "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year  =  2000 AND T2.city  =  'Atlanta';",
+      "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 2000 and t2.city = 'atlanta'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_04",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "canonical_tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_2000",
+        "city_=_'atlanta'"
+      ],
+      "filter_predicates": [
+        "T1.year = 2000",
+        "T2.city = 'Atlanta'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "baseball_1 holdout cluster 4 query 3 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_hq_c04_04",
+      "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 2000 AND T2.city = 'Atlanta'",
+      "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year  =  2000 AND T2.city  =  'Atlanta';",
+      "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 2000 and t2.city = 'atlanta'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_04",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "canonical_tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_2000",
+        "city_=_'atlanta'"
+      ],
+      "filter_predicates": [
+        "T1.year = 2000",
+        "T2.city = 'Atlanta'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "baseball_1 holdout cluster 4 query 4 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_hq_c05_01",
+      "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park'",
+      "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park';",
+      "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 1907 and t2.park_name = 'columbia park'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_05",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "canonical_tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_1907",
+        "park_name_=_'columbia_park'"
+      ],
+      "filter_predicates": [
+        "T1.year = 1907",
+        "T2.park_name = 'Columbia Park'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "baseball_1 holdout cluster 5 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_hq_c05_02",
+      "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park'",
+      "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park';",
+      "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 1907 and t2.park_name = 'columbia park'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_05",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "canonical_tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_1907",
+        "park_name_=_'columbia_park'"
+      ],
+      "filter_predicates": [
+        "T1.year = 1907",
+        "T2.park_name = 'Columbia Park'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "baseball_1 holdout cluster 5 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_hq_c05_03",
+      "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park'",
+      "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park';",
+      "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 1907 and t2.park_name = 'columbia park'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_05",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "canonical_tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_1907",
+        "park_name_=_'columbia_park'"
+      ],
+      "filter_predicates": [
+        "T1.year = 1907",
+        "T2.park_name = 'Columbia Park'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "baseball_1 holdout cluster 5 query 3 rows=1"
+    },
+    {
+      "query_id": "schemaopt_hard_sports_analytics_hq_c05_04",
+      "sql": "SELECT count(*) FROM raw.home_game AS T1 JOIN raw.park AS T2 ON T1.park_id = T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park'",
+      "original_sql": "SELECT count(*) FROM home_game AS T1 JOIN park AS T2 ON T1.park_id  =  T2.park_id WHERE T1.year = 1907 AND T2.park_name = 'Columbia Park';",
+      "normalized_sql": "select count(*) from raw.home_game as t1 join raw.park as t2 on t1.park_id = t2.park_id where t1.year = 1907 and t2.park_name = 'columbia park'",
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_05",
+      "business_tag": "Benchmark baseball_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "canonical_tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "year_=_1907",
+        "park_name_=_'columbia_park'"
+      ],
+      "filter_predicates": [
+        "T1.year = 1907",
+        "T2.park_name = 'Columbia Park'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "baseball_1 holdout cluster 5 query 4 rows=1"
+    }
+  ],
+  "clusters": [
+    {
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_01",
+      "label": "baseball_1 workload cluster 1",
+      "business_label": "Benchmark baseball_1 analytics cluster 1",
+      "query_ids": [
+        "schemaopt_hard_sports_analytics_vq_c01_01",
+        "schemaopt_hard_sports_analytics_vq_c01_02",
+        "schemaopt_hard_sports_analytics_vq_c01_03",
+        "schemaopt_hard_sports_analytics_vq_c01_04",
+        "schemaopt_hard_sports_analytics_vq_c01_05",
+        "schemaopt_hard_sports_analytics_vq_c01_06",
+        "schemaopt_hard_sports_analytics_vq_c01_07"
+      ],
+      "query_count": 7,
+      "total_frequency_weight": 14.0,
+      "total_weighted_baseline_cost": 14.0,
+      "top_tables": [
+        "raw.player",
+        "raw.player_college",
+        "raw.college"
+      ],
+      "common_operator_patterns": [
+        "aggregate",
+        "filter",
+        "join",
+        "numeric_aggregation"
+      ],
+      "representative_dimensions": [],
+      "representative_measures": [
+        "height"
+      ],
+      "hotspot_rank": 1,
+      "preferred_object_kind": "agg_matview",
+      "representative_query_id": "schemaopt_hard_sports_analytics_vq_c01_01",
+      "cluster_grain_emphasis": [],
+      "suggested_exact_derived_shape": {
+        "object_kind": "agg_matview",
+        "source_objects": [
+          "raw.player",
+          "raw.player_college",
+          "raw.college"
+        ],
+        "group_by": [],
+        "canonical_predicates": [
+          "name_full = 'yale university'"
+        ],
+        "measure_columns": [
+          "height"
+        ],
+        "aggregate_functions": [
+          "avg"
+        ]
+      },
+      "reference_rewrite_feasible": true
+    },
+    {
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_02",
+      "label": "baseball_1 workload cluster 2",
+      "business_label": "Benchmark baseball_1 analytics cluster 2",
+      "query_ids": [
+        "schemaopt_hard_sports_analytics_vq_c02_01",
+        "schemaopt_hard_sports_analytics_vq_c02_02",
+        "schemaopt_hard_sports_analytics_vq_c02_03",
+        "schemaopt_hard_sports_analytics_vq_c02_04",
+        "schemaopt_hard_sports_analytics_vq_c02_05",
+        "schemaopt_hard_sports_analytics_vq_c02_06",
+        "schemaopt_hard_sports_analytics_vq_c02_07"
+      ],
+      "query_count": 7,
+      "total_frequency_weight": 14.0,
+      "total_weighted_baseline_cost": 14.0,
+      "top_tables": [
+        "raw.hall_of_fame"
+      ],
+      "common_operator_patterns": [
+        "aggregate"
+      ],
+      "representative_dimensions": [
+        "yearid"
+      ],
+      "representative_measures": [
+        "count_star"
+      ],
+      "hotspot_rank": 2,
+      "preferred_object_kind": "agg_matview",
+      "representative_query_id": "schemaopt_hard_sports_analytics_vq_c02_01",
+      "cluster_grain_emphasis": [
+        "yearid"
+      ],
+      "suggested_exact_derived_shape": {
+        "object_kind": "agg_matview",
+        "source_objects": [
+          "raw.hall_of_fame"
+        ],
+        "group_by": [
+          "yearid"
+        ],
+        "canonical_predicates": [],
+        "measure_columns": [
+          "count_star"
+        ],
+        "aggregate_functions": [
+          "count"
+        ]
+      },
+      "reference_rewrite_feasible": true
+    },
+    {
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_03",
+      "label": "baseball_1 workload cluster 3",
+      "business_label": "Benchmark baseball_1 analytics cluster 3",
+      "query_ids": [
+        "schemaopt_hard_sports_analytics_vq_c03_01",
+        "schemaopt_hard_sports_analytics_vq_c03_02",
+        "schemaopt_hard_sports_analytics_vq_c03_03",
+        "schemaopt_hard_sports_analytics_vq_c03_04",
+        "schemaopt_hard_sports_analytics_vq_c03_05",
+        "schemaopt_hard_sports_analytics_vq_c03_06",
+        "schemaopt_hard_sports_analytics_vq_c03_07"
+      ],
+      "query_count": 7,
+      "total_frequency_weight": 14.0,
+      "total_weighted_baseline_cost": 14.0,
+      "top_tables": [
+        "raw.home_game"
+      ],
+      "common_operator_patterns": [
+        "aggregate",
+        "numeric_aggregation"
+      ],
+      "representative_dimensions": [
+        "year"
+      ],
+      "representative_measures": [
+        "avg_attendance"
+      ],
+      "hotspot_rank": 3,
+      "preferred_object_kind": "agg_matview",
+      "representative_query_id": "schemaopt_hard_sports_analytics_vq_c03_01",
+      "cluster_grain_emphasis": [
+        "year"
+      ],
+      "suggested_exact_derived_shape": {
+        "object_kind": "agg_matview",
+        "source_objects": [
+          "raw.home_game"
+        ],
+        "group_by": [
+          "year"
+        ],
+        "canonical_predicates": [],
+        "measure_columns": [
+          "avg_attendance"
+        ],
+        "aggregate_functions": [
+          "avg"
+        ]
+      },
+      "reference_rewrite_feasible": true
+    },
+    {
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_04",
+      "label": "baseball_1 workload cluster 4",
+      "business_label": "Benchmark baseball_1 analytics cluster 4",
+      "query_ids": [
+        "schemaopt_hard_sports_analytics_vq_c04_01",
+        "schemaopt_hard_sports_analytics_vq_c04_02",
+        "schemaopt_hard_sports_analytics_vq_c04_03",
+        "schemaopt_hard_sports_analytics_vq_c04_04",
+        "schemaopt_hard_sports_analytics_vq_c04_05",
+        "schemaopt_hard_sports_analytics_vq_c04_06",
+        "schemaopt_hard_sports_analytics_vq_c04_07"
+      ],
+      "query_count": 7,
+      "total_frequency_weight": 14.0,
+      "total_weighted_baseline_cost": 14.0,
+      "top_tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "common_operator_patterns": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "representative_dimensions": [],
+      "representative_measures": [
+        "count_star"
+      ],
+      "hotspot_rank": 4,
+      "preferred_object_kind": "agg_matview",
+      "representative_query_id": "schemaopt_hard_sports_analytics_vq_c04_01",
+      "cluster_grain_emphasis": [],
+      "suggested_exact_derived_shape": {
+        "object_kind": "agg_matview",
+        "source_objects": [
+          "raw.home_game",
+          "raw.park"
+        ],
+        "group_by": [],
+        "canonical_predicates": [
+          "year = 2000",
+          "city = 'atlanta'"
+        ],
+        "measure_columns": [
+          "count_star"
+        ],
+        "aggregate_functions": [
+          "count"
+        ]
+      },
+      "reference_rewrite_feasible": true
+    },
+    {
+      "cluster_id": "schemaopt_hard_sports_analytics_cluster_05",
+      "label": "baseball_1 workload cluster 5",
+      "business_label": "Benchmark baseball_1 analytics cluster 5",
+      "query_ids": [
+        "schemaopt_hard_sports_analytics_vq_c05_01",
+        "schemaopt_hard_sports_analytics_vq_c05_02",
+        "schemaopt_hard_sports_analytics_vq_c05_03",
+        "schemaopt_hard_sports_analytics_vq_c05_04",
+        "schemaopt_hard_sports_analytics_vq_c05_05",
+        "schemaopt_hard_sports_analytics_vq_c05_06",
+        "schemaopt_hard_sports_analytics_vq_c05_07"
+      ],
+      "query_count": 7,
+      "total_frequency_weight": 14.0,
+      "total_weighted_baseline_cost": 14.0,
+      "top_tables": [
+        "raw.home_game",
+        "raw.park"
+      ],
+      "common_operator_patterns": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "representative_dimensions": [],
+      "representative_measures": [
+        "count_star"
+      ],
+      "hotspot_rank": 5,
+      "preferred_object_kind": "agg_matview",
+      "representative_query_id": "schemaopt_hard_sports_analytics_vq_c05_01",
+      "cluster_grain_emphasis": [],
+      "suggested_exact_derived_shape": {
+        "object_kind": "agg_matview",
+        "source_objects": [
+          "raw.home_game",
+          "raw.park"
+        ],
+        "group_by": [],
+        "canonical_predicates": [
+          "year = 1907",
+          "park_name = 'columbia park'"
+        ],
+        "measure_columns": [
+          "count_star"
+        ],
+        "aggregate_functions": [
+          "count"
+        ]
+      },
+      "reference_rewrite_feasible": true
+    }
+  ],
+  "budgets": {
+    "max_new_derived_objects": 5,
+    "max_storage_bytes": 40000000,
+    "max_refresh_runtime_ms": 25000.0,
+    "max_steps": 30
+  },
+  "allowed_object_kinds": [
+    "join_matview",
+    "agg_matview",
+    "filtered_projection",
+    "denorm_table"
+  ],
+  "engine_capabilities": {
+    "engine": "duckdb",
+    "uses_real_duckdb_database": true,
+    "uses_real_query_execution": true,
+    "uses_explain_plan_metrics": true,
+    "rewrite_model": "explicit_rewritten_sql",
+    "source_dataset": "public_sql_benchmark",
+    "source_database_engine": "sqlite",
+    "source_db_id": "baseball_1",
+    "sql_normalized_for_duckdb": true
+  },
+  "validation_metadata": {
+    "source_db_id": "baseball_1",
+    "validated_under_duckdb": true,
+    "raw_candidate_query_count": 21,
+    "validated_query_count": 19,
+    "selected_cluster_count": 5
+  }
+}

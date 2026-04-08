@@ -1,0 +1,1402 @@
+{
+  "task_id": "schemaopt_easy_retail_ops",
+  "difficulty": "easy",
+  "domain": "bench_retail_ops",
+  "objective": "Optimize the retail operations benchmark workload over a DuckDB-converted database by materializing derived objects that reduce measured execution cost while preserving exact query results.",
+  "seed_source": "benchmark_source/sqlite/store_1/store_1.sqlite",
+  "dataset_dir": "benchmark_source/sqlite/store_1",
+  "database_path": "task_assets/databases/schemaopt_easy_retail_ops.duckdb",
+  "tables": [
+    {
+      "name": "raw.albums",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "title",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "artist_id",
+          "type": "BIGINT"
+        }
+      ],
+      "row_count": 347
+    },
+    {
+      "name": "raw.artists",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 275
+    },
+    {
+      "name": "raw.customers",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "first_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "last_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "company",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "address",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "city",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "state",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "country",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "postal_code",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "phone",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "fax",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "support_rep_id",
+          "type": "BIGINT"
+        }
+      ],
+      "row_count": 59
+    },
+    {
+      "name": "raw.employees",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "last_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "first_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "title",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "reports_to",
+          "type": "BIGINT"
+        },
+        {
+          "name": "birth_date",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "hire_date",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "address",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "city",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "state",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "country",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "postal_code",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "phone",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "fax",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 8
+    },
+    {
+      "name": "raw.genres",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 25
+    },
+    {
+      "name": "raw.invoice_lines",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "invoice_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "track_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "unit_price",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "quantity",
+          "type": "BIGINT"
+        }
+      ],
+      "row_count": 2240
+    },
+    {
+      "name": "raw.invoices",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "customer_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "invoice_date",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "billing_address",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "billing_city",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "billing_state",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "billing_country",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "billing_postal_code",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "total",
+          "type": "DOUBLE"
+        }
+      ],
+      "row_count": 412
+    },
+    {
+      "name": "raw.media_types",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 5
+    },
+    {
+      "name": "raw.playlist_tracks",
+      "columns": [
+        {
+          "name": "playlist_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "track_id",
+          "type": "BIGINT"
+        }
+      ],
+      "row_count": 8715
+    },
+    {
+      "name": "raw.playlists",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        }
+      ],
+      "row_count": 18
+    },
+    {
+      "name": "raw.tracks",
+      "columns": [
+        {
+          "name": "id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "album_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "media_type_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "genre_id",
+          "type": "BIGINT"
+        },
+        {
+          "name": "composer",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "milliseconds",
+          "type": "BIGINT"
+        },
+        {
+          "name": "bytes",
+          "type": "BIGINT"
+        },
+        {
+          "name": "unit_price",
+          "type": "DOUBLE"
+        }
+      ],
+      "row_count": 3503
+    }
+  ],
+  "visible_queries": [
+    {
+      "query_id": "schemaopt_easy_retail_ops_vq_c01_01",
+      "sql": "SELECT billing_state , COUNT(*) FROM raw.invoices WHERE billing_country = 'USA' GROUP BY billing_state",
+      "original_sql": "SELECT billing_state ,  COUNT(*) FROM invoices WHERE billing_country  =  \"USA\" GROUP BY billing_state;",
+      "normalized_sql": "select billing_state , count(*) from raw.invoices where billing_country = 'usa' group by billing_state",
+      "cluster_id": "schemaopt_easy_retail_ops_cluster_01",
+      "business_tag": "Benchmark store_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.invoices"
+      ],
+      "canonical_tables": [
+        "raw.invoices"
+      ],
+      "columns": [
+        "billing_state",
+        "count_star"
+      ],
+      "result_columns": [
+        "billing_state",
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "billing_state",
+        "count_star"
+      ],
+      "group_by": [
+        "billing_state"
+      ],
+      "filter_tokens": [
+        "billing_country_=_'usa'"
+      ],
+      "filter_predicates": [
+        "billing_country = 'USA'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "store_1 visible cluster 1 query 1 rows=11"
+    },
+    {
+      "query_id": "schemaopt_easy_retail_ops_vq_c01_02",
+      "sql": "SELECT billing_state , COUNT(*) FROM raw.invoices WHERE billing_country = 'USA' GROUP BY billing_state ORDER BY COUNT(*) DESC LIMIT 1",
+      "original_sql": "SELECT billing_state ,  COUNT(*) FROM invoices WHERE billing_country  =  \"USA\" GROUP BY billing_state ORDER BY COUNT(*) DESC LIMIT 1;",
+      "normalized_sql": "select billing_state , count(*) from raw.invoices where billing_country = 'usa' group by billing_state order by count(*) desc limit 1",
+      "cluster_id": "schemaopt_easy_retail_ops_cluster_01",
+      "business_tag": "Benchmark store_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.invoices"
+      ],
+      "canonical_tables": [
+        "raw.invoices"
+      ],
+      "columns": [
+        "billing_state",
+        "count_star"
+      ],
+      "result_columns": [
+        "billing_state",
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "billing_state",
+        "count_star"
+      ],
+      "group_by": [
+        "billing_state"
+      ],
+      "filter_tokens": [
+        "billing_country_=_'usa'"
+      ],
+      "filter_predicates": [
+        "billing_country = 'USA'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [
+        {
+          "expression": "count(*)",
+          "result_label": "count_star()",
+          "canonical_output": "count_star",
+          "direction": "desc"
+        }
+      ],
+      "limit": 1,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "store_1 visible cluster 1 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_easy_retail_ops_vq_c01_03",
+      "sql": "SELECT billing_state , COUNT(*) FROM raw.invoices WHERE billing_country = 'USA' GROUP BY billing_state",
+      "original_sql": "SELECT billing_state ,  COUNT(*) FROM invoices WHERE billing_country  =  \"USA\" GROUP BY billing_state;",
+      "normalized_sql": "select billing_state , count(*) from raw.invoices where billing_country = 'usa' group by billing_state",
+      "cluster_id": "schemaopt_easy_retail_ops_cluster_01",
+      "business_tag": "Benchmark store_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.invoices"
+      ],
+      "canonical_tables": [
+        "raw.invoices"
+      ],
+      "columns": [
+        "billing_state",
+        "count_star"
+      ],
+      "result_columns": [
+        "billing_state",
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "billing_state",
+        "count_star"
+      ],
+      "group_by": [
+        "billing_state"
+      ],
+      "filter_tokens": [
+        "billing_country_=_'usa'"
+      ],
+      "filter_predicates": [
+        "billing_country = 'USA'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "store_1 visible cluster 1 query 3 rows=11"
+    },
+    {
+      "query_id": "schemaopt_easy_retail_ops_vq_c01_04",
+      "sql": "SELECT billing_state , COUNT(*) FROM raw.invoices WHERE billing_country = 'USA' GROUP BY billing_state ORDER BY COUNT(*) DESC LIMIT 1",
+      "original_sql": "SELECT billing_state ,  COUNT(*) FROM invoices WHERE billing_country  =  \"USA\" GROUP BY billing_state ORDER BY COUNT(*) DESC LIMIT 1;",
+      "normalized_sql": "select billing_state , count(*) from raw.invoices where billing_country = 'usa' group by billing_state order by count(*) desc limit 1",
+      "cluster_id": "schemaopt_easy_retail_ops_cluster_01",
+      "business_tag": "Benchmark store_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.invoices"
+      ],
+      "canonical_tables": [
+        "raw.invoices"
+      ],
+      "columns": [
+        "billing_state",
+        "count_star"
+      ],
+      "result_columns": [
+        "billing_state",
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "billing_state",
+        "count_star"
+      ],
+      "group_by": [
+        "billing_state"
+      ],
+      "filter_tokens": [
+        "billing_country_=_'usa'"
+      ],
+      "filter_predicates": [
+        "billing_country = 'USA'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [
+        {
+          "expression": "count(*)",
+          "result_label": "count_star()",
+          "canonical_output": "count_star",
+          "direction": "desc"
+        }
+      ],
+      "limit": 1,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "store_1 visible cluster 1 query 4 rows=1"
+    },
+    {
+      "query_id": "schemaopt_easy_retail_ops_vq_c02_01",
+      "sql": "SELECT count(*) FROM raw.albums AS T1 JOIN raw.artists AS T2 ON T1.artist_id = T2.id WHERE T2.name = 'Billy Cobham'",
+      "original_sql": "SELECT count(*) FROM albums AS T1 JOIN artists AS T2 ON  T1.artist_id = T2.id WHERE T2.name = \"Billy Cobham\";",
+      "normalized_sql": "select count(*) from raw.albums as t1 join raw.artists as t2 on t1.artist_id = t2.id where t2.name = 'billy cobham'",
+      "cluster_id": "schemaopt_easy_retail_ops_cluster_02",
+      "business_tag": "Benchmark store_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.albums",
+        "raw.artists"
+      ],
+      "canonical_tables": [
+        "raw.albums",
+        "raw.artists"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_=_'billy_cobham'"
+      ],
+      "filter_predicates": [
+        "T2.name = 'Billy Cobham'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "store_1 visible cluster 2 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_easy_retail_ops_vq_c02_02",
+      "sql": "SELECT count(*) FROM raw.albums AS T1 JOIN raw.artists AS T2 ON T1.artist_id = T2.id WHERE T2.name = 'Billy Cobham'",
+      "original_sql": "SELECT count(*) FROM albums AS T1 JOIN artists AS T2 ON  T1.artist_id = T2.id WHERE T2.name = \"Billy Cobham\";",
+      "normalized_sql": "select count(*) from raw.albums as t1 join raw.artists as t2 on t1.artist_id = t2.id where t2.name = 'billy cobham'",
+      "cluster_id": "schemaopt_easy_retail_ops_cluster_02",
+      "business_tag": "Benchmark store_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.albums",
+        "raw.artists"
+      ],
+      "canonical_tables": [
+        "raw.albums",
+        "raw.artists"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_=_'billy_cobham'"
+      ],
+      "filter_predicates": [
+        "T2.name = 'Billy Cobham'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "store_1 visible cluster 2 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_easy_retail_ops_vq_c02_03",
+      "sql": "SELECT count(*) FROM raw.albums AS T1 JOIN raw.artists AS T2 ON T1.artist_id = T2.id WHERE T2.name = 'Billy Cobham'",
+      "original_sql": "SELECT count(*) FROM albums AS T1 JOIN artists AS T2 ON  T1.artist_id = T2.id WHERE T2.name = \"Billy Cobham\";",
+      "normalized_sql": "select count(*) from raw.albums as t1 join raw.artists as t2 on t1.artist_id = t2.id where t2.name = 'billy cobham'",
+      "cluster_id": "schemaopt_easy_retail_ops_cluster_02",
+      "business_tag": "Benchmark store_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.albums",
+        "raw.artists"
+      ],
+      "canonical_tables": [
+        "raw.albums",
+        "raw.artists"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_=_'billy_cobham'"
+      ],
+      "filter_predicates": [
+        "T2.name = 'Billy Cobham'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "store_1 visible cluster 2 query 3 rows=1"
+    },
+    {
+      "query_id": "schemaopt_easy_retail_ops_vq_c02_04",
+      "sql": "SELECT count(*) FROM raw.albums AS T1 JOIN raw.artists AS T2 ON T1.artist_id = T2.id WHERE T2.name = 'Billy Cobham'",
+      "original_sql": "SELECT count(*) FROM albums AS T1 JOIN artists AS T2 ON  T1.artist_id = T2.id WHERE T2.name = \"Billy Cobham\";",
+      "normalized_sql": "select count(*) from raw.albums as t1 join raw.artists as t2 on t1.artist_id = t2.id where t2.name = 'billy cobham'",
+      "cluster_id": "schemaopt_easy_retail_ops_cluster_02",
+      "business_tag": "Benchmark store_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.albums",
+        "raw.artists"
+      ],
+      "canonical_tables": [
+        "raw.albums",
+        "raw.artists"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_=_'billy_cobham'"
+      ],
+      "filter_predicates": [
+        "T2.name = 'Billy Cobham'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "store_1 visible cluster 2 query 4 rows=1"
+    },
+    {
+      "query_id": "schemaopt_easy_retail_ops_vq_c03_01",
+      "sql": "SELECT count(*) FROM raw.customers WHERE city = 'Prague'",
+      "original_sql": "SELECT count(*) FROM customers WHERE city = \"Prague\";",
+      "normalized_sql": "select count(*) from raw.customers where city = 'prague'",
+      "cluster_id": "schemaopt_easy_retail_ops_cluster_03",
+      "business_tag": "Benchmark store_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.customers"
+      ],
+      "canonical_tables": [
+        "raw.customers"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "city_=_'prague'"
+      ],
+      "filter_predicates": [
+        "city = 'Prague'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "store_1 visible cluster 3 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_easy_retail_ops_vq_c03_02",
+      "sql": "SELECT count(*) FROM raw.customers WHERE city = 'Prague'",
+      "original_sql": "SELECT count(*) FROM customers WHERE city = \"Prague\";",
+      "normalized_sql": "select count(*) from raw.customers where city = 'prague'",
+      "cluster_id": "schemaopt_easy_retail_ops_cluster_03",
+      "business_tag": "Benchmark store_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.customers"
+      ],
+      "canonical_tables": [
+        "raw.customers"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "city_=_'prague'"
+      ],
+      "filter_predicates": [
+        "city = 'Prague'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "store_1 visible cluster 3 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_easy_retail_ops_vq_c03_03",
+      "sql": "SELECT count(*) FROM raw.customers WHERE city = 'Prague'",
+      "original_sql": "SELECT count(*) FROM customers WHERE city = \"Prague\";",
+      "normalized_sql": "select count(*) from raw.customers where city = 'prague'",
+      "cluster_id": "schemaopt_easy_retail_ops_cluster_03",
+      "business_tag": "Benchmark store_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.customers"
+      ],
+      "canonical_tables": [
+        "raw.customers"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "city_=_'prague'"
+      ],
+      "filter_predicates": [
+        "city = 'Prague'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "store_1 visible cluster 3 query 3 rows=1"
+    },
+    {
+      "query_id": "schemaopt_easy_retail_ops_vq_c03_04",
+      "sql": "SELECT count(*) FROM raw.customers WHERE city = 'Prague'",
+      "original_sql": "SELECT count(*) FROM customers WHERE city = \"Prague\";",
+      "normalized_sql": "select count(*) from raw.customers where city = 'prague'",
+      "cluster_id": "schemaopt_easy_retail_ops_cluster_03",
+      "business_tag": "Benchmark store_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.customers"
+      ],
+      "canonical_tables": [
+        "raw.customers"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "city_=_'prague'"
+      ],
+      "filter_predicates": [
+        "city = 'Prague'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "store_1 visible cluster 3 query 4 rows=1"
+    }
+  ],
+  "holdout_queries": [
+    {
+      "query_id": "schemaopt_easy_retail_ops_hq_c01_01",
+      "sql": "SELECT billing_state , COUNT(*) FROM raw.invoices WHERE billing_country = 'USA' GROUP BY billing_state ORDER BY COUNT(*) DESC LIMIT 1",
+      "original_sql": "SELECT billing_state ,  COUNT(*) FROM invoices WHERE billing_country  =  \"USA\" GROUP BY billing_state ORDER BY COUNT(*) DESC LIMIT 1;",
+      "normalized_sql": "select billing_state , count(*) from raw.invoices where billing_country = 'usa' group by billing_state order by count(*) desc limit 1",
+      "cluster_id": "schemaopt_easy_retail_ops_cluster_01",
+      "business_tag": "Benchmark store_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.invoices"
+      ],
+      "canonical_tables": [
+        "raw.invoices"
+      ],
+      "columns": [
+        "billing_state",
+        "count_star"
+      ],
+      "result_columns": [
+        "billing_state",
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "billing_state",
+        "count_star"
+      ],
+      "group_by": [
+        "billing_state"
+      ],
+      "filter_tokens": [
+        "billing_country_=_'usa'"
+      ],
+      "filter_predicates": [
+        "billing_country = 'USA'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [
+        {
+          "expression": "count(*)",
+          "result_label": "count_star()",
+          "canonical_output": "count_star",
+          "direction": "desc"
+        }
+      ],
+      "limit": 1,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "store_1 holdout cluster 1 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_easy_retail_ops_hq_c01_02",
+      "sql": "SELECT billing_state , COUNT(*) FROM raw.invoices WHERE billing_country = 'USA' GROUP BY billing_state ORDER BY COUNT(*) DESC LIMIT 1",
+      "original_sql": "SELECT billing_state ,  COUNT(*) FROM invoices WHERE billing_country  =  \"USA\" GROUP BY billing_state ORDER BY COUNT(*) DESC LIMIT 1;",
+      "normalized_sql": "select billing_state , count(*) from raw.invoices where billing_country = 'usa' group by billing_state order by count(*) desc limit 1",
+      "cluster_id": "schemaopt_easy_retail_ops_cluster_01",
+      "business_tag": "Benchmark store_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.invoices"
+      ],
+      "canonical_tables": [
+        "raw.invoices"
+      ],
+      "columns": [
+        "billing_state",
+        "count_star"
+      ],
+      "result_columns": [
+        "billing_state",
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "billing_state",
+        "count_star"
+      ],
+      "group_by": [
+        "billing_state"
+      ],
+      "filter_tokens": [
+        "billing_country_=_'usa'"
+      ],
+      "filter_predicates": [
+        "billing_country = 'USA'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [
+        {
+          "expression": "count(*)",
+          "result_label": "count_star()",
+          "canonical_output": "count_star",
+          "direction": "desc"
+        }
+      ],
+      "limit": 1,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "store_1 holdout cluster 1 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_easy_retail_ops_hq_c02_01",
+      "sql": "SELECT count(*) FROM raw.albums AS T1 JOIN raw.artists AS T2 ON T1.artist_id = T2.id WHERE T2.name = 'Billy Cobham'",
+      "original_sql": "SELECT count(*) FROM albums AS T1 JOIN artists AS T2 ON  T1.artist_id = T2.id WHERE T2.name = \"Billy Cobham\";",
+      "normalized_sql": "select count(*) from raw.albums as t1 join raw.artists as t2 on t1.artist_id = t2.id where t2.name = 'billy cobham'",
+      "cluster_id": "schemaopt_easy_retail_ops_cluster_02",
+      "business_tag": "Benchmark store_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.albums",
+        "raw.artists"
+      ],
+      "canonical_tables": [
+        "raw.albums",
+        "raw.artists"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_=_'billy_cobham'"
+      ],
+      "filter_predicates": [
+        "T2.name = 'Billy Cobham'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "store_1 holdout cluster 2 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_easy_retail_ops_hq_c02_02",
+      "sql": "SELECT count(*) FROM raw.albums AS T1 JOIN raw.artists AS T2 ON T1.artist_id = T2.id WHERE T2.name = 'Billy Cobham'",
+      "original_sql": "SELECT count(*) FROM albums AS T1 JOIN artists AS T2 ON  T1.artist_id = T2.id WHERE T2.name = \"Billy Cobham\";",
+      "normalized_sql": "select count(*) from raw.albums as t1 join raw.artists as t2 on t1.artist_id = t2.id where t2.name = 'billy cobham'",
+      "cluster_id": "schemaopt_easy_retail_ops_cluster_02",
+      "business_tag": "Benchmark store_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.albums",
+        "raw.artists"
+      ],
+      "canonical_tables": [
+        "raw.albums",
+        "raw.artists"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "name_=_'billy_cobham'"
+      ],
+      "filter_predicates": [
+        "T2.name = 'Billy Cobham'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "description": "store_1 holdout cluster 2 query 2 rows=1"
+    },
+    {
+      "query_id": "schemaopt_easy_retail_ops_hq_c03_01",
+      "sql": "SELECT count(*) FROM raw.customers WHERE city = 'Prague'",
+      "original_sql": "SELECT count(*) FROM customers WHERE city = \"Prague\";",
+      "normalized_sql": "select count(*) from raw.customers where city = 'prague'",
+      "cluster_id": "schemaopt_easy_retail_ops_cluster_03",
+      "business_tag": "Benchmark store_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.customers"
+      ],
+      "canonical_tables": [
+        "raw.customers"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "city_=_'prague'"
+      ],
+      "filter_predicates": [
+        "city = 'Prague'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "store_1 holdout cluster 3 query 1 rows=1"
+    },
+    {
+      "query_id": "schemaopt_easy_retail_ops_hq_c03_02",
+      "sql": "SELECT count(*) FROM raw.customers WHERE city = 'Prague'",
+      "original_sql": "SELECT count(*) FROM customers WHERE city = \"Prague\";",
+      "normalized_sql": "select count(*) from raw.customers where city = 'prague'",
+      "cluster_id": "schemaopt_easy_retail_ops_cluster_03",
+      "business_tag": "Benchmark store_1 workload",
+      "frequency_weight": 2.0,
+      "priority_weight": 1.0,
+      "tables": [
+        "raw.customers"
+      ],
+      "canonical_tables": [
+        "raw.customers"
+      ],
+      "columns": [
+        "count_star"
+      ],
+      "result_columns": [
+        "count_star()"
+      ],
+      "canonical_output_columns": [
+        "count_star"
+      ],
+      "group_by": [],
+      "filter_tokens": [
+        "city_=_'prague'"
+      ],
+      "filter_predicates": [
+        "city = 'Prague'"
+      ],
+      "measure_columns": [
+        "count_star"
+      ],
+      "aggregate_functions": [
+        "count"
+      ],
+      "order_by": [],
+      "limit": null,
+      "plan_features": [
+        "aggregate",
+        "filter"
+      ],
+      "description": "store_1 holdout cluster 3 query 2 rows=1"
+    }
+  ],
+  "clusters": [
+    {
+      "cluster_id": "schemaopt_easy_retail_ops_cluster_01",
+      "label": "store_1 workload cluster 1",
+      "business_label": "Benchmark store_1 analytics cluster 1",
+      "query_ids": [
+        "schemaopt_easy_retail_ops_vq_c01_01",
+        "schemaopt_easy_retail_ops_vq_c01_02",
+        "schemaopt_easy_retail_ops_vq_c01_03",
+        "schemaopt_easy_retail_ops_vq_c01_04"
+      ],
+      "query_count": 4,
+      "total_frequency_weight": 8.0,
+      "total_weighted_baseline_cost": 8.0,
+      "top_tables": [
+        "raw.invoices"
+      ],
+      "common_operator_patterns": [
+        "aggregate",
+        "filter"
+      ],
+      "representative_dimensions": [
+        "billing_state"
+      ],
+      "representative_measures": [
+        "count_star"
+      ],
+      "hotspot_rank": 1,
+      "preferred_object_kind": "agg_matview",
+      "representative_query_id": "schemaopt_easy_retail_ops_vq_c01_01",
+      "cluster_grain_emphasis": [
+        "billing_state"
+      ],
+      "suggested_exact_derived_shape": {
+        "object_kind": "agg_matview",
+        "source_objects": [
+          "raw.invoices"
+        ],
+        "group_by": [
+          "billing_state"
+        ],
+        "canonical_predicates": [
+          "billing_country = 'usa'"
+        ],
+        "measure_columns": [
+          "count_star"
+        ],
+        "aggregate_functions": [
+          "count"
+        ]
+      },
+      "reference_rewrite_feasible": true
+    },
+    {
+      "cluster_id": "schemaopt_easy_retail_ops_cluster_02",
+      "label": "store_1 workload cluster 2",
+      "business_label": "Benchmark store_1 analytics cluster 2",
+      "query_ids": [
+        "schemaopt_easy_retail_ops_vq_c02_01",
+        "schemaopt_easy_retail_ops_vq_c02_02",
+        "schemaopt_easy_retail_ops_vq_c02_03",
+        "schemaopt_easy_retail_ops_vq_c02_04"
+      ],
+      "query_count": 4,
+      "total_frequency_weight": 8.0,
+      "total_weighted_baseline_cost": 8.0,
+      "top_tables": [
+        "raw.albums",
+        "raw.artists"
+      ],
+      "common_operator_patterns": [
+        "aggregate",
+        "filter",
+        "join"
+      ],
+      "representative_dimensions": [],
+      "representative_measures": [
+        "count_star"
+      ],
+      "hotspot_rank": 2,
+      "preferred_object_kind": "agg_matview",
+      "representative_query_id": "schemaopt_easy_retail_ops_vq_c02_01",
+      "cluster_grain_emphasis": [],
+      "suggested_exact_derived_shape": {
+        "object_kind": "agg_matview",
+        "source_objects": [
+          "raw.albums",
+          "raw.artists"
+        ],
+        "group_by": [],
+        "canonical_predicates": [
+          "name = 'billy cobham'"
+        ],
+        "measure_columns": [
+          "count_star"
+        ],
+        "aggregate_functions": [
+          "count"
+        ]
+      },
+      "reference_rewrite_feasible": true
+    },
+    {
+      "cluster_id": "schemaopt_easy_retail_ops_cluster_03",
+      "label": "store_1 workload cluster 3",
+      "business_label": "Benchmark store_1 analytics cluster 3",
+      "query_ids": [
+        "schemaopt_easy_retail_ops_vq_c03_01",
+        "schemaopt_easy_retail_ops_vq_c03_02",
+        "schemaopt_easy_retail_ops_vq_c03_03",
+        "schemaopt_easy_retail_ops_vq_c03_04"
+      ],
+      "query_count": 4,
+      "total_frequency_weight": 8.0,
+      "total_weighted_baseline_cost": 8.0,
+      "top_tables": [
+        "raw.customers"
+      ],
+      "common_operator_patterns": [
+        "aggregate",
+        "filter"
+      ],
+      "representative_dimensions": [],
+      "representative_measures": [
+        "count_star"
+      ],
+      "hotspot_rank": 3,
+      "preferred_object_kind": "agg_matview",
+      "representative_query_id": "schemaopt_easy_retail_ops_vq_c03_01",
+      "cluster_grain_emphasis": [],
+      "suggested_exact_derived_shape": {
+        "object_kind": "agg_matview",
+        "source_objects": [
+          "raw.customers"
+        ],
+        "group_by": [],
+        "canonical_predicates": [
+          "city = 'prague'"
+        ],
+        "measure_columns": [
+          "count_star"
+        ],
+        "aggregate_functions": [
+          "count"
+        ]
+      },
+      "reference_rewrite_feasible": true
+    }
+  ],
+  "budgets": {
+    "max_new_derived_objects": 3,
+    "max_storage_bytes": 12000000,
+    "max_refresh_runtime_ms": 8000.0,
+    "max_steps": 18
+  },
+  "allowed_object_kinds": [
+    "join_matview",
+    "agg_matview",
+    "filtered_projection",
+    "denorm_table"
+  ],
+  "engine_capabilities": {
+    "engine": "duckdb",
+    "uses_real_duckdb_database": true,
+    "uses_real_query_execution": true,
+    "uses_explain_plan_metrics": true,
+    "rewrite_model": "explicit_rewritten_sql",
+    "source_dataset": "public_sql_benchmark",
+    "source_database_engine": "sqlite",
+    "source_db_id": "store_1",
+    "sql_normalized_for_duckdb": true
+  },
+  "validation_metadata": {
+    "source_db_id": "store_1",
+    "validated_under_duckdb": true,
+    "raw_candidate_query_count": 21,
+    "validated_query_count": 16,
+    "selected_cluster_count": 3
+  }
+}
