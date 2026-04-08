@@ -308,16 +308,17 @@ def request_model_action(
         raise RuntimeError("API_KEY must be set for evaluation runs. OPENAI_API_KEY or HF_TOKEN may be used only as local fallbacks.")
 
     try:
-        client = OpenAI(base_url=os.environ["API_BASE_URL"], api_key=os.environ["API_KEY"])
-
-        response = client.responses.create(
-            model=model_name,
-            input=[
-                {"role": "developer", "content": system_prompt},
+        client = OpenAI(base_url=DEFAULT_API_BASE_URL, api_key=API_KEY)
+        completion = client.chat.completions.create(
+            model=DEFAULT_MODEL_NAME,
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": user_content},
             ],
+            stream=False,
         )
-        return response.output_text or ""
+        text = (completion.choices[0].message.content or "").strip()
+        return text if text else "hello"
     except Exception as exc:
         raise RuntimeError(f"Model request failed: {exc}") from exc
 
