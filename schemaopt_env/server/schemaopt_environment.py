@@ -218,6 +218,28 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
         payload = self._task.reset_payload()
         return SchemaOptObservation(status=status, message=message, decision_state=self._build_decision_state(status, feedback, reward, done), catalog_summary=self._catalog_summary(payload), workload_summary=payload["workload_summary"], retrieval_context=self._retrieval_context, benchmark_context=self._benchmark_context, router_summary=self._router_summary, action_feedback=feedback, reward=round(reward, 6), done=done, metadata={"task": payload["task"]})
 
+    def _step_budget_limit(self) -> int:
+        return int(self._task.budgets.get("max_steps", 0) or 0)
+
+    def _step_budget_exhausted(self) -> bool:
+        step_budget = self._step_budget_limit()
+        return step_budget > 0 and self._state.step_count >= step_budget
+
+    def _finalize_due_to_budget(self, action: SchemaOptAction, status: str, message: str, feedback: Dict[str, Any]) -> Tuple[str, str, bool, Dict[str, Any], bool]:
+        final_feedback = self._submit_episode()
+        final_feedback["auto_submitted"] = True
+        final_feedback["termination_reason"] = "budget_exhausted"
+        final_feedback["originating_action"] = action.operation
+        final_feedback["originating_status"] = status
+        if status == "error":
+            final_feedback["pre_terminal_error"] = feedback.get("error")
+            final_feedback["pre_terminal_error_type"] = feedback.get("error_type")
+        if message:
+            final_message = f"{message} Step budget exhausted. Final benchmark submitted automatically."
+        else:
+            final_message = "Step budget exhausted. Final benchmark submitted automatically."
+        return "completed", final_message, True, final_feedback, True
+
     def _reward_population_counts(self) -> Tuple[int, int]:
         return len(self._task.visible_queries), len(self._task.clusters)
 
@@ -584,10 +606,14 @@ class SchemaOptEnvironment(Environment[SchemaOptAction, SchemaOptObservation, Sc
     def step(self, action: SchemaOptAction, timeout_s: Optional[float] = None, **kwargs: Any) -> SchemaOptObservation:
         self._state.step_count += 1
         status, message, done, feedback = self._execute_action(action, timeout_s=timeout_s, **kwargs)
+        budget_terminated = False
+        if not done and self._step_budget_exhausted():
+            status, message, done, feedback, budget_terminated = self._finalize_due_to_budget(action, status, message, feedback)
         self._last_feedback = feedback
         self._refresh_public_state(action, status, feedback, done)
         observation = self._build_observation(status, message, 0.0, done, feedback)
-        observation.reward = round(self._apply_rubric(action, observation), 6)
+        reward_action = SchemaOptAction(operation="submit") if budget_terminated else action
+        observation.reward = round(self._apply_rubric(reward_action, observation), 6)
         if observation.decision_state.get("last_action_effect"):
             observation.decision_state["last_action_effect"]["reward"] = observation.reward
         return observation

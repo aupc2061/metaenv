@@ -457,7 +457,11 @@ def run_episode(
     if env.state.final_score is None:
         warnings.append("final_score_unavailable")
 
-    termination_reason = "submitted" if observation.done else "max_steps_reached"
+    if observation.done:
+        termination_reason = str(final_feedback.get("termination_reason") or "submitted")
+    else:
+        termination_reason = "runner_max_steps_reached"
+    terminated_due_to_max_steps = terminated_due_to_max_steps or termination_reason == "budget_exhausted"
     result = {
         "task_id": task_id,
         "final_score": env.state.final_score,

@@ -1,11 +1,11 @@
 {
-  "task_id": "schemaopt_bench_easy_geo_metrics_1",
+  "task_id": "schemaopt_easy_geo_metrics",
   "difficulty": "easy",
   "domain": "bench_geo_metrics",
   "objective": "Optimize the geographic metrics benchmark workload over a DuckDB-converted database by materializing derived objects that reduce measured execution cost while preserving exact query results.",
   "seed_source": "benchmark_source/sqlite/world_1/world_1.sqlite",
   "dataset_dir": "benchmark_source/sqlite/world_1",
-  "database_path": "schemaopt_env/task_assets/databases/schemaopt_bench_easy_geo_metrics_1.duckdb",
+  "database_path": "schemaopt_env/task_assets/databases/schemaopt_easy_geo_metrics.duckdb",
   "tables": [
     {
       "name": "raw.city",
@@ -124,11 +124,11 @@
   ],
   "visible_queries": [
     {
-      "query_id": "schemaopt_bench_easy_geo_metrics_1_vq_c01_01",
+      "query_id": "schemaopt_easy_geo_metrics_vq_c01_01",
       "sql": "SELECT sum(Population) FROM raw.city WHERE District = 'Gelderland'",
       "original_sql": "SELECT sum(Population) FROM city WHERE District  =  \"Gelderland\"",
       "normalized_sql": "select sum(population) from raw.city where district = 'gelderland'",
-      "cluster_id": "schemaopt_bench_easy_geo_metrics_1_cluster_01",
+      "cluster_id": "schemaopt_easy_geo_metrics_cluster_01",
       "business_tag": "Benchmark world_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
@@ -170,11 +170,11 @@
       "description": "world_1 visible cluster 1 query 1 rows=1"
     },
     {
-      "query_id": "schemaopt_bench_easy_geo_metrics_1_vq_c01_02",
+      "query_id": "schemaopt_easy_geo_metrics_vq_c01_02",
       "sql": "SELECT sum(Population) FROM raw.city WHERE District = 'Gelderland'",
       "original_sql": "SELECT sum(Population) FROM city WHERE District  =  \"Gelderland\"",
       "normalized_sql": "select sum(population) from raw.city where district = 'gelderland'",
-      "cluster_id": "schemaopt_bench_easy_geo_metrics_1_cluster_01",
+      "cluster_id": "schemaopt_easy_geo_metrics_cluster_01",
       "business_tag": "Benchmark world_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
@@ -216,11 +216,11 @@
       "description": "world_1 visible cluster 1 query 2 rows=1"
     },
     {
-      "query_id": "schemaopt_bench_easy_geo_metrics_1_vq_c01_03",
+      "query_id": "schemaopt_easy_geo_metrics_vq_c01_03",
       "sql": "SELECT sum(Population) FROM raw.city WHERE District = 'Gelderland'",
       "original_sql": "SELECT sum(Population) FROM city WHERE District  =  \"Gelderland\"",
       "normalized_sql": "select sum(population) from raw.city where district = 'gelderland'",
-      "cluster_id": "schemaopt_bench_easy_geo_metrics_1_cluster_01",
+      "cluster_id": "schemaopt_easy_geo_metrics_cluster_01",
       "business_tag": "Benchmark world_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
@@ -262,11 +262,11 @@
       "description": "world_1 visible cluster 1 query 3 rows=1"
     },
     {
-      "query_id": "schemaopt_bench_easy_geo_metrics_1_vq_c01_04",
+      "query_id": "schemaopt_easy_geo_metrics_vq_c01_04",
       "sql": "SELECT sum(Population) FROM raw.city WHERE District = 'Gelderland'",
       "original_sql": "SELECT sum(Population) FROM city WHERE District  =  \"Gelderland\"",
       "normalized_sql": "select sum(population) from raw.city where district = 'gelderland'",
-      "cluster_id": "schemaopt_bench_easy_geo_metrics_1_cluster_01",
+      "cluster_id": "schemaopt_easy_geo_metrics_cluster_01",
       "business_tag": "Benchmark world_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
@@ -308,11 +308,11 @@
       "description": "world_1 visible cluster 1 query 4 rows=1"
     },
     {
-      "query_id": "schemaopt_bench_easy_geo_metrics_1_vq_c02_01",
+      "query_id": "schemaopt_easy_geo_metrics_vq_c02_01",
       "sql": "SELECT count(DISTINCT GovernmentForm) FROM raw.country WHERE Continent = 'Africa'",
       "original_sql": "SELECT count(DISTINCT GovernmentForm) FROM country WHERE Continent  =  \"Africa\"",
       "normalized_sql": "select count(distinct governmentform) from raw.country where continent = 'africa'",
-      "cluster_id": "schemaopt_bench_easy_geo_metrics_1_cluster_02",
+      "cluster_id": "schemaopt_easy_geo_metrics_cluster_02",
       "business_tag": "Benchmark world_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
@@ -353,11 +353,11 @@
       "description": "world_1 visible cluster 2 query 1 rows=1"
     },
     {
-      "query_id": "schemaopt_bench_easy_geo_metrics_1_vq_c02_02",
+      "query_id": "schemaopt_easy_geo_metrics_vq_c02_02",
       "sql": "SELECT count(DISTINCT GovernmentForm) FROM raw.country WHERE Continent = 'Africa'",
       "original_sql": "SELECT count(DISTINCT GovernmentForm) FROM country WHERE Continent  =  \"Africa\"",
       "normalized_sql": "select count(distinct governmentform) from raw.country where continent = 'africa'",
-      "cluster_id": "schemaopt_bench_easy_geo_metrics_1_cluster_02",
+      "cluster_id": "schemaopt_easy_geo_metrics_cluster_02",
       "business_tag": "Benchmark world_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
@@ -398,11 +398,11 @@
       "description": "world_1 visible cluster 2 query 2 rows=1"
     },
     {
-      "query_id": "schemaopt_bench_easy_geo_metrics_1_vq_c02_03",
+      "query_id": "schemaopt_easy_geo_metrics_vq_c02_03",
       "sql": "SELECT count(DISTINCT GovernmentForm) FROM raw.country WHERE Continent = 'Africa'",
       "original_sql": "SELECT count(DISTINCT GovernmentForm) FROM country WHERE Continent  =  \"Africa\"",
       "normalized_sql": "select count(distinct governmentform) from raw.country where continent = 'africa'",
-      "cluster_id": "schemaopt_bench_easy_geo_metrics_1_cluster_02",
+      "cluster_id": "schemaopt_easy_geo_metrics_cluster_02",
       "business_tag": "Benchmark world_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
@@ -443,11 +443,11 @@
       "description": "world_1 visible cluster 2 query 3 rows=1"
     },
     {
-      "query_id": "schemaopt_bench_easy_geo_metrics_1_vq_c02_04",
+      "query_id": "schemaopt_easy_geo_metrics_vq_c02_04",
       "sql": "SELECT count(DISTINCT GovernmentForm) FROM raw.country WHERE Continent = 'Africa'",
       "original_sql": "SELECT count(DISTINCT GovernmentForm) FROM country WHERE Continent  =  \"Africa\"",
       "normalized_sql": "select count(distinct governmentform) from raw.country where continent = 'africa'",
-      "cluster_id": "schemaopt_bench_easy_geo_metrics_1_cluster_02",
+      "cluster_id": "schemaopt_easy_geo_metrics_cluster_02",
       "business_tag": "Benchmark world_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
@@ -488,11 +488,11 @@
       "description": "world_1 visible cluster 2 query 4 rows=1"
     },
     {
-      "query_id": "schemaopt_bench_easy_geo_metrics_1_vq_c03_01",
+      "query_id": "schemaopt_easy_geo_metrics_vq_c03_01",
       "sql": "SELECT avg(LifeExpectancy) FROM raw.country WHERE Continent = 'Africa' AND GovernmentForm = 'Republic'",
       "original_sql": "SELECT avg(LifeExpectancy) FROM country WHERE Continent  =  \"Africa\" AND GovernmentForm  =  \"Republic\"",
       "normalized_sql": "select avg(lifeexpectancy) from raw.country where continent = 'africa' and governmentform = 'republic'",
-      "cluster_id": "schemaopt_bench_easy_geo_metrics_1_cluster_03",
+      "cluster_id": "schemaopt_easy_geo_metrics_cluster_03",
       "business_tag": "Benchmark world_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
@@ -536,11 +536,11 @@
       "description": "world_1 visible cluster 3 query 1 rows=1"
     },
     {
-      "query_id": "schemaopt_bench_easy_geo_metrics_1_vq_c03_02",
+      "query_id": "schemaopt_easy_geo_metrics_vq_c03_02",
       "sql": "SELECT avg(LifeExpectancy) FROM raw.country WHERE Continent = 'Africa' AND GovernmentForm = 'Republic'",
       "original_sql": "SELECT avg(LifeExpectancy) FROM country WHERE Continent  =  \"Africa\" AND GovernmentForm  =  \"Republic\"",
       "normalized_sql": "select avg(lifeexpectancy) from raw.country where continent = 'africa' and governmentform = 'republic'",
-      "cluster_id": "schemaopt_bench_easy_geo_metrics_1_cluster_03",
+      "cluster_id": "schemaopt_easy_geo_metrics_cluster_03",
       "business_tag": "Benchmark world_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
@@ -584,11 +584,11 @@
       "description": "world_1 visible cluster 3 query 2 rows=1"
     },
     {
-      "query_id": "schemaopt_bench_easy_geo_metrics_1_vq_c03_03",
+      "query_id": "schemaopt_easy_geo_metrics_vq_c03_03",
       "sql": "SELECT avg(LifeExpectancy) FROM raw.country WHERE Continent = 'Africa' AND GovernmentForm = 'Republic'",
       "original_sql": "SELECT avg(LifeExpectancy) FROM country WHERE Continent  =  \"Africa\" AND GovernmentForm  =  \"Republic\"",
       "normalized_sql": "select avg(lifeexpectancy) from raw.country where continent = 'africa' and governmentform = 'republic'",
-      "cluster_id": "schemaopt_bench_easy_geo_metrics_1_cluster_03",
+      "cluster_id": "schemaopt_easy_geo_metrics_cluster_03",
       "business_tag": "Benchmark world_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
@@ -632,11 +632,11 @@
       "description": "world_1 visible cluster 3 query 3 rows=1"
     },
     {
-      "query_id": "schemaopt_bench_easy_geo_metrics_1_vq_c03_04",
+      "query_id": "schemaopt_easy_geo_metrics_vq_c03_04",
       "sql": "SELECT avg(LifeExpectancy) FROM raw.country WHERE Continent = 'Africa' AND GovernmentForm = 'Republic'",
       "original_sql": "SELECT avg(LifeExpectancy) FROM country WHERE Continent  =  \"Africa\" AND GovernmentForm  =  \"Republic\"",
       "normalized_sql": "select avg(lifeexpectancy) from raw.country where continent = 'africa' and governmentform = 'republic'",
-      "cluster_id": "schemaopt_bench_easy_geo_metrics_1_cluster_03",
+      "cluster_id": "schemaopt_easy_geo_metrics_cluster_03",
       "business_tag": "Benchmark world_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
@@ -682,11 +682,11 @@
   ],
   "holdout_queries": [
     {
-      "query_id": "schemaopt_bench_easy_geo_metrics_1_hq_c01_01",
+      "query_id": "schemaopt_easy_geo_metrics_hq_c01_01",
       "sql": "SELECT sum(Population) FROM raw.city WHERE District = 'Gelderland'",
       "original_sql": "SELECT sum(Population) FROM city WHERE District  =  \"Gelderland\"",
       "normalized_sql": "select sum(population) from raw.city where district = 'gelderland'",
-      "cluster_id": "schemaopt_bench_easy_geo_metrics_1_cluster_01",
+      "cluster_id": "schemaopt_easy_geo_metrics_cluster_01",
       "business_tag": "Benchmark world_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
@@ -728,11 +728,11 @@
       "description": "world_1 holdout cluster 1 query 1 rows=1"
     },
     {
-      "query_id": "schemaopt_bench_easy_geo_metrics_1_hq_c01_02",
+      "query_id": "schemaopt_easy_geo_metrics_hq_c01_02",
       "sql": "SELECT sum(Population) FROM raw.city WHERE District = 'Gelderland'",
       "original_sql": "SELECT sum(Population) FROM city WHERE District  =  \"Gelderland\"",
       "normalized_sql": "select sum(population) from raw.city where district = 'gelderland'",
-      "cluster_id": "schemaopt_bench_easy_geo_metrics_1_cluster_01",
+      "cluster_id": "schemaopt_easy_geo_metrics_cluster_01",
       "business_tag": "Benchmark world_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
@@ -774,11 +774,11 @@
       "description": "world_1 holdout cluster 1 query 2 rows=1"
     },
     {
-      "query_id": "schemaopt_bench_easy_geo_metrics_1_hq_c02_01",
+      "query_id": "schemaopt_easy_geo_metrics_hq_c02_01",
       "sql": "SELECT count(DISTINCT GovernmentForm) FROM raw.country WHERE Continent = 'Africa'",
       "original_sql": "SELECT count(DISTINCT GovernmentForm) FROM country WHERE Continent  =  \"Africa\"",
       "normalized_sql": "select count(distinct governmentform) from raw.country where continent = 'africa'",
-      "cluster_id": "schemaopt_bench_easy_geo_metrics_1_cluster_02",
+      "cluster_id": "schemaopt_easy_geo_metrics_cluster_02",
       "business_tag": "Benchmark world_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
@@ -819,11 +819,11 @@
       "description": "world_1 holdout cluster 2 query 1 rows=1"
     },
     {
-      "query_id": "schemaopt_bench_easy_geo_metrics_1_hq_c02_02",
+      "query_id": "schemaopt_easy_geo_metrics_hq_c02_02",
       "sql": "SELECT count(DISTINCT GovernmentForm) FROM raw.country WHERE Continent = 'Africa'",
       "original_sql": "SELECT count(DISTINCT GovernmentForm) FROM country WHERE Continent  =  \"Africa\"",
       "normalized_sql": "select count(distinct governmentform) from raw.country where continent = 'africa'",
-      "cluster_id": "schemaopt_bench_easy_geo_metrics_1_cluster_02",
+      "cluster_id": "schemaopt_easy_geo_metrics_cluster_02",
       "business_tag": "Benchmark world_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
@@ -864,11 +864,11 @@
       "description": "world_1 holdout cluster 2 query 2 rows=1"
     },
     {
-      "query_id": "schemaopt_bench_easy_geo_metrics_1_hq_c03_01",
+      "query_id": "schemaopt_easy_geo_metrics_hq_c03_01",
       "sql": "SELECT avg(LifeExpectancy) FROM raw.country WHERE Continent = 'Africa' AND GovernmentForm = 'Republic'",
       "original_sql": "SELECT avg(LifeExpectancy) FROM country WHERE Continent  =  \"Africa\" AND GovernmentForm  =  \"Republic\"",
       "normalized_sql": "select avg(lifeexpectancy) from raw.country where continent = 'africa' and governmentform = 'republic'",
-      "cluster_id": "schemaopt_bench_easy_geo_metrics_1_cluster_03",
+      "cluster_id": "schemaopt_easy_geo_metrics_cluster_03",
       "business_tag": "Benchmark world_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
@@ -912,11 +912,11 @@
       "description": "world_1 holdout cluster 3 query 1 rows=1"
     },
     {
-      "query_id": "schemaopt_bench_easy_geo_metrics_1_hq_c03_02",
+      "query_id": "schemaopt_easy_geo_metrics_hq_c03_02",
       "sql": "SELECT avg(LifeExpectancy) FROM raw.country WHERE Continent = 'Africa' AND GovernmentForm = 'Republic'",
       "original_sql": "SELECT avg(LifeExpectancy) FROM country WHERE Continent  =  \"Africa\" AND GovernmentForm  =  \"Republic\"",
       "normalized_sql": "select avg(lifeexpectancy) from raw.country where continent = 'africa' and governmentform = 'republic'",
-      "cluster_id": "schemaopt_bench_easy_geo_metrics_1_cluster_03",
+      "cluster_id": "schemaopt_easy_geo_metrics_cluster_03",
       "business_tag": "Benchmark world_1 workload",
       "frequency_weight": 2.0,
       "priority_weight": 1.0,
@@ -962,14 +962,14 @@
   ],
   "clusters": [
     {
-      "cluster_id": "schemaopt_bench_easy_geo_metrics_1_cluster_01",
+      "cluster_id": "schemaopt_easy_geo_metrics_cluster_01",
       "label": "world_1 workload cluster 1",
       "business_label": "Benchmark world_1 analytics cluster 1",
       "query_ids": [
-        "schemaopt_bench_easy_geo_metrics_1_vq_c01_01",
-        "schemaopt_bench_easy_geo_metrics_1_vq_c01_02",
-        "schemaopt_bench_easy_geo_metrics_1_vq_c01_03",
-        "schemaopt_bench_easy_geo_metrics_1_vq_c01_04"
+        "schemaopt_easy_geo_metrics_vq_c01_01",
+        "schemaopt_easy_geo_metrics_vq_c01_02",
+        "schemaopt_easy_geo_metrics_vq_c01_03",
+        "schemaopt_easy_geo_metrics_vq_c01_04"
       ],
       "query_count": 4,
       "total_frequency_weight": 8.0,
@@ -988,7 +988,7 @@
       ],
       "hotspot_rank": 1,
       "preferred_object_kind": "agg_matview",
-      "representative_query_id": "schemaopt_bench_easy_geo_metrics_1_vq_c01_01",
+      "representative_query_id": "schemaopt_easy_geo_metrics_vq_c01_01",
       "cluster_grain_emphasis": [],
       "suggested_exact_derived_shape": {
         "object_kind": "agg_matview",
@@ -1009,14 +1009,14 @@
       "reference_rewrite_feasible": true
     },
     {
-      "cluster_id": "schemaopt_bench_easy_geo_metrics_1_cluster_02",
+      "cluster_id": "schemaopt_easy_geo_metrics_cluster_02",
       "label": "world_1 workload cluster 2",
       "business_label": "Benchmark world_1 analytics cluster 2",
       "query_ids": [
-        "schemaopt_bench_easy_geo_metrics_1_vq_c02_01",
-        "schemaopt_bench_easy_geo_metrics_1_vq_c02_02",
-        "schemaopt_bench_easy_geo_metrics_1_vq_c02_03",
-        "schemaopt_bench_easy_geo_metrics_1_vq_c02_04"
+        "schemaopt_easy_geo_metrics_vq_c02_01",
+        "schemaopt_easy_geo_metrics_vq_c02_02",
+        "schemaopt_easy_geo_metrics_vq_c02_03",
+        "schemaopt_easy_geo_metrics_vq_c02_04"
       ],
       "query_count": 4,
       "total_frequency_weight": 8.0,
@@ -1034,7 +1034,7 @@
       ],
       "hotspot_rank": 2,
       "preferred_object_kind": "agg_matview",
-      "representative_query_id": "schemaopt_bench_easy_geo_metrics_1_vq_c02_01",
+      "representative_query_id": "schemaopt_easy_geo_metrics_vq_c02_01",
       "cluster_grain_emphasis": [],
       "suggested_exact_derived_shape": {
         "object_kind": "agg_matview",
@@ -1055,14 +1055,14 @@
       "reference_rewrite_feasible": true
     },
     {
-      "cluster_id": "schemaopt_bench_easy_geo_metrics_1_cluster_03",
+      "cluster_id": "schemaopt_easy_geo_metrics_cluster_03",
       "label": "world_1 workload cluster 3",
       "business_label": "Benchmark world_1 analytics cluster 3",
       "query_ids": [
-        "schemaopt_bench_easy_geo_metrics_1_vq_c03_01",
-        "schemaopt_bench_easy_geo_metrics_1_vq_c03_02",
-        "schemaopt_bench_easy_geo_metrics_1_vq_c03_03",
-        "schemaopt_bench_easy_geo_metrics_1_vq_c03_04"
+        "schemaopt_easy_geo_metrics_vq_c03_01",
+        "schemaopt_easy_geo_metrics_vq_c03_02",
+        "schemaopt_easy_geo_metrics_vq_c03_03",
+        "schemaopt_easy_geo_metrics_vq_c03_04"
       ],
       "query_count": 4,
       "total_frequency_weight": 8.0,
@@ -1081,7 +1081,7 @@
       ],
       "hotspot_rank": 3,
       "preferred_object_kind": "agg_matview",
-      "representative_query_id": "schemaopt_bench_easy_geo_metrics_1_vq_c03_01",
+      "representative_query_id": "schemaopt_easy_geo_metrics_vq_c03_01",
       "cluster_grain_emphasis": [],
       "suggested_exact_derived_shape": {
         "object_kind": "agg_matview",

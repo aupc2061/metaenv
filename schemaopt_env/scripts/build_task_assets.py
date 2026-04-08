@@ -77,11 +77,11 @@ SOURCE_DB_ROOT = SOURCE_DATA_ROOT / "database"
 DB_OUTPUT_ROOT = ASSET_ROOT / "databases"
 
 SELECTED_BENCHMARK_TASKS = [
-    ("schemaopt_bench_easy_retail_ops_1", "easy", "store_1"),
-    ("schemaopt_bench_easy_geo_metrics_1", "easy", "world_1"),
-    ("schemaopt_bench_medium_motorsport_ops_1", "medium", "formula_1"),
-    ("schemaopt_bench_medium_customer_ops_1", "medium", "sakila_1"),
-    ("schemaopt_bench_hard_sports_analytics_1", "hard", "baseball_1"),
+    ("schemaopt_easy_retail_ops", "easy", "store_1"),
+    ("schemaopt_easy_geo_metrics", "easy", "world_1"),
+    ("schemaopt_medium_motorsport_ops", "medium", "formula_1"),
+    ("schemaopt_medium_customer_ops", "medium", "sakila_1"),
+    ("schemaopt_hard_sports_analytics", "hard", "baseball_1"),
 ]
 
 BENCHMARK_TASK_METADATA: Dict[str, Dict[str, str]] = {
